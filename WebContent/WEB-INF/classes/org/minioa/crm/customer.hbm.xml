@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<class name="Customer" table="crm_customer">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="gongsimc" column="gongsimc" type="java.lang.String" />
+		<property name="shengfen" column="shengfen" type="java.lang.String" />
+		<property name="hangye" column="hangye" type="java.lang.String" />
+		<property name="guimo" column="guimo" type="java.lang.String" />
+		<property name="kehubm" column="kehubm" type="java.lang.String" />
+		<property name="city" column="city" type="java.lang.String" />
+		<property name="dizhi" column="dizhi" type="java.lang.String" />
+		<property name="youbian" column="youbian" type="java.lang.String" />
+		<property name="dianhua" column="dianhua" type="java.lang.String" />
+		<property name="chuanzhen" column="chuanzhen" type="java.lang.String" />
+		<property name="youjian" column="youjian" type="java.lang.String" />
+		<property name="wangzhi" column="wangzhi" type="java.lang.String" />
+		<property name="beizhu" column="beizhu" type="java.lang.String" />
+		<property name="dizhi2" column="dizhi2" type="java.lang.String" />
+		<property name="zidingyi" column="zidingyi" type="java.lang.String" />
+		<property name="zidingyi2" column="zidingyi2" type="java.lang.String" />
+		<property name="kehulb" column="kehulb" type="java.lang.String" />
+		<property name="nianyingye" column="nianyingye" type="java.lang.Integer" />
+		<property name="isarc" column="isarc" type="java.lang.String" />
+		<property name="kehuly" column="kehuly" type="java.lang.String" />
+	</class>
+	<sql-query name="crm.customer.records">
+    <![CDATA[
+        select ta.ID_, ta.CID_, ta.CDATE_, ta.MID_, ta.MDATE_, ta.UUID_,
+        	ta.gongsimc, ta.shengfen, ta.hangye, ta.guimo, ta.kehubm, ta.city, 
+        	ta.dizhi, ta.youbian, ta.dianhua, ta.chuanzhen, ta.youjian, ta.wangzhi, 
+        	ta.beizhu, ta.dizhi2, ta.zidingyi, ta.zidingyi2, ta.kehulb, ta.nianyingye, ta.isarc,
+        	tb.displayName as cUser, ta.kehuly,ifnull(ta.nianyingye,0) from crm_customer ta left join core_user tb on tb.ID_ = ta.CID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.records.count">
+    <![CDATA[
+        select count(*) from crm_customer ta left join core_user tb on tb.ID_ = ta.CID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.hassubitems">
+    <![CDATA[
+		select crm_customer_hassubitems(:uuid) from dual
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.updatecid">
+    <![CDATA[
+		update crm_customer set CID_ = :cId where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.isexists">
+    <![CDATA[
+        select count(*) from crm_customer where kehubm = :kehubm
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.isexists2">
+    <![CDATA[
+        select count(*) from crm_customer where kehubm = :kehubm and ID_ != :id
+    ]]>
+	</sql-query>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="OpRoleRelation" table="core_op_role_relation">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="opId" column="opId" type="java.lang.Integer" />
+		<property name="roleId" column="roleId" type="java.lang.Integer" />
+	</class>
+	<sql-query name="core.oprolerelation.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.opName,ta.opDesc,IFNULL(tb.roleId,0) as roleId
+        from core_op ta
+        left join core_op_role_relation tb on tb.opId = ta.ID_ and tb.roleId = :relationId
+        order by ta.opName
+    ]]>
+	</sql-query>
+	<sql-query name="core.oprolerelation.deleterecordbyid">
+    <![CDATA[
+        delete from core_op_role_relation where opId = :opId and roleId = :roleId
+    ]]>
+	</sql-query>
+	<sql-query name="core.oprolerelation.isrecordexistbyid">
+    <![CDATA[
+        select count(*) as ds from core_op_role_relation where opId = :opId and roleId = :roleId
+    ]]>
+	</sql-query>
+	<sql-query name="core.oprolerelation.hasop">
+    <![CDATA[
+		SELECT ta.opName,tb.roleId FROM core_op ta
+		left join core_op_role_relation tb on tb.opId = ta.ID_ and tb.roleId in (select tc.roleId from core_role_user_relation tc where tc.userId = :userId)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

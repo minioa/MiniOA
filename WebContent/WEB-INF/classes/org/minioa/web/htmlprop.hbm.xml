@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.web">
+	<class name="HtmlProp" table="web_prop">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="propName" column="propName" type="java.lang.String" />
+		<property name="propType" column="propType" type="java.lang.String" />
+		<property name="propValue" column="propValue" type="java.lang.String" />
+		<property name="title" column="title" type="java.lang.String" />
+		<property name="keywords" column="keywords" type="java.lang.String" />
+		<property name="description" column="description" type="java.lang.String" />
+	</class>
+</hibernate-mapping>

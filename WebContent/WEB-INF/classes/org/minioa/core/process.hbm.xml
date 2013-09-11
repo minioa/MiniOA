@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+<class name="Process" table="core_process">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="processDefId" column="processDefId" type="java.lang.Integer" />
+		<property name="instanceId" column="instanceId" type="java.lang.Integer" />
+		<property name="jobId" column="jobId" type="java.lang.Integer" />
+		<property name="processDesc" column="processDesc" type="java.lang.String" />
+		<property name="processStatus" column="processStatus" type="java.lang.String" />
+		<property name="startDate" column="startDate" type="java.util.Date" />
+		<property name="endDate" column="endDate" type="java.util.Date" />
+		<property name="processNote" column="processNote" type="java.lang.String" />
+	</class>
+	<sql-query name="core.process.items.count">
+    <![CDATA[
+        select count(*) from core_process ta
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.items">
+    <![CDATA[
+        select ta.ID_,ta.processDefId, ta.instanceId, ta.processDesc,
+        	ta.startDate, ta.endDate, ta.processStatus, tb.processName, tc.displayName, tb.formId, ta.processNote
+        from core_process ta
+        left join core_processdefinition tb on tb.ID_ = ta.processDefId
+        left join core_user tc on tc.ID_ = ta.CID_
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.getinstanceidbyid">
+    <![CDATA[
+        select ifnull((select pro.instanceId from core_process pro where pro.ID_ = :id),0) as r from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.getprocessidbydef">
+    <![CDATA[
+        select ifnull((select pro.ID_ from core_process pro where pro.processDefId = :processDefId and  pro.instanceId = :instanceId limit 1),'') from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.select.record.where.uuid">
+    <![CDATA[
+        select pro.ID_,pro.CID_,pro.CDATE_,pro.processDefId, pro.instanceId, pro.processDesc, 
+        	pro.startDate, pro.endDate, pro.processStatus, pro.UUID_,pro.jobId
+        from core_process pro
+        left join core_processdefinition def on def.ID_ = pro.processDefId
+        where pro.UUID_ = :uuid
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.select.record.where.processDefId">
+    <![CDATA[
+        select pro.ID_,pro.CID_,pro.CDATE_,pro.processDefId, pro.instanceId, pro.processDesc, pro.startDate, pro.endDate, pro.processStatus, pro.UUID_,pro.jobId
+        from core_process pro
+        where pro.processDefId = :processDefId and  pro.instanceId = :instanceId
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.complete.where.id">
+    <![CDATA[
+        update core_process set MID_ = :mId, MDATE_ = sysdate(), endDate = sysdate(), processStatus = :processStatus
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.update.record.status.where.id">
+    <![CDATA[
+        update core_process set MID_ = :mId, MDATE_ = sysdate(), processStatus = :processStatus
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.update.record.complete.where.id">
+    <![CDATA[
+        update core_process set MID_ = :mId, MDATE_ = sysdate(), endDate = sysdate(), processStatus = :processStatus
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.delete.record.where.id">
+    <![CDATA[
+        delete from core_process where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.hasinstance">
+    <![CDATA[
+        select count(*) from core_process where instanceId = :instanceId and processDefId = :processDefId
+    ]]>
+	</sql-query>
+	<sql-query name="core.process.getlastprocessid">
+    <![CDATA[
+        select ifnull((select max(ID_) from core_process where instanceId = :instanceId and processDefId = :processDefId),0) from dual
+    ]]>
+	</sql-query>
+</hibernate-mapping>

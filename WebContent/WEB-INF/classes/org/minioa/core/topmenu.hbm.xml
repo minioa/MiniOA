@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="TopMenu" table="core_topmenu">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="parentId" column="parentId" type="java.lang.Integer" />
+		<property name="menuName" column="menuName" type="java.lang.String" />
+		<property name="menuUrl" column="menuUrl" type="java.lang.String" />
+		<property name="menuTarget" column="menuTarget" type="java.lang.String" />
+		<property name="sequence" column="sequence" type="java.lang.Integer" />
+		<property name="templates" column="templates" type="java.lang.String" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.topmenu.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.parentId,ta.menuName,ta.menuUrl,ta.menuTarget,ta.sequence,ta.templates
+        from core_topmenu ta
+        order by ta.sequence
+    ]]>
+	</sql-query>
+	<!-- 选择记录总数，便于分页 -->
+	<!-- Select records count, use for paging. -->
+	<sql-query name="core.topmenu.records.count">
+    <![CDATA[
+        select count(*) as result from core_topmenu ta
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.topmenu.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.parentId,ta.menuName,ta.menuUrl,ta.menuTarget,ta.sequence,ta.templates
+        from core_topmenu ta
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.topmenu.updaterecordbyid">
+    <![CDATA[
+        update core_topmenu set MID_ = :mId, MDATE_ = sysdate(),
+        	menuName = :menuName, menuUrl = :menuUrl, menuTarget = :menuTarget, 
+        	sequence = :sequence, templates = :templates
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.topmenu.moverecordbyid">
+    <![CDATA[
+        update core_topmenu set MID_ = :mId, MDATE_ = sysdate(),
+        	parentId = :parentId
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.topmenu.deleterecordbyid">
+    <![CDATA[
+         CALL core_delete_topmenu_p(:id)
+    ]]>
+	</sql-query>
+	<sql-query name="core.topmenu.getchildren">
+    <![CDATA[
+         select ID_,menuName,menuUrl,menuTarget
+         from core_topmenu where parentId = :parentId
+         order by sequence
+    ]]>
+	</sql-query>
+	<sql-query name="core.topmenu.haschildren">
+    <![CDATA[
+         select count(*)
+         from core_topmenu where parentId = :parentId
+    ]]>
+	</sql-query>
+</hibernate-mapping>

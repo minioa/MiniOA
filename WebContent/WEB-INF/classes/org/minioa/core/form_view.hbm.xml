@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="FormView" table="core_form_view">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="formId" column="formId" type="java.lang.Integer" />
+		<property name="viewName" column="viewName" type="java.lang.String" />
+		<property name="displayProcessBtn" column="displayProcessBtn" type="java.lang.String" />
+		<property name="displayNewBtn" column="displayNewBtn" type="java.lang.String" />
+		<property name="displayEditBtn" column="displayEditBtn" type="java.lang.String" />
+		<property name="displayDelBtn" column="displayDelBtn" type="java.lang.String" />
+		<property name="displayDownloadBtn" column="displayDownloadBtn" type="java.lang.String" />
+		<property name="displayAttachment" column="displayAttachment" type="java.lang.String" />
+		<property name="displayCInfo" column="displayCInfo" type="java.lang.String" />
+		<property name="displayMInfo" column="displayMInfo" type="java.lang.String" />
+		<property name="viewTemplate" column="viewTemplate" type="java.lang.String" />
+	</class>
+	<sql-query name="core.form.view.items">
+    <![CDATA[
+        select ta.ID_,ta.viewName from core_form_view ta where ta.formId = :formId order by convert(ta.viewName using gbk)
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.selectitems">
+    <![CDATA[
+        select * from core_form_view_v
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.deleterecordbyid">
+    <![CDATA[
+         CALL core_delete_form_view_p(:id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

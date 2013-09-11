@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="FormViewField" table="core_form_view_field">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="viewId" column="viewId" type="java.lang.Integer" />
+		<property name="fieldId" column="fieldId" type="java.lang.Integer" />
+		<property name="isShow" column="isShow" type="java.lang.String" />
+		<property name="enabledSearch" column="enabledSearch" type="java.lang.String" />
+		<property name="spacer" column="spacer" type="java.lang.Integer" />
+		<property name="canEdit" column="canEdit" type="java.lang.String" />
+		<property name="displayWidth" column="displayWidth" type="java.lang.String" />
+		<property name="textAlign" column="textAlign" type="java.lang.String" />
+		<property name="tableOrEdit" column="tableOrEdit" type="java.lang.String" />
+		<property name="inputTextBoxSize" column="inputTextBoxSize"
+			type="java.lang.Integer" />
+		<property name="inputType" column="inputType" type="java.lang.String" />
+		<property name="required" column="required" type="java.lang.String" />
+	</class>
+	<sql-query name="core.form.view.field.items">
+    <![CDATA[
+        select ta.ID_ as fId,ta.fieldText,ta.fieldName,ta.fieldType, tb.ID_,ifnull(tb.isShow,'N'),
+        ifnull(tb.canEdit,'N'),tb.displayWidth, tb.textAlign, tb.inputTextBoxSize, tb.inputType, 
+        ta.checkText, tb.required,ta.formatString,ta.dataSource,tb.enabledSearch,tb.spacer from core_form_field ta 
+		left join core_form_view_field tb on tb.fieldId = ta.ID_ and tb.viewId = :viewId and tb.tableOrEdit = :tableOrEdit 
+		where ta.formId= :formId 
+		order by ta.orderNum
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.field.isexists">
+    <![CDATA[
+        select count(*) from core_form_view_field 
+        where viewId = :viewId and tableOrEdit = :tableOrEdit and fieldId = :fieldId
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.field.insert.table">
+    <![CDATA[
+        insert into core_form_view_field(viewId,tableOrEdit,fieldId,isShow,displayWidth,textAlign,enabledSearch,spacer) 
+        values(:viewId, :tableOrEdit, :fieldId, :isShow, :displayWidth, :textAlign, :enabledSearch, :spacer)
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.field.insert.edit">
+    <![CDATA[
+        insert into core_form_view_field(viewId,tableOrEdit,fieldId,canEdit,inputTextBoxSize,inputType,required) 
+        values(:viewId, :tableOrEdit, :fieldId, :canEdit,:inputTextBoxSize,:inputType,:required)
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.field.update.table">
+    <![CDATA[
+        update core_form_view_field set isShow = :isShow, displayWidth = :displayWidth, textAlign = :textAlign, enabledSearch = :enabledSearch, spacer = :spacer
+        where viewId = :viewId and tableOrEdit = :tableOrEdit and fieldId = :fieldId
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.view.field.update.edit">
+    <![CDATA[
+        update core_form_view_field set canEdit = :canEdit, inputTextBoxSize = :inputTextBoxSize, inputType = :inputType, required = :required
+        where viewId = :viewId and tableOrEdit = :tableOrEdit and fieldId = :fieldId 
+    ]]>
+	</sql-query>
+</hibernate-mapping>

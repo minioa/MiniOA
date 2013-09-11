@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<sql-query name="crm.customer.attachment.newrecord">
+    <![CDATA[
+        insert into crm_customer_attachment(CID_,CDATE_,UUID_,filename,filetype,filesize,oldname) values(:cId,sysdate(),:uuid,:filename,:filetype,:filesize,:oldname)
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.attachment.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.filename, ta.filetype, ta.filesize,ta.oldname
+        from crm_customer_attachment ta where ta.UUID_ = :uuid
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.attachment.records.images">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.filename, ta.filetype, ta.filesize,ta.oldname
+        from crm_customer_attachment ta where ta.UUID_ = :uuid and ta.filetype in ('.jpg','.jpeg','.png','.bpm','.gif')
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.attachment.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.filename, ta.filetype, ta.filesize,ta.oldname
+        from crm_customer_attachment ta
+        where ta.ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.attachment.deleterecordbyid">
+    <![CDATA[
+        delete from crm_customer_attachment where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="crm.customer.attachment.updatecid">
+    <![CDATA[
+		update crm_customer_attachment set CID_ = :cId where UUID_ in (select UUID_ from crm_customer where ID_ = :id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

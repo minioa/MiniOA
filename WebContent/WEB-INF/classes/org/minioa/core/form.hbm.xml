@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Form" table="core_form">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="formName" column="formName" type="java.lang.String" />
+		<property name="tableName" column="tableName" type="java.lang.String" />
+		<property name="notice" column="notice" type="java.lang.String" />
+		<property name="opRead" column="opRead" type="java.lang.String" />
+		<property name="opEdit" column="opEdit" type="java.lang.String" />
+		<property name="enabledLog" column="enabledLog" type="java.lang.String" />
+		<property name="enabledAtt" column="enabledAtt" type="java.lang.String" />
+		<property name="isPublish" column="isPublish" type="java.lang.String" />
+	</class>
+	<sql-query name="core.form.records.count">
+    <![CDATA[
+        select count(*) as result from core_form
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.si">
+    <![CDATA[
+        select ID_,formName from core_form
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.deleterecordbyid">
+    <![CDATA[
+         CALL core_delete_form_p(:id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

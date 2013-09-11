@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="ProcessDefinition" table="core_processdefinition">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="formId" column="formId" type="java.lang.Integer" />
+		<property name="formViewId" column="formViewId" type="java.lang.Integer" />
+		<property name="processName" column="processName" type="java.lang.String" />
+		<property name="processImage" column="processImage" type="java.lang.String" />
+		<property name="processImageThum" column="processImageThum" type="java.lang.String" />
+		<property name="processDesc" column="processDesc" type="java.lang.String" />
+		<property name="sqlWhenCreate" column="sqlWhenCreate" type="java.lang.String" />
+		<property name="sqlWhenDelete" column="sqlWhenDelete" type="java.lang.String" />
+		<property name="sqlWhenAgree" column="sqlWhenAgree" type="java.lang.String" />
+		<property name="sqlWhenReject" column="sqlWhenReject" type="java.lang.String" />
+		<property name="isPublish" column="isPublish" type="java.lang.String" />
+		<property name="notice" column="notice" type="java.lang.String" />
+	</class>
+	<sql-query name="core.processdefinition.items.count">
+    <![CDATA[
+        select count(*) as result from core_processdefinition
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.items">
+    <![CDATA[
+        select * from core_processdefinition
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.si">
+    <![CDATA[
+        select ID_,processName from core_processdefinition order by convert(processName using gbk)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

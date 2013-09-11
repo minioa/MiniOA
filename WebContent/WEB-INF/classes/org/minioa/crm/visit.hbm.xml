@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<class name="Visit" table="crm_visit">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="lianxirq" column="lianxirq" type="java.util.Date" />
+		<property name="jiluren" column="jiluren" type="java.lang.String" />
+		<property name="lianxinr" column="lianxinr" type="java.lang.String" />
+		<property name="xingdongjh" column="xingdongjh" type="java.lang.String" />
+		<property name="xingdongrq" column="xingdongrq" type="java.util.Date" />
+		<property name="zhuguanpf" column="zhuguanpf" type="java.lang.String" />
+		<property name="isarc" column="isarc" type="java.lang.String" />
+	</class>
+	<sql-query name="crm.visit.records">
+    <![CDATA[
+        select ta.ID_, tc.displayName as cUser, ta.CDATE_, td.displayName as mUser, ta.MDATE_, ta.UUID_,
+        	ta.lianxirq, ta.jiluren, ta.lianxinr, ta.xingdongjh, ta.xingdongrq, ta.zhuguanpf, ta.isarc, 
+        	tb.kehubm, tb.gongsimc, tb.ID_ as kehuId, tb.UUID_ as kehuUUID
+        from crm_visit ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+		left join core_user tc on tc.ID_ = ta.CID_
+		left join core_user td on td.ID_ = ta.MID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.visit.records.count">
+    <![CDATA[
+        select count(*)
+        from crm_visit ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+		left join core_user tc on tc.ID_ = ta.CID_
+		left join core_user td on td.ID_ = ta.MID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.visit.updatecid">
+    <![CDATA[
+		update crm_visit set CID_ = :cId where UUID_ in (select UUID_ from crm_customer where ID_ = :id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

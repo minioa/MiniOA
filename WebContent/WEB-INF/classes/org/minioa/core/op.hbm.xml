@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.op.newrecord">
+    <![CDATA[
+        insert into core_op(CID_,CDATE_,opName,opDesc) values(:cId,sysdate(),:opName,:opDesc)
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.opName,ta.opDesc
+        from core_op ta
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.records.count">
+    <![CDATA[
+        select count(*) as ds from core_op ta
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.opName,ta.opDesc
+        from core_op ta
+        where ta.ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.isrecordexistbyname">
+    <![CDATA[
+        select count(*) as tmp
+        from core_op where opName = :opName
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.isrecordexistbyname.byid">
+    <![CDATA[
+        select count(*) as tmp
+        from core_op where opName = :opName and ID_ != :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.updaterecordbyid">
+    <![CDATA[
+        update core_op set MID_ = :mId, MDATE_ = sysdate(), 
+        	opName = :opName, opDesc = :opDesc
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.updaterecordbyopname">
+    <![CDATA[
+        update core_op set MID_ = :mId, MDATE_ = sysdate(), opDesc = :opDesc
+        where opName = :opName
+    ]]>
+	</sql-query>
+	<sql-query name="core.op.deleterecordbyid">
+    <![CDATA[
+         CALL core_delete_op_p(:id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<class name="Record" table="crm_record">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="jiaoyisj" column="jiaoyisj" type="java.util.Date" />
+		<property name="jieshusj" column="jieshusj" type="java.util.Date" />
+		<property name="xiangmumc" column="xiangmumc" type="java.lang.String" />
+		<property name="peixundx" column="peixundx" type="java.lang.String" />
+		<property name="xueyuanrs" column="xueyuanrs" type="java.lang.Integer" />
+		<property name="zengzhifw" column="zengzhifw" type="java.lang.String" />
+		<property name="kehufk" column="kehufk" type="java.lang.String" />
+		<property name="beizhu" column="beizhu" type="java.lang.String" />
+		<property name="isarc" column="isarc" type="java.lang.String" />
+		<property name="jiaoyije" column="jiaoyije" type="java.lang.Double" />
+	</class>
+	<sql-query name="crm.record.records">
+    <![CDATA[
+        select ta.ID_, tc.displayName as cUser, ta.CDATE_, td.displayName as mUser, ta.MDATE_, ta.UUID_,
+        	ta.jiaoyisj, ta.jieshusj, ta.xiangmumc, ta.peixundx, ta.xueyuanrs, ta.zengzhifw, ta.kehufk, ta.beizhu, ta.isarc, ta.jiaoyije, 
+        	tb.kehubm, tb.gongsimc, tb.ID_ as kehuId, tb.UUID_ as kehuUUID
+        from crm_record ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+		left join core_user tc on tc.ID_ = ta.CID_
+		left join core_user td on td.ID_ = ta.MID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.record.records.count">
+    <![CDATA[
+        select count(*) as result from crm_record
+    ]]>
+	</sql-query>
+	<sql-query name="crm.record.updatecid">
+    <![CDATA[
+		update crm_record set CID_ = :cId where UUID_ in (select UUID_ from crm_customer where ID_ = :id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>
