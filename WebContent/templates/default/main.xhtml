@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title><h:outputText value="#{Lang.prop[MySession.l]['webname']}" /></title>
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/ddaccordion.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/ddaccordion_init.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/main.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/niceforms.js" />
+<script language="javascript">
+var lock = false;
+</script>
+<script language="javaScript">
+<!--
+function addFrame(pagename, frametext) {
+	if(pagename=='')
+		return ;
+	var isExists = false;
+	
+	var frameset = parent.document.all.frameset02;
+	
+	for(var i=1; i < frameset.children.length; i++){
+		var f =  frameset.children[i];
+		if(!f.src.endsWith('portal.jsf')){
+			if(f.tag == pagename)
+				isExists = true;
+		}	
+	}
+	if(isExists){
+		var j = 1;
+		if(window.parent.hidemenu==0)
+			window.parent.framesetcols = "200";
+		else
+			window.parent.framesetcols = "0";
+		for(var i=1; i < frameset.children.length; i++){
+			var f =  frameset.children[i];
+			if(!f.src.endsWith('portal.jsf')){
+				if(f.tag == pagename){
+					window.parent.framesetcols = window.parent.framesetcols + ",*";
+					j = i;
+				}
+				else
+					window.parent.framesetcols = window.parent.framesetcols + ",0";	
+			}else
+				window.parent.framesetcols = window.parent.framesetcols + ",0";
+		}
+		frameset.cols = window.parent.framesetcols;
+		var header = parent.frames["frameHeader"];
+		var ulList = header.document.getElementById('tabcontainer').childNodes;
+		for(var i = 2; i < ulList.length; i ++)
+			ulList[i].className = "";
+		for(var i = 2; i < ulList.length; i ++){
+			if(j == i -1)
+				ulList[i].className = "ui-tabs-selected";
+		}
+	}else{
+		var wincount = window.parent.wincount + 1;
+		if(window.parent.hidemenu==0)
+			window.parent.framesetcols = "200";
+		else
+			window.parent.framesetcols = "0";
+		for(var i=1; i < frameset.children.length; i++){
+			window.parent.framesetcols = window.parent.framesetcols + ",0";
+		}
+		window.parent.framesetcols = window.parent.framesetcols + ",*";
+		frameset.cols = window.parent.framesetcols;
+		var frame = parent.document.createElement("frame");
+		frame.id = "tab" + wincount;
+		frame.name = "tab" + wincount;
+		frame.src = pagename;
+		frame.tag = pagename;
+		frameset.appendChild(frame);
+		window.parent.wincount = wincount;
+		window.parent.tabIndex = wincount;
+		self.parent.frames[0].addTab(frametext);
+		self.parent.frameHeader.document.getElementById("loading").style.cssText='border:0px;width:21px;margin:-8px 0 30px 8px;';
+	}
+}
+//-->
+</script>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/firefox.css" />
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/style.css" />
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/ie6.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/ie7.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/ie8.css" />
+<![endif]-->
+<!--[if IE 9]>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/ie9.css" />
+<![endif]-->
+</head>
+<body style="margin-top: 3px;" onkeydown="if(event.keyCode==13){if(document.getElementById('mpForMsg')){document.getElementById('mpForMsg').component.hide();}if(document.getElementById('mpForSubMsg')){document.getElementById('mpForSubMsg').component.hide();}}">
+<h:outputText value="#{Application.init} #{MySession.templateName}" style="display:none;" />
+<h:outputText escape="false" value="#{MySession.isLogin}" style="display:none;" />
+<h:outputText value="#{MySession.l}" style="display:none;" />
+<div style="margin:3px 0 0 3px;"><ui:insert name="body">Body</ui:insert></div>
+<!-- Message Box -->
+<a4j:outputPanel id="msg">
+	<rich:modalPanel id="mpForMsg" width="300" height="80" zindex="2000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #E9F1F5;background-image:url(#{MySession.host}/templates/#{MySession.templateName}/images/warning.png)">
+		<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;" onclick="#{rich:component('mpForMsg')}.hide()">
+			<h:panelGrid columns="1">
+				<h:outputText escape="false" value="#{MySession.msg}" />
+				<h:outputText escape="false" value="#{Lang.prop[MySession.l]['messagebox']}" style="color:#296DC1;font-size:8pt;margin-top:8px;" />
+			</h:panelGrid>
+		</a4j:outputPanel>
+	</rich:modalPanel>
+	<h:outputText id="msgScript" escape="false" value="#{MySession.msgScript}" />
+</a4j:outputPanel>
+<!-- End of Message Box -->
+<script type="text/javascript">
+	window.parent.frameHeader.document.getElementById("loading").style.cssText='display:none;';
+</script>
+</body>
+</html>

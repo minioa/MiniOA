@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	<!DOCTYPE digester-rules SYSTEM "digester-rules.dtd">
+ -->
+<digester-rules>
+	<pattern value="*/roleentity">
+		<object-create-rule	classname="org.minioa.core.suggestionbox.RoleEntity" />
+		<bean-property-setter-rule pattern="id" propertyname="id"/>
+		<bean-property-setter-rule pattern="name" propertyname="name"/>
+		<bean-property-setter-rule pattern="desc" propertyname="desc"/>
+		<set-next-rule methodname="addRoleEntity"/>
+	</pattern>
+</digester-rules>

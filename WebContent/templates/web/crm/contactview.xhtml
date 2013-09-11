@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理：联系人" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{Contact.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="姓名" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="性别" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="部门" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="职位" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="职责" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="等级" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="生日" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="电话" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="邮件" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="Arc" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:80px;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.xingming}" />
+								<rich:toolTip>
+									<h:panelGrid columns="1">
+										<h:outputText value="QQ:#{item.qq}" />
+										<h:outputText value="MSN:#{item.msn}" />
+										<h:outputText value="邮件:#{item.youjian}" />
+										<h:outputText value="办公电话:#{item.gudingdh}" />
+										<h:outputText value="手机:#{item.yidongdh}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:40px;text-align:center;">
+							<h:outputText value="#{item.chenghu}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.bumen}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.zhiwei}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.zhize}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.lianxidj}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.birthday}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.gudingdh}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.youjian}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;">
+							<h:outputText value="#{item.isarc}" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="浏览">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{Contact.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="4" columnClasses="co1,co2,co1,co2">
+							<h:outputText value="姓名:" />
+							<h:outputText value="#{Contact.xingming}" />
+							<h:outputText value="昵称:" />
+							<h:outputText value="#{Contact.nickname}" />
+							<h:outputText value="性别:" />
+							<h:outputText value="#{Contact.chenghu}" />
+							<h:outputText value="婚否:" />
+							<h:outputText value="#{Contact.hunfou}" />
+							<h:outputText value="籍贯:" />
+							<h:outputText value="#{Contact.jiguan}" />
+							<h:outputText value="生日:" />
+							<h:outputText value="#{Contact.birthday}" />
+							<h:outputText value="部门:" />
+							<h:outputText value="#{Contact.bumen}" />
+							<h:outputText value="职位:" />
+							<h:outputText value="#{Contact.zhiwei}" />
+							<h:outputText value="职责:" />
+							<h:outputText value="#{Contact.zhize}" />
+
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<h:outputText value="联系等级:" />
+							<h:outputText value="#{Contact.lianxidj}" />
+							<h:outputText value="角色作用:" />
+							<h:outputText value="#{Contact.juesezy}" />
+
+
+							<h:outputText value="办公电话:" />
+
+							<h:outputText value="#{Contact.gudingdh}" />
+							<h:outputText value="传真:" />
+							<h:outputText value="#{Contact.chuanzhen}" />
+
+
+							<h:outputText value="手机:" />
+
+							<h:outputText value="#{Contact.yidongdh}" />
+							<h:outputText value="宅电:" />
+							<h:outputText value="#{Contact.zhaidian}" />
+
+
+							<h:outputText value="邮件:" />
+							<h:outputText value="#{Contact.youjian}" />
+
+							<h:outputText value="兴趣:" />
+							<h:outputText value="#{Contact.xingqu}" />
+
+							<h:outputText value="QQ:" />
+							<h:outputText value="#{Contact.qq}" />
+							<h:outputText value="MSN:" />
+							<h:outputText value="#{Contact.msn}" />
+							<h:outputText value="毕业院校:" />
+							<h:outputText value="#{Contact.biyeyx}" />
+
+						</h:panelGrid>
+						<h:panelGrid columns="2" columnClasses="co1,co2">
+							<h:outputText value="办公地址:" />
+							<h:outputText value="#{Contact.dizhi}" />
+
+
+
+							<h:outputText value="备注:" />
+							<h:outputText value="#{Contact.beizhu}" />
+						</h:panelGrid>
+						<h:inputHidden value="#{Contact.ID_}" />
+						<h:inputHidden value="#{Contact.CID_}" />
+						<h:inputHidden value="#{Contact.CDATE_}" />
+						<h:inputHidden value="#{Contact.isarc}" />
+						<h:inputHidden value="#{Contact.UUID_}" />
+
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理：拜访记录查询" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	background: url(../images/search.png) no-repeat;
+}
+</style>
+		<rich:simpleTogglePanel opened="false" switchType="client"
+			style="width:100%;">
+			<a4j:form id="searchForm">
+				<h:panelGrid columns="10" style="margin-left:-2px;">
+					<h:outputText value="客户编码：" />
+				<h:inputText id="kehubm" value="#{MySession.tempStr['VisitView.kehubm']}" style="width:80px;" />
+				<h:outputText value="客户名称：" />
+				<h:inputText id="gongsim" value="#{MySession.tempStr['VisitView.gongsimc']}" style="width:80px;" />
+				<h:outputText value="联系人：" />
+				<h:inputText id="jiluren" value="#{MySession.tempStr['VisitView.jiluren']}" style="width:80px;" />
+				<h:outputText value="行动计划：" />
+				<h:inputText id="xingdongjh" value="#{MySession.tempStr['VisitView.xingdongjh']}" style="width:80px;" />
+				
+					<h:outputText value="客户经理：" />
+					<h:selectOneMenu id="key6"
+						value="#{MySession.tempStr['VisitView.key6']}">
+						<f:selectItem itemValue="" itemLabel="" />
+						<f:selectItems value="#{Application.userSelectItem}" />
+					</h:selectOneMenu>
+					<h:outputText value="行动日期： " />
+					<a4j:outputPanel layout="block" style="margin-left:-5px;">
+						<rich:calendar id="startDate"
+							value="#{MySession.tempDate['VisitView.startDate']}"
+							locale="zh/CN" cellWidth="24px" cellHeight="22px"
+							enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="-" />
+					<a4j:outputPanel layout="block">
+						<rich:calendar id="endDate"
+							value="#{MySession.tempDate['VisitView.endDate']}" locale="zh/CN"
+							cellWidth="24px" cellHeight="22px" enableManualInput="true"
+							datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="联系日期： " />
+					<a4j:outputPanel layout="block" style="margin-left:-5px;">
+						<rich:calendar id="lxrq"
+							value="#{MySession.tempDate['VisitView.lxrq']}"
+							locale="zh/CN" cellWidth="24px" cellHeight="22px"
+							enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="-" />
+					<a4j:outputPanel layout="block">
+						<rich:calendar id="lxrqend"
+							value="#{MySession.tempDate['VisitView.lxrqend']}" locale="zh/CN"
+							cellWidth="24px" cellHeight="22px" enableManualInput="true"
+							datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<a4j:commandLink action="#{VisitView.buildItems}"
+						reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+				</h:panelGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+		<a4j:form id="dataForm" style="margin-top:3px;">
+			<rich:dataTable id="dataTable" value="#{VisitView.items}" var="item"
+				rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:900px;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column styleClass="left">
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="公司编码" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="公司名称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="联系日期" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="联系人" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="行动计划" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="行动日期" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建人" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建时间" />
+						</rich:column>
+						<rich:column styleClass="right">
+							<h:outputText value="修改人" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputLink value="customerentity_edit.jsf" target="_self">
+						<h:outputText value="#{rowNum + 1}" />
+						<f:param name="id" value="#{item.prop['kehuId']}" />
+						<f:param name="headerId" value="#{item.prop['kehuId']}" />
+						<f:param name="uuid" value="#{item.prop['kehuUUID']}" />
+					</h:outputLink>
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputLink value="customerentity.jsf" target="_self">
+						<h:outputText value="#{item.prop['kehubm']}" />
+						<f:param name="id" value="#{item.prop['kehuId']}" />
+						<f:param name="uuid" value="#{item.prop['kehuUUID']}" />
+						<f:param name="reload" value="false" />
+					</h:outputLink>
+				</rich:column>
+				<rich:column style="width:*;text-align:left;">
+					<rich:panel style="border-width:0;">
+						<h:outputText value="#{item.prop['gongsimc']}"/>
+						<rich:toolTip style="text-align:left;">
+							<h:panelGrid columns="1">
+								<h:outputText value="联系内容:#{item.prop['lianxinr']}" />
+								<h:outputText value="行动计划:#{item.prop['xingdongjh']}" />
+								<h:outputText value="行动日期:#{item.prop['xingdongrq']}"
+									class="datetimeBlue" />
+								<h:outputText value="主管批复:#{item.prop['zhuguanpf']}" />
+								<a4j:commandLink onclick="lock=true;"
+									reRender="edit">
+									<h:outputText value="批复" class="btn" onclick="#{rich:component('mpEdit')}.show()"/>
+									<f:param name="id" value="#{item.prop['ID_']}" />
+									<f:param name="reload" value="false" />
+								</a4j:commandLink>
+							</h:panelGrid>
+						</rich:toolTip>
+					</rich:panel>
+				</rich:column>
+				<rich:column style="width:65px;text-align:center;">
+					<h:outputText value="#{item.propDate['lianxirq']}" rendered="#{!(item.propDate['lianxirq'] == item.propDate['now'])}"/>
+					<h:outputText value="#{item.propDate['lianxirq']}" style="color:green;" rendered="#{item.propDate['lianxirq'] == item.propDate['now']}"/>
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['jiluren']}" rendered="#{!(item.propDate['lianxirq'] == item.propDate['now'])}"/>
+					<h:outputText value="#{item.prop['jiluren']}" style="color:green;" rendered="#{item.propDate['lianxirq'] == item.propDate['now']}"/>
+				</rich:column>
+				<rich:column style="width:200px;text-align:left;">
+					<h:outputText value="#{item.prop['xingdongjh']}" rendered="#{!(item.propDate['lianxirq'] == item.propDate['now'])}"/>
+					<h:outputText value="#{item.prop['xingdongjh']}" style="color:green;" rendered="#{item.propDate['lianxirq'] == item.propDate['now']}"/>
+				</rich:column>
+				<rich:column style="width:65px;text-align:center;">
+					<h:outputText value="#{item.prop['xingdongrq']}" rendered="#{!(item.propDate['lianxirq'] == item.propDate['now'])}"/>
+					<h:outputText value="#{item.prop['xingdongrq']}" style="color:green;" rendered="#{item.propDate['lianxirq'] == item.propDate['now']}"/>
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['cUser']}" />
+				</rich:column>
+				<rich:column style="width:65px;text-align:center;">
+					<h:outputText value="#{item.prop['CDATE_']}" rendered="#{!(item.prop['CDATE_'] == item.propDate['now'])}"/>
+					<h:outputText value="#{item.prop['CDATE_']}" style="color:blue;" rendered="#{item.prop['CDATE_'] == item.propDate['now']}"/>
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['mUser']}" />
+				</rich:column>
+			</rich:dataTable>
+			<rich:dataTable id="dsTable" rows="#{MySession.pageSize}"
+				value="#{VisitView.dsList}" var="item" style="width:700px;"
+				reRender="ds">
+				<ui:include src="../ds.xhtml" />
+			</rich:dataTable>
+		</a4j:form>
+		<a4j:outputPanel id="edit">
+			<a4j:form id="editForm">
+				<h:outputText value="#{Visit.init}" style="display:none;" />
+				<rich:modalPanel id="mpEdit" width="500" height="300" zindex="2000"
+					style="clear:both;">
+					<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="联系日期:" />
+							<a4j:outputPanel layout="block">
+								<rich:calendar id="lianxirq" value="#{Visit.lianxirq}"
+									locale="zh/CN" cellWidth="24px" cellHeight="22px"
+									enableManualInput="true" datePattern="yyyy-MM-dd"
+									required="false" requiredMessage="联系日期不能空" />
+							</a4j:outputPanel>
+							<rich:message for="lianxirq" style="color:red;margin-left:3px;">
+								<f:facet name="errorMarker">
+									<h:outputText value="" />
+								</f:facet>
+							</rich:message>
+
+							<h:outputText value="联系人:" />
+							<h:inputText value="#{Visit.jiluren}" required="true"
+								requiredMessage="不能空" id="jiluren" style="width:80px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="jiluren" />
+
+							<h:outputText value="联系内容:" />
+							<h:inputTextarea value="#{Visit.lianxinr}" required="true"
+								requiredMessage="不能空" id="lianxinr" style="width:300px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="lianxinr" />
+							<h:outputText value="下一步行动计划:" />
+							<h:inputTextarea value="#{Visit.xingdongjh}" id="xingdongjh"
+								style="width:300px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="xingdongjh" />
+
+							<h:outputText value="行动日期:" />
+							<a4j:outputPanel layout="block">
+								<rich:calendar id="xingdongrq" value="#{Visit.xingdongrq}"
+									locale="zh/CN" cellWidth="24px" cellHeight="22px"
+									enableManualInput="true" datePattern="yyyy-MM-dd"
+									required="false" requiredMessage="联系日期不能空" />
+							</a4j:outputPanel>
+							<rich:message for="xingdongrq" style="color:red;margin-left:3px;">
+								<f:facet name="errorMarker">
+									<h:outputText value="" />
+								</f:facet>
+							</rich:message>
+
+							<h:outputText value="主管批复:" />
+							<h:inputTextarea value="#{Visit.zhuguanpf}" id="zhuguanpf"
+								style="width:300px;" rendered="#{MySession.hasOp['crm.admin']}">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<h:inputHidden value="#{Visit.zhuguanpf}"
+								rendered="#{!(MySession.hasOp['crm.admin'])}" />
+							<rich:message for="zhuguanpf" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="4">
+								<a4j:commandLink action="#{Visit.updateRecordById}"
+									onclick="#{rich:component('mpEdit')}.hide()" reRender="msg">
+									<h:outputText class="btn" value="保存"
+										rendered="#{param['id'] gt 0}" />
+									<f:param name="pifu" value="true" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Visit.arc}"
+									onclick="#{rich:component('mpEdit')}.hide()" reRender="msg">
+									<h:outputText class="btn" value="存档"/>
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{Visit.ID_}" />
+							<h:inputHidden value="#{Visit.CID_}" />
+							<h:inputHidden value="#{Visit.CDATE_}" />
+							<h:inputHidden value="#{Visit.isarc}" />
+							<h:inputHidden value="#{Visit.UUID_}" />
+						</h:panelGrid>
+					</a4j:outputPanel>
+				</rich:modalPanel>
+				<script>if(lock){#{rich:component('mpEdit')}.show()}lock=false;</script>
+			</a4j:form>
+		</a4j:outputPanel>
+	</ui:define>
+</ui:composition>
+</html>

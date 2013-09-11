@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+	<a4j:form>
+		<h:panelGrid columns="6" columnClasses="co1,co2,co3,co1,co2,co3">
+			<h:outputText value="客户编码:" />
+			<h:inputText value="#{Customer.kehubm}" id="kehubm" required="true" requiredMessage="不能空" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="kehubm" />
+
+			<h:outputText value="客户全称:" />
+			<h:inputText value="#{Customer.gongsimc}" id="gongsimc" required="true" requiredMessage="不能空" style="width:300px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="gongsimc" />
+
+			<h:outputText value="省份:" />
+			<h:inputText value="#{Customer.shengfen}" id="shengfen" required="true" requiredMessage="不能空" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="shengfen" />
+
+			<h:outputText value="区市:" />
+			<h:inputText value="#{Customer.city}" id="city" required="true" requiredMessage="不能空" style="width:80px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="city" />
+
+			<h:outputText value="行业:" />
+			<h:selectOneMenu value="#{Customer.hangye}" id="hangye">
+				<f:selectItem itemValue="银行" itemLabel="银行" />
+				<f:selectItem itemValue="证券" itemLabel="证券" />
+				<f:selectItem itemValue="保险" itemLabel="保险" />
+				<f:selectItem itemValue="企业" itemLabel="企业" />
+				<f:selectItem itemValue="其他" itemLabel="其他" />
+				<rich:ajaxValidator event="onblur" />
+			</h:selectOneMenu>
+			<rich:message for="hangye" />
+
+			<h:outputText value="规模:" />
+			<h:selectOneMenu value="#{Customer.guimo}" id="guimo">
+				<f:selectItem itemValue="1-50人" itemLabel="1-50人" />
+				<f:selectItem itemValue="51-100人" itemLabel="51-100人" />
+				<f:selectItem itemValue="101-500人" itemLabel="101-500人" />
+				<f:selectItem itemValue="500-2000人" itemLabel="500-2000人" />
+				<f:selectItem itemValue="2000人以上" itemLabel="2000人以上" />
+				<rich:ajaxValidator event="onblur" />
+			</h:selectOneMenu>
+			<rich:message for="guimo" />
+
+			<h:outputText value="年营业额:" />
+			<h:inputText value="#{Customer.nianyingye}" id="nianyingye" style="width:200px;">
+				<f:validator validatorId="Integer" />
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="nianyingye">
+				<f:facet name="errorMarker">
+					<h:outputText value="年营业额必须是数值格式" />
+				</f:facet>
+			</rich:message>
+			<h:outputText value="客户类别:" />
+			<h:selectOneMenu value="#{Customer.kehulb}" id="kehulb">
+				<f:selectItem itemValue="A" itemLabel="重点" />
+				<f:selectItem itemValue="B" itemLabel="成交" />
+				<f:selectItem itemValue="C" itemLabel="有意向" />
+				<f:selectItem itemValue="D" itemLabel="商机" />
+				<f:selectItem itemValue="E" itemLabel="培育" />
+				<rich:ajaxValidator event="onblur" />
+			</h:selectOneMenu>
+			<rich:message for="kehulb" />
+			<h:outputText value="电话:" />
+			<h:inputText value="#{Customer.dianhua}" id="dianhua" style="width:160px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="dianhua" />
+			<h:outputText value="传真:" />
+			<h:inputText value="#{Customer.chuanzhen}" id="chuanzhen" style="width:160px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="chuanzhen" />
+			<h:outputText value="邮件:" />
+			<h:inputText value="#{Customer.youjian}" id="youjian" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="youjian" />
+			<h:outputText value="网址:" />
+			<h:inputText value="#{Customer.wangzhi}" id="wangzhi" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="wangzhi" />
+			<h:outputText value="邮编:" />
+			<h:inputText value="#{Customer.youbian}" id="youbian" style="width:100px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="youbian" />
+			<h:outputText value="客户来源:" />
+			<h:selectOneMenu value="#{Customer.kehuly}">
+				<f:selectItem itemValue="" itemLabel="" />
+				<f:selectItem itemValue="网站搜索" itemLabel="网站搜索" />
+				<f:selectItem itemValue="朋友介绍" itemLabel="朋友介绍" />
+				<f:selectItem itemValue="广告" itemLabel="广告" />
+				<f:selectItem itemValue="公司资源分配" itemLabel="公司资源分配" />
+				<rich:ajaxValidator event="onblur" />
+			</h:selectOneMenu>
+			<rich:message for="youbian" />
+		</h:panelGrid>
+		<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+			<h:outputText value="　地址:" />
+			<h:inputText value="#{Customer.dizhi}" id="dizhi" style="width:500px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="dizhi" />
+			<h:outputText value="　地址2:" />
+			<h:inputText value="#{Customer.dizhi2}" id="dizhi2" style="width:500px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="dizhi2" />
+			<h:outputText value="　自定义:" />
+			<h:inputText value="#{Customer.zidingyi}" id="zidingyi" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="zidingyi" />
+			<h:outputText value="自定义2:" />
+			<h:inputText value="#{Customer.zidingyi2}" id="zidingyi2" style="width:200px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="zidingyi2" />
+
+			<h:outputText value="　　备注:" />
+			<h:inputText value="#{Customer.beizhu}" id="beizhu" style="width:500px;">
+				<rich:ajaxValidator event="onblur" />
+			</h:inputText>
+			<rich:message for="beizhu" />
+
+			<h:outputText value="" />
+			<h:panelGrid columns="4">
+				<a4j:commandLink action="#{Customer.newRecord}" reRender="msg">
+					<h:outputText class="btn" value="新建" />
+					<f:param name="redirect" value="false" />
+					<f:param name="reload" value="false" />
+				</a4j:commandLink>
+			</h:panelGrid>
+			<h:outputText value="" />
+		</h:panelGrid>
+	</a4j:form>
+</ui:composition>
+</html>

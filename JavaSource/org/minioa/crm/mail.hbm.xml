@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<class name="Mail" table="crm_mail">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="recipient" column="recipient" type="java.lang.String" />
+		<property name="address" column="address" type="java.lang.String" />
+		<property name="subject" column="subject" type="java.lang.String" />
+		<property name="message" column="message" type="java.lang.String" />
+		<property name="att" column="att" type="java.lang.String" />
+		<property name="gongsimc" column="gongsimc" type="java.lang.String" />
+		<property name="sended" column="sended" type="java.lang.String" />
+	</class>
+	<sql-query name="crm.mail.records.count">
+    <![CDATA[
+        select count(*) as result from crm_mail
+    ]]>
+	</sql-query>
+</hibernate-mapping>

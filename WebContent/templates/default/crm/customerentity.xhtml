@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.co1 {
+	text-align: right;
+	verticle-align: top;
+	white-space: nowrap;
+	width: 100px;
+}
+
+.co2 {
+	text-align: left;
+	verticle-align: top;
+	margin-right: 6px;
+	width: *;
+}
+
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	border-bottom: 1px solid #DBE1E1;
+	font-size:13px;
+}
+</style>
+		<h:outputText value="#{Customer.init}" style="display:none;" />
+		<rich:simpleTogglePanel opened="true" switchType="client" label="基本资料" style="width:100%;">
+			<h:panelGrid columns="4" columnClasses="co1,co2,co1,co2">
+				<h:outputText value="客户编码:" />
+				<h:outputText value="#{Customer.kehubm}" />
+				<h:outputText value="客户全称:" />
+				<h:outputText value="#{Customer.gongsimc}" />
+				<h:outputText value="省份:" />
+				<h:outputText value="#{Customer.shengfen}" />
+				<h:outputText value="区市:" />
+				<h:outputText value="#{Customer.city}" />
+				<h:outputText value="行业:" />
+				<h:outputText value="#{Customer.hangye}" />
+				<h:outputText value="规模:" />
+				<h:outputText value="#{Customer.guimo}" />
+				<h:outputText value="年营业额:" />
+				<h:outputText value="#{Customer.nianyingye} RMB" />
+				<h:outputText value="邮编:" />
+				<h:outputText value="#{Customer.youbian}" />
+				<h:outputText value="电话:" />
+				<h:outputText value="#{Customer.dianhua}" />
+				<h:outputText value="传真:" />
+				<h:outputText value="#{Customer.chuanzhen}" />
+				<h:outputText value="邮箱:" />
+				<h:outputText value="#{Customer.youjian}" />
+				<h:outputText value="网址:" />
+				<h:outputText value="#{Customer.wangzhi}" />
+				<h:outputText value="客户类别:" />
+				<h:outputText value="重点" rendered="#{Customer.kehulb=='A'}" />
+				<h:outputText value="成交" rendered="#{Customer.kehulb=='B'}" />
+				<h:outputText value="有意向" rendered="#{Customer.kehulb=='C'}" />
+				<h:outputText value="商机" rendered="#{Customer.kehulb=='D'}" />
+				<h:outputText value="培育" rendered="#{Customer.kehulb=='E'}" />
+				<h:outputText value="创建时间:" />
+				<h:panelGrid columns="4" style="margin-left:-2px;">
+					<h:outputText value="#{Customer.CDATE_}" class="datetimeBlue" />
+					<h:outputText value="修改时间:" />
+					<h:outputText value="#{Customers.MDATE_}" class="datetimeBlue" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="2" columnClasses="co1,co2">
+				<h:outputText value="地址:" />
+				<h:outputText value="#{Customer.dizhi}" />
+				<h:outputText value="地址2:" />
+				<h:outputText value="#{Customer.dizhi2}" />
+				<h:outputText value="备注:" />
+				<h:outputText value="#{Customer.beizhu}" />
+				<h:outputText value="自定义:" />
+				<h:outputText value="#{Customer.zidingyi}" />
+				<h:outputText value="自定义2:" />
+				<h:outputText value="#{Customer.zidingyi2}" />
+			</h:panelGrid>
+		</rich:simpleTogglePanel>
+		<rich:simpleTogglePanel opened="false" switchType="client" label="附件" style="width:100%;">
+			<a4j:form>
+				<rich:dataGrid id="attachmentTable" value="#{CustomerAttachment.items}" var="att" columns="1" elements="36" style="border-width:0;">
+					<h:commandLink action="#{CustomerAttachment.download}">
+						<h:outputText value="#{att.prop['oldname']}" />
+						<f:param name="id" value="#{att.prop['id']}" />
+						<f:param name="uuid" value="#{att.prop['uuid']}" />
+					</h:commandLink>
+					<h:outputText value="#{Customer.CDATE_}" class="datetimeBlue" />
+				</rich:dataGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+		<rich:simpleTogglePanel opened="false" switchType="client" label="联系人" style="width:100%;">
+			<a4j:form>
+				<rich:dataGrid id="conTable" rowKeyVar="rowNum" value="#{Contact.items}" var="con" columns="1" elements="36" style="border-width:0;width:100%;">
+
+					<h:panelGrid columns="6" columnClasses="co1,co2,co1,co2,co1,co2">
+						<h:outputText value="昵称:" />
+						<h:outputText value="#{con.nickname}" style="font-weight:bold;color:blue;" />
+						<h:outputText value="性别:" />
+						<h:outputText value="#{con.chenghu}" />
+						<h:outputText value="婚否:" />
+						<h:outputText value="#{con.hunfou}" />
+						<h:outputText value="籍贯:" />
+						<h:outputText value="#{con.jiguan}" />
+						<h:outputText value="生日:" />
+						<h:outputText value="#{con.birthday}" />
+						<h:outputText value="部门:" />
+						<h:outputText value="#{con.bumen}" />
+						<h:outputText value="职位:" />
+						<h:outputText value="#{con.zhiwei}" />
+						<h:outputText value="职责:" />
+						<h:outputText value="#{con.zhize}" />
+						<h:outputText value="" />
+						<h:outputText value="" />
+						<h:outputText value="联系等级:" />
+						<h:outputText value="#{con.lianxidj}" />
+						<h:outputText value="角色作用:" />
+						<h:outputText value="#{con.juesezy}" />
+						<h:outputText value="办公电话:" />
+						<h:outputText value="#{con.gudingdh}" />
+						<h:outputText value="传真:" />
+						<h:outputText value="#{con.chuanzhen}" />
+						<h:outputText value="手机:" />
+						<h:outputText value="#{con.yidongdh}" />
+						<h:outputText value="宅电:" />
+						<h:outputText value="#{con.zhaidian}" />
+						<h:outputText value="邮件:" />
+						<h:outputText value="#{con.youjian}" />
+						<h:outputText value="兴趣:" />
+						<h:outputText value="#{con.xingqu}" />
+						<h:outputText value="QQ:" />
+						<h:outputText value="#{con.qq}" />
+						<h:outputText value="MSN:" />
+						<h:outputText value="#{con.msn}" />
+						<h:outputText value="毕业院校:" />
+						<h:outputText value="#{con.biyeyx}" />
+						<h:outputText value="创建时间:" />
+						<h:panelGrid columns="4" style="margin-left:-2px;">
+							<h:outputText value="#{con.CDATE_}" class="datetimeBlue" />
+							<h:outputText value="修改时间:" />
+							<h:outputText value="#{con.MDATE_}" class="datetimeBlue" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="co1,co2" style="width:100%;">
+						<h:outputText value="办公地址:" />
+						<h:outputText value="#{con.dizhi}" />
+						<h:outputText value="备注:" />
+						<h:outputText value="#{con.beizhu}" />
+					</h:panelGrid>
+				</rich:dataGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+		<rich:simpleTogglePanel opened="false" switchType="client" label="拜访记录" style="width:100%;">
+			<a4j:form>
+				<rich:dataGrid id="visTable" rowKeyVar="rowNum" value="#{Visit.items}" var="vis" columns="1" elements="36" style="border-width:0;width:100%;">
+					<h:panelGrid columns="2" columnClasses="co1,co2">
+						<h:outputText value="联系日期:" />
+						<h:outputText value="#{vis.lianxirq}" style="font-weight:bold;color:blue;" />
+						<h:outputText value="联系人:" />
+						<h:outputText value="#{vis.jiluren}" />
+						<h:outputText value="联系内容:" />
+						<h:outputText value="#{vis.lianxinr}" />
+						<h:outputText value="下一步行动计划:" />
+						<h:outputText value="#{vis.xingdongjh}" />
+						<h:outputText value="行动日期:" />
+						<h:outputText value="#{vis.xingdongrq}" />
+						<h:outputText value="主管批复:" />
+						<h:outputText value="#{vis.zhuguanpf}" />
+						<h:outputText value="创建时间:" />
+						<h:panelGrid columns="4" style="margin-left:-2px;">
+							<h:outputText value="#{vis.CDATE_}" class="datetimeBlue" />
+							<h:outputText value="修改时间:" />
+							<h:outputText value="#{vis.MDATE_}" class="datetimeBlue" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</rich:dataGrid>
+			</a4j:form>
+
+		</rich:simpleTogglePanel>
+		<rich:simpleTogglePanel opened="false" switchType="client" label="交易记录" style="width:100%;">
+			<a4j:form>
+				<rich:dataGrid id="recTable" rowKeyVar="rowNum" value="#{Record.items}" var="rec" columns="1" elements="36" style="border-width:0;width:100%;">
+
+					<h:panelGrid columns="4" columnClasses="co1,co2,o1,co2">
+						<h:outputText value="项目名称:" />
+						<h:outputText value="#{rec.xiangmumc}" style="font-weight:bold;color:blue;" />
+						<h:outputText value="项目金额:" />
+						<h:outputText value="#{rec.jiaoyije}" />
+						<h:outputText value="开始日期:" />
+						<h:outputText value="#{rec.jiaoyisj}" />
+						<h:outputText value="结束日期:" />
+						<h:outputText value="#{rec.jieshusj}" />
+						<h:outputText value="培训对象:" />
+						<h:outputText value="#{rec.peixundx}" />
+						<h:outputText value="学员人数:" />
+						<h:outputText value="#{rec.xueyuanrs}" />
+						<h:outputText value="增值服务:" />
+						<h:outputText value="#{rec.zengzhifw}" />
+						<h:outputText value="创建时间:" />
+						<h:panelGrid columns="4" style="margin-left:-2px;">
+							<h:outputText value="#{rec.CDATE_}" class="datetimeBlue" />
+							<h:outputText value="修改时间:" />
+							<h:outputText value="#{rec.MDATE_}" class="datetimeBlue" />
+						</h:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="co1,co2">
+						<h:outputText value="客户反馈:" />
+						<h:outputText value="#{rec.kehufk}" />
+						<h:outputText value="备注:" />
+						<h:outputText value="#{rec.beizhu}" />
+					</h:panelGrid>
+				</rich:dataGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+	</ui:define>
+</ui:composition>
+</html>

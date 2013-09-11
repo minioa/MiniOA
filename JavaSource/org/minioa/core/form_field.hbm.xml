@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="FormField" table="core_form_field">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="formId" column="formId" type="java.lang.Integer" />
+		<property name="fieldName" column="fieldName" type="java.lang.String" />
+		<property name="fieldText" column="fieldText" type="java.lang.String" />
+		<property name="fieldType" column="fieldType" type="java.lang.String" />
+		<property name="fieldWidth" column="fieldWidth" type="java.lang.Integer" />
+		<property name="dataSource" column="dataSource" type="java.lang.String" />
+		<property name="textItems" column="textItems" type="java.lang.String" />
+		<property name="checkRule" column="checkRule" type="java.lang.String" />
+		<property name="checkText" column="checkText" type="java.lang.String" />
+		<property name="formatString" column="formatString" type="java.lang.String" />
+		<property name="checkType" column="checkType" type="java.lang.String" />
+		<property name="autoIncrease" column="autoIncrease" type="java.lang.String" />
+		<property name="orderNum" column="orderNum" type="java.lang.Integer" />
+	</class>
+	<sql-query name="core.form.field.items">
+    <![CDATA[
+        select ta.ID_, ta.fieldText from core_form_field ta
+		where ta.formId = 0 and ta.fieldName not in (select tb.fieldName from core_form_field tb where tb.formId = :formId) order by ta.ID_
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.field.getname">
+    <![CDATA[
+        select ifnull((SELECT fieldName FROM core_form_field where fieldText=:fieldText and formId = :formId),'') from dual
+    ]]>
+	</sql-query>
+</hibernate-mapping>

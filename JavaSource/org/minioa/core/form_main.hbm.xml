@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="FormMain" table="core_form_main">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="formId" column="formId" type="java.lang.Integer" />
+		<property name="field" column="field" type="java.lang.String" />
+		<property name="field2" column="field2" type="java.lang.String" />
+		<property name="field3" column="field3" type="java.lang.String" />
+		<property name="field4" column="field4" type="java.lang.String" />
+		<property name="field5" column="field5" type="java.lang.String" />
+		<property name="field6" column="field6" type="java.lang.String" />
+		<property name="field7" column="field7" type="java.lang.String" />
+		<property name="field8" column="field8" type="java.lang.String" />
+		<property name="field9" column="field9" type="java.lang.String" />
+		<property name="field10" column="field10" type="java.lang.String" />
+		<property name="field11" column="field11" type="java.lang.Integer" />
+		<property name="field12" column="field12" type="java.lang.Integer" />
+		<property name="field13" column="field13" type="java.lang.Integer" />
+		<property name="field14" column="field14" type="java.lang.Integer" />
+		<property name="field15" column="field15" type="java.lang.Integer" />
+		<property name="field16" column="field16" type="java.lang.Double" />
+		<property name="field17" column="field17" type="java.lang.Float" />
+		<property name="field18" column="field18" type="java.lang.Float" />
+		<property name="field19" column="field19" type="java.lang.Float" />
+		<property name="field20" column="field20" type="java.lang.Float" />
+		<property name="field21" column="field21" type="java.lang.String" />
+		<property name="field22" column="field22" type="java.lang.String" />
+		<property name="field23" column="field23" type="java.lang.String" />
+		<property name="field24" column="field24" type="java.lang.String" />
+		<property name="field25" column="field25" type="java.lang.String" />
+		<property name="field26" column="field26" type="java.util.Date" />
+		<property name="field27" column="field27" type="java.util.Date" />
+		<property name="field28" column="field28" type="java.util.Date" />
+		<property name="field29" column="field29" type="java.util.Date" />
+		<property name="field30" column="field30" type="java.util.Date" />
+		<property name="field31" column="field31" type="java.lang.String" />
+		<property name="field32" column="field32" type="java.lang.String" />
+		<property name="isArc" column="isArc" type="java.lang.String" />
+	</class>
+	<sql-query name="core.form.main.items">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,ta.formId,
+        	ta.field,ta.field2,ta.field3,ta.field4,ta.field5,
+        	ta.field6,ta.field7,ta.field8,ta.field9,ta.field10,
+        	ta.field11,ta.field12,ta.field13,ta.field14,ta.field15,
+        	ta.field16,ta.field17,ta.field18,ta.field19,ta.field20,
+        	ta.field21,ta.field22,ta.field23,ta.field24,ta.field25,
+        	ta.field26,ta.field27,ta.field28,ta.field29,ta.field30,
+        	ta.field31,ta.field32,tb.ID_ as processDefId,tc.ID_ as processId ,tc.processStatus,
+        	td.displayName as cUser, te.displayName as mUser,ta.isArc
+		from core_form_main ta 
+		left join core_processdefinition tb on tb.formId = ta.formId
+        left join core_process tc on tc.instanceId = ta.ID_ and tc.processDefId = tb.ID_
+        left join core_user td on td.ID_ = ta.CID_
+        left join core_user te on te.ID_ = ta.MID_
+        where ta.formId= :formId
+    ]]>
+	</sql-query>
+	<sql-query name="core.form.main.items.count">
+    <![CDATA[
+        select count(*)
+		from core_form_main ta 
+		left join core_processdefinition tb on tb.formId = ta.formId
+        left join core_process tc on tc.instanceId = ta.ID_ and tc.processDefId = tb.ID_
+        where ta.formId= :formId
+    ]]>
+	</sql-query>
+</hibernate-mapping>

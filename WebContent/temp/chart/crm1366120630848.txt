@@ -1,0 +1,20 @@
+{
+
+  "title":{
+    "text":"客户分布图",
+    "style":"{font-size: 30px;}"
+  },
+
+  "elements":[
+    {
+      "type":      "pie",
+      "colours":   ["#d01f3c","#356aa0","#C79810","#0247fe", "#3d01a4", "#8601af", "#a7194b", "#fe2712", "#fd5308", "#fb9902", "#fabc02", "#fefe33", "#d0ea2b", "#66b032", "#0392ce"],
+      "alpha":     0.6,
+      "border":    2,
+      "start-angle": 35,
+      "values" :   [
+        {"value":6,"label":"山东", "tip":"山东"},{"value":4,"label":"湖北", "tip":"湖北"}
+      ]
+    }
+  ]
+}

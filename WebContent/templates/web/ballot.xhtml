@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['ballotadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left" rendered="#{MySession.hasOp['core.ballot.edit']==true}">
+			<rich:tab id="tab1" name="tab1" label="#{Lang.prop[MySession.l]['list']}">
+				<a4j:form id="searchForm">
+					<a4j:commandLink action="#{Ballot.buildItems}" reRender="dataForm">
+						<h:outputText value="#{Lang.prop[MySession.l]['search']}" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{Ballot.items}" var="item" rowKeyVar="rowNum">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{Lang.prop[MySession.l]['operation']}" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{Lang.prop[MySession.l]['title']}" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="#{Lang.prop[MySession.l]['status']}" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="#{Lang.prop[MySession.l]['edit']}" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{BallotDao.showDialog}"
+								onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="#{Lang.prop[MySession.l]['delete']}" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:200px;">
+							<h:outputLink value="ballotitems.jsf">
+								<h:outputText value="#{item.title}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.status==0}" value="#{Lang.prop[MySession.l]['notstarted']}" />
+							<h:outputText rendered="#{item.status==1}" value="#{Lang.prop[MySession.l]['balloting']}" />
+							<h:outputText rendered="#{item.status==2}" value="#{Lang.prop[MySession.l]['balloted']}" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="#{Lang.prop[MySession.l]['edit']}">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{Ballot.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="#{Lang.prop[MySession.l]['title']}:" />
+							<h:inputText value="#{Ballot.title}" id="title" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="title" />
+
+							<h:outputText value="#{Lang.prop[MySession.l]['status']}:" />
+							<h:selectOneRadio value="#{Ballot.status}">
+								<f:selectItem itemValue="0" itemLabel="#{Lang.prop[MySession.l]['notstarted']}" />
+								<f:selectItem itemValue="1" itemLabel="#{Lang.prop[MySession.l]['balloting']}" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="status" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="3">
+								<a4j:commandLink action="#{Ballot.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['newrecord']}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Ballot.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['save']}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{BallotDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

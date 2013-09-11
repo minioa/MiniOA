@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['roleadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left" rendered="#{MySession.hasOp['core.role.read']==true}">
+			<rich:tab id="tab1" name="tab1" label="#{Lang.prop[MySession.l]['list']}">
+				<a4j:form id="searchForm">
+					<h:outputText value="#{Lang.prop[MySession.l]['rolename']}:" />
+					<h:inputText id="key" value="#{MySession.tempStr['Role.key']}" style="width:80px;" />
+					<a4j:commandLink action="#{Role.buildItems}" reRender="dataForm">
+						<h:outputText value="#{Lang.prop[MySession.l]['search']}" class="btn" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';return false;">
+						<h:outputText value="#{Lang.prop[MySession.l]['reset']}" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" rows="#{MySession.pageSize}" value="#{Role.items}" var="item" rowKeyVar="rowNum" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{Lang.prop[MySession.l]['operation']}" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="#{Lang.prop[MySession.l]['rolename']}" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="#{Lang.prop[MySession.l]['roledesc']}" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;white-space:nowrap;width:42px;">
+							<a4j:commandLink reRender="editPanel">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="#{Lang.prop[MySession.l]['edit']}" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="relationId" value="#{item.prop['id']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<h:outputLink value="oprolerelation.jsf" rendered="#{MySession.hasOp['core.op.admin']==true}">
+								<h:graphicImage title="#{Lang.prop[MySession.l]['operationsetting']}" class="imgBtn" url="images/op.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="relationId" value="#{item.prop['id']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</h:outputLink>
+							<h:outputLink value="topmenurolerelation.jsf" rendered="#{MySession.hasOp['core.op.admin']==true}">
+								<h:graphicImage title="#{Lang.prop[MySession.l]['topmenu']}" class="imgBtn" url="images/topmenu.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="relationId" value="#{item.prop['id']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</h:outputLink>
+							<h:outputLink value="leftmenurolerelation.jsf" rendered="#{MySession.hasOp['core.op.admin']==true}">
+								<h:graphicImage title="#{Lang.prop[MySession.l]['leftmenu']}" class="imgBtn" url="images/leftmenu.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="relationId" value="#{item.prop['id']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</h:outputLink>
+							<a4j:commandLink action="#{Role.showDialog}" rendered="#{MySession.hasOp['core.role.edit']==true}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="#{Lang.prop[MySession.l]['delete']}" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:136px;text-align:left;">
+							<h:outputText value="#{item.prop['roleName']}" />
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputText value="#{item.prop['roleDesc']}" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Role.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="#{Lang.prop[MySession.l]['edit']}">
+				<a4j:outputPanel id="editPanel">
+					<h:outputText value="#{Role.init}" style="display:none;" />
+					<fieldset class="fieldset">
+						<legend>
+							<h:outputText value="#{Lang.prop[MySession.l]['property']}" />
+						</legend>
+						<a4j:form id="editForm">
+							<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+								<h:outputText value="#{Lang.prop[MySession.l]['rolename']}:" />
+								<h:inputText value="#{Role.prop['roleName']}" style="width:80px;" />
+								<h:outputText value="*" />
+
+								<h:outputText value="#{Lang.prop[MySession.l]['roledesc']}:" />
+								<h:inputText value="#{Role.prop['roleDesc']}" style="width:200px;" />
+								<h:outputText value="*" />
+
+								<h:outputText value="" />
+								<h:panelGrid columns="2" rendered="#{MySession.hasOp['core.role.edit']==true}">
+									<a4j:commandLink action="#{Role.newRecord}" reRender="msg">
+										<h:outputText class="btn" value="#{Lang.prop[MySession.l]['newrecord']}" />
+										<f:param name="redirect" value="false" />
+										<f:param name="reload" value="false" />
+									</a4j:commandLink>
+									<a4j:commandLink action="#{Role.updateRecordById}" reRender="msg">
+										<h:outputText class="btn" value="#{Lang.prop[MySession.l]['save']}" />
+										<f:param name="redirect" value="false" />
+										<f:param name="reload" value="false" />
+										<f:param name="id" value="#{param['id']}" />
+									</a4j:commandLink>
+								</h:panelGrid>
+								<h:outputText value="" />
+							</h:panelGrid>
+						</a4j:form>
+					</fieldset>
+					<fieldset class="fieldset">
+						<legend>
+							<h:outputText value="#{Lang.prop[MySession.l]['userlist']}" />
+						</legend>
+						<a4j:form id="relationForm" rendered="#{param['relationId'] gt 0 and MySession.hasOp['core.role.edit']==true}">
+							<h:panelGrid columns="3">
+								<h:outputText value="#{Lang.prop[MySession.l]['user']}:" />
+								<rich:comboBox value="#{RoleUserRelation.userName}" suggestionValues="#{Application.userList}" style="width:60px;margin-top:-6px;">
+								</rich:comboBox>
+								<a4j:commandLink action="#{RoleUserRelation.newRecord}" reRender="relationDataTable,msg" style="margin-left:90px;">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['join']}" />
+									<f:param name="type" value="role" />
+									<f:param name="relationId" value="#{param['relationId']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+						</a4j:form>
+						<a4j:form id="relationDataForm" rendered="#{param['relationId'] gt 0 and MySession.hasOp['core.role.edit']==true}">
+							<h:panelGrid columns="3" style="margin-top:3px;">
+								<a4j:commandLink onclick="javascript:selectAll();return false;">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['selectall']}" />
+								</a4j:commandLink>
+								<a4j:commandLink onclick="javascript:selectNone();return false;">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['selectnone']}" />
+								</a4j:commandLink>
+								<a4j:commandLink reRender="confirmDialog" action="#{RoleUserRelation.showDialog}" onclick="#{rich:component('mpForConfirm2')}.show();">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['deleteselected']}" />
+									<f:param name="reload" value="false" />
+									<f:param name="type" value="role" />
+									<f:param name="relationId" value="#{param['relationId']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<rich:dataGrid id="relationDataTable" value="#{RoleUserRelation.items}" var="item" columns="5">
+								<h:selectBooleanCheckbox value="#{RoleUserRelation.checkIdsMap[item.ID_]}">
+								</h:selectBooleanCheckbox>
+								<h:outputText value="#{item.userName}" />
+							</rich:dataGrid>
+						</a4j:form>
+					</fieldset>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{Role.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm2" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel id="confirmDialog" style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="relationDataTable,msg" action="#{RoleUserRelation.deleteRecords}" onclick="#{rich:component('mpForConfirm2')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+							<f:param name="type" value="role" />
+							<f:param name="relationId" value="#{MySession.tempStr['RoleUserRelation.relationId']}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm2')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

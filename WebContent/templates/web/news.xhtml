@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['newsadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left" rendered="#{MySession.hasOp['core.news.read']==true}">
+			<rich:tab id="tab1" name="tab1" label="#{Lang.prop[MySession.l]['list']}">
+				<a4j:form id="searchForm">
+					<h:outputText value="#{Lang.prop[MySession.l]['title']}:" />
+					<h:inputText id="key" value="#{MySession.tempStr['News.key']}" style="width:80px;" />
+					<a4j:commandLink action="#{News.buildItems}" reRender="dataForm">
+						<h:outputText value="#{Lang.prop[MySession.l]['search']}" class="btn" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';return false;">
+						<h:outputText value="#{Lang.prop[MySession.l]['reset']}" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" rows="#{MySession.pageSize}" value="#{News.items}" var="item" rowKeyVar="rowNum" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{Lang.prop[MySession.l]['operation']}" />
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="#{Lang.prop[MySession.l]['newscate']}" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="#{Lang.prop[MySession.l]['title']}" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="#{Lang.prop[MySession.l]['ispicnews']}" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="#{Lang.prop[MySession.l]['status']}" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="#{Lang.prop[MySession.l]['times']}" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;white-space:nowrap;width:42px;">
+							<a4j:commandLink reRender="editPanel">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="#{Lang.prop[MySession.l]['edit']}" style="border:0px;width:18px;margin-right:6px;" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="relationId" value="#{item.prop['id']}" />
+								<f:param name="uuid" value="#{item.prop['uuid']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{News.showDialog}" rendered="#{MySession.hasOp['core.news.edit']==true}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="#{Lang.prop[MySession.l]['delete']}" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="headerId" value="#{item.prop['id']}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{item.prop['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.prop['catename']}" />
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputLink value="newsview.jsf">
+								<h:outputText value="#{item.prop['title']}" />
+								<f:param name="view" value="true" />
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="uuid" value="#{item.prop['uuid']}" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:36px;text-align:left;">
+							<h:outputText value="#{Lang.prop[MySession.l]['yes']}" rendered="#{item.prop['ispicnews'] == 'Y'}" />
+							<h:outputText value="#{Lang.prop[MySession.l]['no']}" rendered="#{item.prop['ispicnews'] == 'N'}" />
+						</rich:column>
+						<rich:column style="width:36px;text-align:center;">
+							<h:outputText value="未审核" rendered="#{item.prop['status']=='0'}" style="color:blue;" />
+							<h:outputText value="已审核" rendered="#{item.prop['status']=='1'}" style="color:green;" />
+						</rich:column>
+						<rich:column style="width:36px;text-align:center;">
+							<h:outputText value="#{item.prop['times']}" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{News.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="#{Lang.prop[MySession.l]['edit']}">
+				<a4j:outputPanel id="editPanel">
+					<h:outputText value="#{News.init}" style="display:none;" />
+					<fieldset class="fieldset"><legend> <h:outputText value="#{Lang.prop[MySession.l]['property']} " /> </legend> <a4j:form id="editForm">
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="#{Lang.prop[MySession.l]['newscate']}:" />
+							<h:selectOneMenu value="#{News.prop['cate']}">
+								<f:selectItems value="#{Application.bsi['news']}" />
+							</h:selectOneMenu>
+							<h:outputText value="*" />
+
+							<h:outputText value="#{Lang.prop[MySession.l]['title']}:" />
+							<h:inputText value="#{News.prop['title']}" style="width:400px;" />
+							<h:outputText value="*" />
+
+							<h:outputText value="#{Lang.prop[MySession.l]['ispicnews']}:" />
+							<h:selectOneRadio value="#{News.prop['ispicnews']}">
+								<f:selectItem itemValue="N" itemLabel="#{Lang.prop[MySession.l]['no']}" />
+								<f:selectItem itemValue="Y" itemLabel="#{Lang.prop[MySession.l]['yes']}" />
+							</h:selectOneRadio>
+							<h:outputText value="*" />
+
+							<h:outputText value="#{Lang.prop[MySession.l]['defaultimage']}:" />
+							<h:selectOneMenu id="imgurl" value="#{News.prop['imgurl']}">
+								<f:selectItems value="#{NewsAttachment.si}" />
+							</h:selectOneMenu>
+							<h:outputText value="" />
+
+							<h:outputText value="#{Lang.prop[MySession.l]['content']}:" />
+							<h:panelGroup style="height:320px;width:400px;" layout="block">
+								<rich:editor theme="advanced" id="content" width="400" height="300" viewMode="visual" value="#{News.prop['content']}">
+									<f:param name="plugins" value="table" />
+									<f:param name="theme_advanced_buttons1" value="bold,italic,underline, cut,copy,paste,pasteword,fontselect,fontsizeselect,justifyleft,justifycenter,justifyright" />
+									<f:param name="theme_advanced_toolbar_location" value="top" />
+									<f:param name="theme_advanced_toolbar_align" value="left" />
+								</rich:editor>
+							</h:panelGroup>
+							<h:outputText value="*" />
+							<h:outputText value="" />
+							<rich:dataGrid id="attachmentTable" value="#{NewsAttachment.items}" var="att" columns="3" elements="36" style="border-width:0;">
+								<h:outputLink escape="false" value="../../#{att.prop['filename']}" onclick="return false;">
+									<h:outputText value="#{att.prop['oldname']}" />
+								</h:outputLink>
+								<a4j:commandLink action="#{NewsAttachment.showDialog}" onclick="#{rich:component('mpForConfirmAtt')}.show();">
+									<h:graphicImage title="#{Lang.prop[MySession.l]['delete']}" class="imgBtn" url="images/delete.png">
+									</h:graphicImage>
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{att.prop['id']}" />
+									<f:param name="uuid" value="#{att.prop['uuid']}" />
+								</a4j:commandLink>
+							</rich:dataGrid>
+							<h:outputText value="" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="7" rendered="#{MySession.hasOp['core.news.edit']==true}">
+								<a4j:commandLink action="#{News.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['newrecord']}" />
+									<f:param name="redirect" value="true" />
+									<f:param name="reload" value="false" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{News.updateRecordById}" rendered="#{param['id'] gt 0}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['save']}" />
+									<f:param name="redirect" value="true" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{News.approve}" rendered="#{param['id'] gt 0 and MySession.tempStr['News.status']=='0'}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['approve']}" />
+									<f:param name="redirect" value="true" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="status" value="1" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{News.approve}" rendered="#{param['id'] gt 0 and MySession.tempStr['News.status']=='1'}" reRender="msg">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancelapprove']}" />
+									<f:param name="redirect" value="true" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="status" value="0" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<a4j:commandLink reRender="editPanel,mpForAttachment">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['reset']}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{NewsAttachment.buildItems}" reRender="attachmentTable,imgurl">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['attachment']}" />
+									<f:param name="reload" value="false" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</a4j:commandLink>
+								<h:commandLink action="#{News.redirect}" target="_blank">
+									<h:outputText class="btn" value="#{Lang.prop[MySession.l]['preview']}" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</h:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+
+							<h:outputText value="" rendered="#{MySession.hasOp['core.news.edit']==true}" />
+							<rich:simpleTogglePanel rendered="#{MySession.hasOp['core.news.edit']==true}" opened="false" switchType="client" label="#{Lang.prop[MySession.l]['attachment']}..." style="width:397px;">
+								<rich:fileUpload fileUploadListener="#{NewsAttachment.uploadListener}" maxFilesQuantity="100" listWidth="376" listHeight="60" ondblclick="#{rich:component('mpForAttachment')}.hide()">
+									<a4j:support event="onuploadcomplete" reRender="msg" />
+									<f:param name="uuid" value="#{News.uuid}" />
+								</rich:fileUpload>
+							</rich:simpleTogglePanel>
+							<h:outputText value="" />
+						</h:panelGrid>
+					</a4j:form></fieldset>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{News.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmAtt" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{NewsAttachment.deleteRecordById}" onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

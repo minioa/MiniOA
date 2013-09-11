@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.user.newrecord">
+    <![CDATA[
+        insert into core_user(CID_,CDATE_,depaId,jobId,jobId2,userName,email,phone,mobilePhone,gender,displayName,isLock,password) values(:cId,sysdate(),:depaId,:jobId,:jobId2,:userName,:email,:phone,:mobilePhone,:gender,:displayName,:isLock,:password)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.depaId,ta.jobId,ta.jobId2,ta.userName,ta.email,ta.phone,ta.mobilePhone,
+        	ta.gender,ta.displayName,ta.isLock,tb.depaName,ta.signameImage
+        from core_user ta
+        left join core_department tb on tb.ID_ = ta.depaId
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.records.count">
+    <![CDATA[
+        select count(*) as ds from core_user ta
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.depaId,ta.jobId,ta.jobId2,ta.userName,ta.email,ta.phone,ta.mobilePhone,
+        	ta.gender,ta.displayName,ta.isLock,tb.depaName,tc.jobName,td.jobName as deputyJobName,
+        	ta.password,ta.signameImage
+        from core_user ta
+        left join core_department tb on tb.ID_ = ta.depaId
+        left join core_job tc on tc.ID_ = ta.jobId
+        left join core_job td on td.ID_ = ta.jobId2
+        where ta.ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getuserlist">
+    <![CDATA[
+        select ta.ID_,ta.userName,ta.displayName
+        from core_user ta order by convert(ta.displayName using gbk)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getid.byusername">
+    <![CDATA[
+    	select ifnull((select ta.ID_ from core_user ta  where ta.userName = :userName),0) from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getuser.byusername">
+    <![CDATA[
+    	select ifnull((select ta.ID_ from core_user ta  where ta.userName = :userName),'') from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getpassword.byusername">
+    <![CDATA[
+    	select ifnull((select ta.password from core_user ta  where ta.userName = :userName),'') from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getrecordbyusername">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.depaId,ta.jobId,ta.jobId2,ta.userName,ta.email,
+        	ta.phone,ta.mobilePhone,ta.gender,ta.displayName,
+        	ta.isLock,tb.depaName,tc.jobName,td.jobName
+        from core_user ta
+        left join core_department tb on tb.ID_ = ta.depaId
+        left join core_job tc on tc.ID_ = ta.jobId
+        left join core_job td on td.ID_ = ta.jobId2
+        where ta.userName = :userName
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.isrecordexistbyname">
+    <![CDATA[
+        select count(*) as tmp
+        from core_user where userName = :userName
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.isrecordexistbyname.byid">
+    <![CDATA[
+        select count(*) as tmp
+        from core_user where userName = :userName and ID_ != :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.updaterecordbyid">
+    <![CDATA[
+        update core_user set MID_ = :mId, MDATE_ = sysdate(), 
+        	depaId = :depaId,jobId = :jobId,jobId2 = :jobId2,userName = :userName,email = :email,
+        	phone = :phone,mobilePhone = :mobilePhone,
+        	gender = :gender,displayName = :displayName,
+        	isLock = :isLock
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.updateprofile">
+    <![CDATA[
+        update core_user set MID_ = :mId, MDATE_ = sysdate(), 
+        	depaId = :depaId,jobId = :jobId,jobId2 = :jobId2,email = :email,
+        	phone = :phone,mobilePhone = :mobilePhone,
+        	gender = :gender,displayName = :displayName
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.updatepassword">
+    <![CDATA[
+        update core_user set MID_ = :mId, MDATE_ = sysdate(), 
+        	password = :password
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.updatepasswordbyid">
+    <![CDATA[
+        update core_user set MID_ = :mId, MDATE_ = sysdate(), password = :password
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.deleterecordbyid">
+    <![CDATA[
+        CALL core_delete_user_p(:id)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.login">
+    <![CDATA[
+        select count(*) as tmp
+        from core_user where userName = :userName and password = :password
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getuserbypassword">
+    <![CDATA[
+        select count(*) as tmp
+        from core_user where ID_ = :id and password = :password
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.autologin">
+    <![CDATA[
+        select count(*) as tmp
+        from core_user where userName = :userName and password = :password
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.session.update">
+    <![CDATA[
+        call core_online(:cId,:sId,:cTime,:mTime,:ipAddress)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.session.delete">
+    <![CDATA[
+        delete from core_user_session where sessionId = :sessionId
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.of.update">
+    <![CDATA[
+         call core_of_update_user(:userName, :password)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.of.delete">
+    <![CDATA[
+         call core_of_delete_user(:id)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getdisplaynamebyuserid">
+    <![CDATA[
+        select ifnull((select displayName from core_user where ID_ = :userId),'')
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getmailbyuserid">
+    <![CDATA[
+        select ifnull((select email from core_user where ID_ = :userId),'')
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getusernamebyuserid">
+    <![CDATA[
+        select ifnull((select ID_ from core_user where userName = :userName),0) as userId
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getusersbyjobid">
+    <![CDATA[
+        select ID_ from core_user where (jobId = :jobId or jobId2 = :jobId) and isLock = 'N'
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.getuserlistwithdepa">
+    <![CDATA[
+		SELECT ta.ID_,ta.username,ta.displayName,tb.depaName FROM core_user ta 
+		left join core_department tb on tb.ID_ = ta.depaId 
+		where ta.ID_ > 0 order by convert(ta.displayName using gbk) asc
+    ]]>
+	</sql-query>
+</hibernate-mapping>

@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="待审批流程" rendered="#{param['status']=='running'}" />
+		<h:outputText value="已审批流程" rendered="#{param['status']!='running'}" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:form id="searchForm">
+			<h:panelGrid columns="8">
+				<h:outputText value="流程名称:" />
+				<h:selectOneMenu id="key" immediate="true" value="#{MySession.tempStr['Process.key']}">
+					<f:selectItem itemValue="0" itemLabel="" />
+					<f:selectItems value="#{ProcessDefinitionDao.si}" />
+				</h:selectOneMenu>
+				<h:selectOneRadio id="key2" value="#{MySession.tempStr['Process.key2']}">
+					<f:selectItem itemValue="0" itemLabel="显示全部" />
+					<f:selectItem itemValue="1" itemLabel="我提交的" />
+					<f:selectItem itemValue="2" itemLabel="我参与的" />
+				</h:selectOneRadio>
+			</h:panelGrid>
+			<h:panelGrid columns="10">
+				<h:outputText value="开始时间:" />
+				<a4j:outputPanel layout="block" style="margin-bottom:3px;">
+					<rich:calendar id="key3" value="#{MySession.tempDate['Process.key3']}" locale="zh/CN" datePattern="yyyy-MM-dd" cellWidth="24px" cellHeight="22px" style="width:240px" enableManualInput="true" inputStyle="width:70px;border:1px solid #E2E2E2;">
+					</rich:calendar>
+				</a4j:outputPanel>
+				<h:outputText value="结束时间:" />
+				<a4j:outputPanel layout="block" style="margin-bottom:3px;">
+					<rich:calendar id="key4" value="#{MySession.tempDate['Process.key4']}" locale="zh/CN" datePattern="yyyy-MM-dd" cellWidth="24px" cellHeight="22px" style="width:240px" enableManualInput="true" inputStyle="width:70px;border:1px solid #E2E2E2;">
+					</rich:calendar>
+				</a4j:outputPanel>
+				<a4j:commandLink action="#{Process.buildItems}" reRender="dataForm">
+					<h:outputText value="搜索" class="btn" />
+					<f:param name="reload" value="true" />
+					<f:param name="resetPageNo" value="true" />
+					<f:param name="status" value="#{param['status']}" />
+				</a4j:commandLink>
+				<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='0';$('searchForm:key3InputDate').value='';$('searchForm:key4InputDate').value='';return false;">
+					<h:outputText value="清空" class="btn" />
+				</a4j:commandLink>
+			</h:panelGrid>
+		</a4j:form>
+		<a4j:form id="dataForm">
+			<rich:dataTable id="dataTable" rows="30" value="#{Process.items}" var="item" style="width:100%;" rowKeyVar="rowNum">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column style="width:21px;text-align:center;">
+							<h:outputText value="No" />
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputText value="流程名称" />
+						</rich:column>
+						<rich:column style="width:245px;text-align:left;">
+							<h:outputText value="流程描述" />
+						</rich:column>
+						<rich:column style="width:40px;text-align:center;">
+							<h:outputText value="状态" />
+						</rich:column>
+						<rich:column style="width:50px;text-align:center;">
+							<h:outputText value="申请人" />
+						</rich:column>
+						<rich:column style="width:96px;text-align:center;">
+							<h:outputText value="开始时间" />
+						</rich:column>
+						<rich:column style="width:96px;text-align:center;">
+							<h:outputText value="截至时间" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="text-align:left;">
+					<h:outputLink value="processentity.jsf">
+						<h:outputText value="#{item.processName}" />
+						<f:param name="reload" value="false" />
+						<f:param name="formId" value="#{item.formId}" />
+						<f:param name="processId" value="#{item.ID_}" />
+						<f:param name="processDefId" value="#{item.processDefId}" />
+						<f:param name="instanceId" value="#{item.instanceId}" />
+					</h:outputLink>
+				</rich:column>
+				<rich:column style="text-align:left;">
+					<h:outputText value="#{item.processDesc}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{item.processStatusText}" escape="false" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{item.applicant}" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{item.startDateTime}" class="datetimeBlue" />
+				</rich:column>
+				<rich:column style="text-align:center;">
+					<h:outputText value="#{item.endDateTime}" class="datetimeBlue" />
+				</rich:column>
+			</rich:dataTable>
+			<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Process.dsList}" var="item" style="width:100%;" reRender="ds">
+				<ui:include src="ds.xhtml" />
+			</rich:dataTable>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

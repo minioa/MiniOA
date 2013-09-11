@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+	<div class="footer">
+	<div class="left_footer">MiniOA | Powered by <a href="http://www.minioa.net/">MiniOA.net</a> | This Css Template Designed by INDEZINER</div>
+	</div>
+	<!-- Message Box -->
+	<a4j:outputPanel id="msg">
+		<rich:modalPanel id="mpForMsg" width="300" height="80" zindex="2000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+			<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;" onclick="#{rich:component('mpForMsg')}.hide()">
+				<h:panelGrid columns="1">
+					<h:outputText escape="false" value="#{MySession.msg}" />
+					<h:outputText escape="false" value="#{Lang.prop[MySession.l]['messagebox']}" style="color:#296DC1;font-size:8pt;margin-top:8px;" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+		</rich:modalPanel>
+		<h:outputText id="msgScript" escape="false" value="#{MySession.msgScript}" />
+	</a4j:outputPanel>
+	<!-- End of Message Box -->
+</ui:composition>
+</html>

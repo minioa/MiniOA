@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	background: url(../images/search.png) no-repeat;
+}
+</style>
+		<rich:simpleTogglePanel opened="false" switchType="client" style="width:96%;">
+			<a4j:form id="searchForm">
+				<h:outputText value="客户名称：" />
+				<h:inputText id="key" value="#{MySession.tempStr['Customer.key']}" style="width:80px;" />
+				<h:outputText value="行业：" />
+				<h:inputText id="key2" value="#{MySession.tempStr['Customer.key2']}" style="width:80px;" />
+				<h:outputText value="省份：" />
+				<h:inputText id="keyPro" value="#{MySession.tempStr['Customer.keyPro']}" style="width:80px;" />
+				<h:outputText value="城市：" />
+				<h:inputText id="keyCity" value="#{MySession.tempStr['Customer.keyCity']}" style="width:80px;" />
+				<h:outputText value="客户经理：" />
+				<h:selectOneMenu id="key6" value="#{MySession.tempStr['Customer.key6']}">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{Application.userSelectItem}" />
+				</h:selectOneMenu>
+				<h:panelGrid columns="10" style="margin-left:-2px;">
+					<h:outputText value="开始日期：" />
+					<a4j:outputPanel layout="block" style="margin-left:-5px;">
+						<rich:calendar id="startDate" value="#{MySession.tempDate['Customer.startDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="结束日期：" />
+					<a4j:outputPanel layout="block">
+						<rich:calendar id="endDate" value="#{MySession.tempDate['Customer.endDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="排序" />
+					<h:selectOneMenu value="#{MySession.tempStr['Customer.order']}">
+						<f:selectItem itemValue="kehubm" itemLabel="客户编码" />
+						<f:selectItem itemValue="CDATE_" itemLabel="创建时间" />
+						<f:selectItem itemValue="MDATE_" itemLabel="修改时间" />
+					</h:selectOneMenu>
+					<h:selectOneMenu value="#{MySession.tempStr['Customer.asc']}">
+						<f:selectItem itemValue="asc" itemLabel="升序" />
+						<f:selectItem itemValue="desc" itemLabel="降序" />
+					</h:selectOneMenu>
+					<a4j:commandLink action="#{Customer.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+						<f:param name="type" value="#{param['type']}" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';$('searchForm:key2').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+				</h:panelGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+
+		<a4j:form id="dataForm" style="margin-top:3px;">
+			<rich:dataTable id="dataTable" value="#{Customer.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:96%;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column styleClass="left">
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="类别" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="编码" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="客户全称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="行业" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="规模" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="省份" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="城市" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="客户经理" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建时间" />
+						</rich:column>
+						<rich:column styleClass="right">
+							<h:outputText value="Arc" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['kehulb']}" />
+				</rich:column>
+				<rich:column style="width:80px;text-align:center;">
+					<h:outputLink value="customerentity.jsf" target="_self">
+						<h:outputText value="#{item.prop['kehubm']}" />
+						<f:param name="id" value="#{item.prop['ID_']}" />
+						<f:param name="uuid" value="#{item.prop['UUID_']}" />
+						<f:param name="reload" value="false" />
+					</h:outputLink>
+				</rich:column>
+				<rich:column style="width:200px;">
+					<h:outputText value="#{item.prop['gongsimc']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['hangye']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['guimo']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['shengfen']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['city']}" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['cUser']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['CDATE_']}" class="datetimeBlue" />
+				</rich:column>
+				<rich:column style="width:30px;text-align:center;">
+					<h:outputText value="#{item.prop['isarc']}" />
+				</rich:column>
+			</rich:dataTable>
+			<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Customer.dsList}" var="item" style="width:96%;" reRender="ds">
+				<ui:include src="../ds.xhtml" />
+			</rich:dataTable>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

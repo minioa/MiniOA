@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="网站文件管理" />
+	</ui:define>
+	<ui:define name="body">
+		<table cellspacing="0"><tr><td>
+		<a4j:form id="formFileList">
+			<table cellspacing="0">
+				<tr>
+					<td>&nbsp;</td>
+					<td>文件名称</td>
+					<td>文件大小</td>
+					<td>创建时间</td>
+					<td>&nbsp;</td>
+				</tr>
+				<a4j:repeat id="dataTable001" var="item" value="#{FileList.recordsList}">
+					<tr>
+						<td><h:outputText value="#{item.prop['oldName']}" />
+							<h:graphicImage style="border:0px;margin-right:6px;width:16px;" url="../images/folder_closed.png" rendered="#{item.prop['isDir']=='Y'}">
+							</h:graphicImage>
+							<h:graphicImage style="border:0px;margin-right:6px;width:16px;" url="../images/items.png" rendered="#{item.prop['isDir']=='N'}">
+							</h:graphicImage>
+							<a4j:commandLink reRender="editForm" action="#{FileList.mSelect}">
+								<h:graphicImage id="edit" title="选择" style="border:0px;width:16px;margin-right:6px;" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="dirName" value="#{param['dirName']}" />
+								<f:param name="subDirName" value="#{param['subDirName']}" />
+								<f:param name="filePath" value="#{item.prop['filePath']}" />
+								<f:param name="fileName" value="#{item.prop['fileName']}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</td>
+						<td align="left">
+							<h:commandLink reRender="formFileList" style="font-size:9pt;" rendered="#{item.prop['isDir']=='Y' and item.prop['fileName']==''}">
+								<h:outputText value=".." />
+								<f:param name="dirName" value="#{MySession.tempStr['dirName']}/../" />
+							</h:commandLink>
+							<h:commandLink reRender="formFileList" style="font-size:9pt;" rendered="#{item.prop['isDir']=='Y' and item.prop['fileName']!=''}">
+								<h:outputText value="#{item.prop['fileName']}" />
+								<f:param name="dirName" value="#{MySession.tempStr['dirName']}/#{item.prop['fileName']}" />
+							</h:commandLink>
+							<h:commandLink action="#{FileList.mDownload}" style="font-size:9pt;" rendered="#{item.prop['isDir']=='N'}">
+								<h:outputText value="#{item.prop['fileName']}" />
+								<f:param name="dirName" value="#{param['dirName']}" />
+								<f:param name="subDirName" value="#{param['subDirName']}" />
+								<f:param name="fileName" value="#{item.prop['fileName']}" />
+								<f:param name="reload" value="flase" />
+							</h:commandLink>
+						</td>
+						<td align="right"><h:outputText value="#{item.prop['fileSize']}" /></td>
+						<td align="right"><h:outputText value="#{item.prop['cDate']}" class="datetimeBlue" /></td>
+						<td align="right">
+							<a4j:commandLink reRender="mpForMsg,msgScript" action="#{FileList.mDelete}" onclick="if(!confirm('您确定要删除这个文件?')) return false;hideObject('formFileList:dataTable001:#{item.prop['id']}:del');">
+								<h:graphicImage id="del" title="删除" style="border:0px;width:16px;margin-right:6px;" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="dirName" value="#{param['dirName']}" />
+								<f:param name="subDirName" value="#{param['subDirName']}" />
+								<f:param name="filePath" value="#{item.prop['filePath']}" />
+								<f:param name="fileName" value="#{item.prop['fileName']}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</td>
+					</tr>
+				</a4j:repeat>
+			</table>
+		</a4j:form>
+		</td><td>
+		<a4j:form id="editForm">
+			<h:panelGrid columns="30">
+				<h:outputText value="输入合法的文件夹名或文件名：" />
+				<h:inputText value="#{FileList.prop['fileName']}" style="width:100px;" />
+				<a4j:commandLink action="#{FileList.mMakeDir}" reRender="formFileList,mpForMsg,msgScript">
+					<h:outputText value="创建文件夹" class="btn" />
+					<f:param name="reload" value="true" />
+					<f:param name="dirName" value="#{param['dirName']}" />
+				</a4j:commandLink>
+				<a4j:commandLink action="#{FileList.mRenameDir}" reRender="formFileList,mpForMsg,msgScript">
+					<h:outputText value="重命名" class="btn" />
+					<f:param name="reload" value="true" />
+					<f:param name="dirName" value="#{param['dirName']}" />
+					<f:param name="oldName" value="#{FileList.prop['fileName']}" />
+				</a4j:commandLink>
+			</h:panelGrid>
+			<rich:simpleTogglePanel opened="false" switchType="client">
+				<rich:fileUpload fileUploadListener="#{FileList.uploadListener}" maxFilesQuantity="100" acceptedTypes="xls,xlsx,doc,docx,ppt,pptx,pdf,rar,tif,tiff,bmp,jpeg,jpg,gif,png,zip,rar" listWidth="468" listHeight="150">
+					<f:param name="dirName" value="#{param['dirName']}" />
+					<a4j:support event="onuploadcomplete" reRender="mpForMsg,msgScript" />
+				</rich:fileUpload>
+			</rich:simpleTogglePanel>
+		</a4j:form>
+		</td></tr></table>
+	</ui:define>
+</ui:composition>
+</html>

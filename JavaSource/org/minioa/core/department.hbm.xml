@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Department" table="core_department">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="orgId" column="orgId" type="java.lang.Integer" />
+		<property name="parentId" column="parentId" type="java.lang.Integer" />
+		<property name="depaName" column="depaName" type="java.lang.String" />
+		<property name="depaDesc" column="depaDesc" type="java.lang.String" />
+		<property name="sequence" column="sequence" type="java.lang.Integer" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.department.records">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgId,parentId,depaName,depaDesc,sequence
+        from core_department
+        order by sequence
+    ]]>
+	</sql-query>
+	<!-- 选择记录总数，便于分页 -->
+	<!-- Select records count, use for paging. -->
+	<sql-query name="core.department.records.count">
+    <![CDATA[
+        select count(*) as result from core_department
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.department.getrecordbyid">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgId,parentId,depaName,depaDesc,sequence
+        from core_department where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.department.updaterecordbyid">
+    <![CDATA[
+        update core_department set MID_ = :mId, MDATE_ = sysdate(),
+        	depaName = :depaName, depaDesc = :depaDesc, sequence = :sequence
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.moverecordbyid">
+    <![CDATA[
+        update core_department set MID_ = :mId, MDATE_ = sysdate(),
+        	orgId = :orgId, parentId = :parentId
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.department.deleterecordbyid">
+    <![CDATA[
+        delete from core_department where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.getchildren">
+    <![CDATA[
+         select ID_,depaName,depaDesc
+         from core_department where orgId = :orgId and parentId = :parentId
+         order by sequence
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.haschildren">
+    <![CDATA[
+         select count(*)
+         from core_department where orgId = :orgId and parentId = :parentId
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.of.update">
+    <![CDATA[
+         call core_of_update_group(:id)
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.of.delete">
+    <![CDATA[
+         call core_of_delete_group(:id)
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.getusers">
+    <![CDATA[
+         select ID_,displayName
+         from core_user where depaId = :depaId
+         order by convert(displayName using gbk)
+    ]]>
+	</sql-query>
+	<sql-query name="core.department.getdepanamebyid">
+    <![CDATA[
+        select ifnull((select depaName from core_department where ID_ = :depaId),'') from dual
+    ]]>
+	</sql-query>
+</hibernate-mapping>

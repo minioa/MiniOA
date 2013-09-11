@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料：联系记录" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{Visit.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="联系日期" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="联系人" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="行动计划" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="行动日期" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="主管批复" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="Arc" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.lianxirq}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.jiluren}" />
+								<rich:toolTip>
+									<h:panelGrid columns="1">
+										<h:outputText value="联系内容:#{item.lianxinr}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:120px;text-align:left;">
+							<h:outputText value="#{item.xingdongjh}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:left;">
+							<h:outputText value="#{item.xingdongrq}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:120px;text-align:left;">
+							<h:outputText value="#{item.zhuguanpf}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;">
+							<h:outputText value="#{item.isarc}" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="浏览">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{Visit.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="2" columnClasses="co1,co2">
+							<h:outputText value="联系日期:" />
+							<h:outputText value="#{Visit.lianxirq}" />
+							<h:outputText value="联系人:" />
+							<h:outputText value="#{Visit.jiluren}" />
+							<h:outputText value="联系内容:" />
+							<h:outputText value="#{Visit.lianxinr}" />
+							<h:outputText value="下一步行动计划:" />
+							<h:outputText value="#{Visit.xingdongjh}" />
+							<h:outputText value="行动日期:" />
+							<h:outputText value="#{Visit.xingdongrq}" />
+							<h:outputText value="主管批复:" />
+							<h:outputText value="#{Visit.zhuguanpf}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+</ui:composition>
+</html>

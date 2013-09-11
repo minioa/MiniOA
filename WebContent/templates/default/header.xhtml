@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<link rel="stylesheet" href="#{MySession.host}/templates/#{MySession.templateName}/ui.tabs.css" type="text/css"
+	media="print, projection, screen" />
+<script src="#{MySession.host}/templates/#{MySession.templateName}/jquery-1.2.1.pack.js" type="text/javascript"></script>
+<script src="#{MySession.host}/templates/#{MySession.templateName}/ui.tabs.js" type="text/javascript"></script>
+<script src="#{MySession.host}/templates/#{MySession.templateName}/jquerytabframe.js" type="text/javascript"></script>
+<script language="javaScript">
+<!--
+function selectTab(tabName) {
+	alert(tabName);
+}
+//-->
+</script>
+</head>
+<body
+	style="padding: 0; margin: 0; background: url(images/header_bg.png) no-repeat right;">
+<h:outputText value="#{Application.init} #{MySession.templateName}"
+	style="display:none;" />
+<h:outputText escape="false" value="#{MySession.isLogin}"
+	style="display:none;" />
+<h:outputText value="#{MySession.l}" style="display:none;" />
+<table style="width: 100%;">
+	<tr>
+		<td style="width: 200px;"><a href="#"> <img style="width:150px;"
+			src="#{MySession.host}/templates/#{MySession.templateName}/images/logo.png"
+			alt="" title="" border="0" /> </a></td>
+		<td valign="bottom" style="width: *;"><h:form
+			styleClass="niceform" rendered="#{MySession.isLogin=='true'}"
+			style="margin:auto;font-size:10pt;color:#005590;">
+			<h:panelGrid columns="2" columnClasses="co1,co2">
+				<h:outputText
+					value="#{Lang.prop[MySession.l]['welcome']} #{MySession.depaName} . #{MySession.userName} #{Lang.prop[MySession.l]['unreadmessage']}"
+					class="right_header" />
+				<h:commandLink target="_parent" action="#{User.logout}"
+					reRender="msg" styleClass="right_header_logout">
+					<h:outputText value="#{Lang.prop[MySession.l]['logout']}"
+						style="background: url(images/user_logout.png) no-repeat left;padding-left:18px;margin-left:3px;" />
+				</h:commandLink>
+			</h:panelGrid>
+		</h:form></td>
+	</tr>
+	<tr>
+		<td valign="top" style="white-space: nowrap;padding-top:8px;"><img
+			src="images/reload.png"
+			style="border: 0px; width: 21px; margin: -8px 0 30px 8px;cursor:pointer;"
+			onclick="javascript:window.parent.document.getElementById('frameset02').children['tab'+window.parent.tabIndex].src=window.parent.document.getElementById('frameset02').children['tab'+window.parent.tabIndex].src;" />
+		<img src="images/frame.png"
+			style="border: 0px; width: 21px; margin: -8px 0 30px 8px;cursor:pointer;"
+			onclick="javascript:window.parent.hidemenu == 1 ? window.parent.hidemenu =0 : window.parent.hidemenu = 1;window.parent.frameControl();" />
+		<img id="loading" src="images/loading.gif"
+			style="border: 0px; width: 21px; margin: -8px 0 30px 8px;" /></td>
+		<td valign="top" style="white-space: nowrap;border-width:0px;">
+		<div id="container-1"
+			style="margin-top: 3px; font-size: 10pt; font-weight: bold;">
+		<ul id="tabcontainer">
+			<li><a href="#tab1"><span>首页</span></a></li>
+		</ul>
+		<div id="tab1"></div>
+		</div>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['updateuserprofile']}" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:outputPanel id="editPanel">
+			<h:outputText value="#{User.initProfile}" style="display:none;" />
+			<a4j:form id="editForm">
+				<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+					<h:outputText value="#{Lang.prop[MySession.l]['username']}:" />
+					<h:outputText value="#{User.prop['userName']}" />
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['displayname']}:" />
+					<h:inputText value="#{User.prop['displayName']}"
+						style="width:80px;" />
+					<h:outputText value="*" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['department']}:" />
+					<h:panelGrid columns="2">
+						<h:outputText id="departmentName"
+							value="#{MySession.tempStr['DepartmentTree.depaName']}" />
+						<h:graphicImage title="选择部门岗位"
+							onclick="#{rich:component('mpForDepaTree')}.show()"
+							class="imgBtn" url="images/search.png">
+						</h:graphicImage>
+					</h:panelGrid>
+					<h:outputText value="*" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['job']}:" />
+					<h:panelGrid columns="2">
+						<h:outputText id="jobName"
+							value="#{MySession.tempStr['JobTree.jobName']}" />
+						<h:graphicImage title="选择主要岗位"
+							onclick="#{rich:component('mpForJobTree')}.show()" class="imgBtn"
+							url="images/search.png">
+						</h:graphicImage>
+					</h:panelGrid>
+					<h:outputText value="*" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['job']}:" />
+					<h:panelGrid columns="2">
+						<h:outputText id="jobName2"
+							value="#{MySession.tempStr['JobTree.jobName2']}" />
+						<h:graphicImage title="选择兼职岗位"
+							onclick="#{rich:component('mpForJobTree2')}.show()"
+							class="imgBtn" url="images/search.png">
+						</h:graphicImage>
+					</h:panelGrid>
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['phone']}:" />
+					<h:inputText value="#{User.prop['phone']}" style="width:80px;" />
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['mobilephone']}:" />
+					<h:inputText value="#{User.prop['mobilePhone']}"
+						style="width:80px;" />
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['email']}:" />
+					<h:inputText value="#{User.prop['email']}" style="width:200px;" />
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['gender']}:" />
+					<h:selectOneRadio value="#{User.prop['gender']}">
+						<f:selectItem itemValue="1"
+							itemLabel="#{Lang.prop[MySession.l]['male']}" />
+						<f:selectItem itemValue="0"
+							itemLabel="#{Lang.prop[MySession.l]['female']}" />
+					</h:selectOneRadio>
+					<h:outputText value="" />
+
+					<h:outputText value="#{Lang.prop[MySession.l]['autologinurl']}:" />
+					<h:inputText value="#{User.prop['url']}" style="width:300px;"
+						onclick="javascript:this.select();" />
+					<h:outputText value="" />
+
+					<h:outputText value="签名:" />
+					<rich:fileUpload fileUploadListener="#{User.uploadListener}"
+						maxFilesQuantity="1" listWidth="200" listHeight="30">
+						<a4j:support event="onuploadcomplete" reRender="msg" />
+						<f:param name="id" value="#{MySession.userId}" />
+					</rich:fileUpload>
+					<a href="../../#{User.prop['signameImage']}" target="_blank"><img
+						src="../../#{User.prop['signameImage']}" alt=""
+						style="width: 240px;" /> </a>
+					<h:outputText value="" />
+
+					<h:outputText value="" />
+					<a4j:commandLink action="#{User.updateProfile}" reRender="msg">
+						<h:outputText class="btn"
+							value="#{Lang.prop[MySession.l]['save']}" />
+						<f:param name="redirect" value="false" />
+						<f:param name="reload" value="false" />
+						<f:param name="id" value="#{param['id']}" />
+					</a4j:commandLink>
+					<h:outputText value="" />
+				</h:panelGrid>
+			</a4j:form>
+		</a4j:outputPanel>
+		<h:form>
+			<rich:modalPanel id="mpForDepaTree" width="400" height="300"
+				zindex="3001" style="clear:both;padding:0;">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="部门选择"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<a4j:commandLink reRender="departmentName"
+							onclick="#{rich:component('mpForDepaTree')}.hide()">
+							<h:graphicImage value="images/saveicon.png"
+								style="width:15px;margin-right:1px;" />
+						</a4j:commandLink>
+						<h:graphicImage value="images/close.png" styleClass="hidelink"
+							id="hidelink" />
+						<rich:componentControl for="mpForDepaTree" attachTo="hidelink"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<ui:include src="departmenttree.xhtml" />
+			</rich:modalPanel>
+		</h:form>
+		<h:form>
+			<rich:modalPanel id="mpForJobTree" width="400" height="300"
+				zindex="3002" style="clear:both;padding:0;">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="主要岗位选择"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<a4j:commandLink reRender="jobName"
+							onclick="#{rich:component('mpForJobTree')}.hide()">
+							<h:graphicImage value="images/saveicon.png"
+								style="width:15px;margin-right:1px;" />
+						</a4j:commandLink>
+						<h:graphicImage value="images/close.png" styleClass="hidelink"
+							id="hidelink" />
+						<rich:componentControl for="mpForJobTree" attachTo="hidelink"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<ui:include src="jobtree.xhtml" />
+			</rich:modalPanel>
+		</h:form>
+		<h:form>
+			<rich:modalPanel id="mpForJobTree2" width="400" height="300"
+				zindex="3003" style="clear:both;padding:0;">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="兼职岗位选择"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<a4j:commandLink reRender="jobName2"
+							onclick="#{rich:component('mpForJobTree2')}.hide()">
+							<h:graphicImage value="images/saveicon.png"
+								style="width:15px;margin-right:1px;" />
+						</a4j:commandLink>
+						<h:graphicImage value="images/close.png" styleClass="hidelink"
+							id="hidelink" />
+						<rich:componentControl for="mpForJobTree2" attachTo="hidelink"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<ui:include src="jobtree2.xhtml" />
+			</rich:modalPanel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

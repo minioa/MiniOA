@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title><h:outputText value="#{Lang.prop[MySession.l]['webadmin']}" /></title>
+<script language="javascript" type="text/javascript" src="js/niceforms.js" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/firefox.css" />
+<link type="text/css" rel="stylesheet" href="css/style_grey.css" />
+<style>
+input[type=text]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;border-width:0;
+}
+input[type=password]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;border-width:0;
+}
+#loginform\:codeInput {margin-left:1px;margin-top:1px;}
+#loginform\:vCode{margin:-35px 0 0 60px;height:34px;}
+</style>
+<!--[if IE 6]>
+<style>
+input[type=text]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;margin-top:-18px;border-width:0;
+}
+input[type=password]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;margin-top:-18px;border-width:0;
+}
+</style>
+<![endif]-->
+<!--[if IE 7]>
+<style>
+input[type=text]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;background-color:red;
+}
+input[type=password]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;
+}
+#loginform\:codeInput {margin-left:1px;margin-top:1px;}
+#loginform\:vCode{margin:-35px 0 0 60px;height:34px;}
+</style>
+<![endif]-->
+<!--[if IE 8]>
+<style>
+input[type=text]{
+	width:78%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;
+}
+input[type=password]{
+	width:78%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;
+}
+#loginform\:codeInput {margin-left:1px;margin-top:0;}
+#loginform\:vCode{margin:-50px 0 3px 60px;height:34px;}
+</style>
+<![endif]-->
+<!--[if IE 9]>
+<style>
+input[type=text]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;
+}
+input[type=password]{
+	width:80%;height:25px;font-size:12pt;font-weight:bold;margin-left:45px;padding:3px;
+}
+</style>
+<![endif]-->
+</head>
+<body onkeydown="if(event.keyCode==13){#{rich:component('mpForMsg')}.hide()}">
+<h:outputText value="#{Application.init} #{MySession.templateName}" style="display:none;" />
+<div style="width: 900px; height: 50px; position: absolute; text-align: left; left: 50%; top: 50%; margin-left: -450px;; margin-top: -280px;"><img src="images/logo.png" style="border-width: 0; margin-left: 0;" /> <span style="float: right; margin-top: 35px; color: #488ED5;"></span></div>
+<div class="main-inner" id="mainCnt" style="width: 900px; height: 440px; overflow: hidden; position: absolute; left: 50%; top: 50%; margin-left: -450px; margin-top: -195px; background-image: url('images/bg_login.jpg')">
+<div id="loginBlock" class="login" style="margin-top: 80px; height: 210px;">
+<div class="loginFunc">
+<div id="lbNormal" class="loginFuncMobile"><h:outputText value="#{Lang.prop[MySession.l]['userloginform']}" /></div>
+</div>
+<div class="loginForm"><a4j:form id="loginform" name="loginform" styleClass="niceform" rendered="#{!(MySession.isLogin=='true')}" onkeydown="if(event.keyCode==13){A4J.AJAX.Submit('loginform',event,{'similarityGroupingId':'loginform:j_id16','parameters':{'loginform:j_id16':'loginform:j_id16'} } );return false;}">
+	<div id="idInputLine" class="loginFormIpt showPlaceholder" style="margin-top: 5px;"><h:inputText class="loginFormTdIpt" tabindex="1" title="请输入帐号" id="idInput" type="text" maxlength="50" value="#{User.prop['userName']}"/> <label for="idInput" class="placeholder" id="idPlaceholder">帐号：</label></div>
+	<div class="forgetPwdLine"></div>
+	<div id="pwdInputLine" class="loginFormIpt showPlaceholder"><h:inputSecret tabindex="2" title="请输入密码" id="pwdInput" name="password" value="#{User.prop['password']}"/> <label for="pwdInput" class="placeholder" id="pwdPlaceholder" >密码：</label></div>
+	<div class="loginFormIpt loginFormIptWiotTh" style="margin-top:58px;">
+		<a4j:region rendered="#{Application.prop['validateCode']=='Y'}">
+		<div id="codeInputLine" class="loginFormIpt showPlaceholder" style="margin-left:0px;margin-top:-40px;width:50px;">
+			<h:inputText title="请输入验证码" id="codeInput" name="validateCode" value="#{User.prop['validateCode']}"/>
+			<h:graphicImage id="vCode" value="../../validatecode.jsp" onclick="javscript:$('loginForm:vCode').src='../../validatecode.jsp?'+Math.random();"/>
+		</div>
+	</a4j:region>
+	<a4j:commandLink action="#{User.login}" reRender="msg" >
+		<h:outputText id="loginBtn" class="btn btn-login" style="margin-top:-36px;" value="登&nbsp;录" />
+	</a4j:commandLink>
+	</div>
+</a4j:form> <a4j:form styleClass="niceform" rendered="#{MySession.isLogin=='true'}">
+	<script type="text/javascript"> location.href="index.html";</script>
+</a4j:form></div>
+</div>
+</div>
+<div style="width: 900px; height: 50px; position: absolute; text-align: left; left: 50%; top: 50%; margin-left: -450px;; margin-top: 220px;"><span style="color: #488ED5;">Powered By <a href="http://www.zmlongli.com.cn">http://www.zmlongli.com.cn</a></span><span style="color: #488ED5;margin-left:10px;"></span><span style="float: right; color: #488ED5;"></span></div>
+<!-- Message Box -->
+<a4j:outputPanel id="msg">
+	<rich:modalPanel id="mpForMsg" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #E9F1F5;background-image:url(images/warning.png)">
+		<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;" onclick="#{rich:component('mpForMsg')}.hide()">
+			<h:panelGrid columns="1">
+				<h:outputText escape="false" value="#{MySession.msg}" />
+				<h:outputText escape="false" value="#{Lang.prop[MySession.l]['messageBox']}" style="color:#296DC1;font-size:8pt;margin-top:8px;" />
+			</h:panelGrid>
+		</a4j:outputPanel>
+	</rich:modalPanel>
+	<h:outputText id="msgScript" escape="false" value="#{MySession.msgScript}" />
+</a4j:outputPanel>
+<!-- End of Message Box -->
+</body>
+</html>

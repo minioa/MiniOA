@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="表单视图管理" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{FormView.items}" var="item" rowKeyVar="rowNum" style="width:200px;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<a4j:commandLink action="#{Form.buildItems}" reRender="dataForm">
+										<h:graphicImage title="刷新" class="imgBtn" url="images/reload.png">
+										</h:graphicImage>
+										<f:param name="reload" value="true" />
+										<f:param name="resetPageNo" value="true" />
+										<f:param name="formId" value="#{param['formId']}" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="视图名称" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="formId" value="#{param['formId']}" />
+								<f:param name="viewId" value="#{item.ID_}" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{FormViewDao.showDialog}" rendered="#{param['formId'] gt 0}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="formId" value="#{param['formId']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+
+							<h:outputLink value="formviewfield.jsf">
+								<h:outputText value="#{item.viewName}" />
+								<f:param name="formId" value="#{param['formId']}" />
+								<f:param name="viewId" value="#{item.ID_}" />
+							</h:outputLink>
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{FormView.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="4" columnClasses="co1,co2,co3,co3">
+							<h:outputText value="视图名称:" />
+							<h:inputText value="#{FormView.viewName}" id="viewName" required="true" requiredMessage="" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="视图名称，必填" class="imgBtn" url="images/help.png" />
+							<rich:message for="viewName" style="color:red;margin-left:3px;">
+								<f:facet name="errorMarker">
+									<h:outputText value="视图名称，必填" />
+								</f:facet>
+							</rich:message>
+							<h:outputText value="视图模版:" />
+							<h:selectOneMenu value="#{FormView.viewTemplate}">
+								<f:selectItem itemValue="formtemplate.xhtml" itemLabel="列表编辑模板" />
+								<f:selectItem itemValue="formtemplateprocess.xhtml" itemLabel="审批页面模版" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表编辑模版还是审批页面模版？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+
+							<h:outputText value="流程按钮:" />
+							<h:selectOneMenu value="#{FormView.displayProcessBtn}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示流程按钮？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+
+							<h:outputText value="新建按钮:" />
+							<h:selectOneMenu value="#{FormView.displayNewBtn}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示新建按钮？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="修改按钮:" />
+							<h:selectOneMenu value="#{FormView.displayEditBtn}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示修改按钮？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="删除按钮:" />
+							<h:selectOneMenu value="#{FormView.displayDelBtn}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示删除按钮？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="下载按钮:" />
+							<h:selectOneMenu value="#{FormView.displayDownloadBtn}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示下载按钮？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="附件管理:" />
+							<h:selectOneMenu value="#{FormView.displayAttachment}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示附件管理？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="是否创建信息:" />
+							<h:selectOneMenu value="#{FormView.displayCInfo}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示创建人、创建时间？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="是否修改信息:" />
+							<h:selectOneMenu value="#{FormView.displayMInfo}">
+								<f:selectItem itemValue="N" itemLabel="隐藏" />
+								<f:selectItem itemValue="Y" itemLabel="显示" />
+							</h:selectOneMenu>
+							<h:graphicImage title="列表中是否显示修改人、修改时间？" class="imgBtn" url="images/help.png" />
+							<h:outputText value="" />
+							
+							<h:outputText value="" />
+							<h:panelGrid columns="2">
+								<a4j:commandLink action="#{FormView.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="formId" value="#{param['formId']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{FormView.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="formId" value="#{param['formId']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:inputHidden value="#{FormView.formId}" />
+							<h:inputHidden value="#{FormView.CID_}" />
+							<h:inputHidden value="#{FormView.CDATE_}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{FormViewDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<ui:composition>
+		<div class="left_content">
+			<div class="sidebar_search">
+				<a4j:form>
+					<h:panelGrid columns="2" columnClasses="co1,co2">
+						<h:inputText value="#{MySession.searchKeyWords}" onclick="this.value=''" class="search_input"/>
+						<h:commandLink action="#{Search.buildItems}" styleClass="search_submit">
+							<h:graphicImage title="#{Lang.prop[MySession.l]['search']}" style="border:0px;width:16px;margin-right:6px;" url="images/search.png">
+							</h:graphicImage>
+							<f:param name="redirect" value="true" />
+						</h:commandLink>
+					</h:panelGrid>
+				</a4j:form>
+			</div>
+			<h:outputText value="#{MySession.leftMenu}" escape="false"></h:outputText>
+		</div>
+	</ui:composition>
+</html>

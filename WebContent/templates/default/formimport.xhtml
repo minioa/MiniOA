@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="导入表单记录" />
+	</ui:define>
+	<ui:define name="body">
+		<h:outputText value="注意：仅支持xls格式的记录文件，第一行是列表字段，第二行是字段名，第三行起是记录行，第一列是表单id。其它顺序不限。" style="text-indent:21px;color:red;font-weight:bold;"/>
+		<a4j:form style="margin-top:8px;">
+			<rich:fileUpload fileUploadListener="#{FormMainDao.importData}" acceptedTypes="xls" maxFilesQuantity="1" id="upload" listHeight="80" listWidth="300">
+				<a4j:support event="onuploadcomplete" reRender="msg" />
+			</rich:fileUpload>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

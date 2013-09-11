@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理：拜访记录查询" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	background: url(../images/search.png) no-repeat;
+}
+</style>
+		<rich:simpleTogglePanel opened="false" switchType="client" style="width:100%;">
+			<a4j:form id="searchForm">
+				<h:panelGrid columns="10" style="margin-left:-2px;">
+					<h:outputText value="客户经理：" />
+					<h:selectOneMenu id="key6" value="#{MySession.tempStr['RecordView.key6']}">
+						<f:selectItem itemValue="" itemLabel="" />
+						<f:selectItems value="#{Application.userSelectItem}" />
+					</h:selectOneMenu>
+					<h:outputText value="开始日期： " />
+					<a4j:outputPanel layout="block" style="margin-left:-5px;">
+						<rich:calendar id="startDate" value="#{MySession.tempDate['RecordView.startDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="结束日期：" />
+					<a4j:outputPanel layout="block">
+						<rich:calendar id="endDate" value="#{MySession.tempDate['RecordView.endDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<a4j:commandLink action="#{RecordView.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+				</h:panelGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+		<a4j:form id="dataForm" style="margin-top:3px;">
+			<rich:dataTable id="dataTable" value="#{RecordView.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column styleClass="left">
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="公司编码" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="公司名称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="项目名称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="培训对象" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建人" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建时间" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="修改人" />
+						</rich:column>
+						<rich:column styleClass="right">
+							<h:outputText value="修改时间" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputLink value="customerentity.jsf" target="_self">
+						<h:outputText value="#{item.prop['kehubm']}" />
+						<f:param name="id" value="#{item.prop['kehuId']}" />
+						<f:param name="uuid" value="#{item.prop['kehuUUID']}" />
+						<f:param name="reload" value="false" />
+					</h:outputLink>
+				</rich:column>
+				<rich:column style="width:*;text-align:left;">
+					<h:outputText value="#{item.prop['gongsimc']}" />
+				</rich:column>
+				<rich:column style="width:160px;text-align:left;">
+					<rich:panel style="border-width:0;">
+						<h:outputText value="#{item.prop['xiangmumc']}"/>
+						<rich:toolTip style="text-align:left;">
+							<h:panelGrid columns="1">
+								<h:outputText value="开始日期:#{item.prop['kaishisj']}-结束日期:#{item.prop['jieshusj']}" class="datetimeBlue" />
+								<h:outputText value="学员人数:#{item.prop['xueyuanrs']}" />
+								<h:outputText value="项目金额:#{item.prop['jiaoyije']}" />
+								<h:outputText value="增值服务:#{item.prop['zengzhifw']}" />
+								<h:outputText value="客户反馈:#{item.prop['kehufk']}" />
+								<h:outputText value="备注:#{item.prop['beizhu']}" />
+							</h:panelGrid>
+						</rich:toolTip>
+					</rich:panel>
+				</rich:column>
+				<rich:column style="width:80px;text-align:center;">
+					<h:outputText value="#{item.prop['培训对象']}" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['cUser']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['CDATE_']}" class="datetimeBlue" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['mUser']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['mDate']}" class="datetimeBlue" />
+				</rich:column>
+			</rich:dataTable>
+			<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{RecordView.dsList}" var="item" style="width:100%;" reRender="ds">
+				<ui:include src="../ds.xhtml" />
+			</rich:dataTable>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

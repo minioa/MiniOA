@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+	<a4j:region renderRegionOnly="true">
+		<a4j:form id="panelForm" style="margin:0;padding:0;">
+			<a4j:commandButton id="btn" reRender="panelForm" action="#{News.buildPanelList}" style="display:none">
+				<f:param name="cate" value="01" />
+			</a4j:commandButton>
+			<rich:panel style="width:336px;">
+				<f:facet name="header" style="border:1px solid red;">
+					<h:panelGrid columns="2" columnClasses="panelCo1,panelCo2">
+						<h:outputText value="#{News.prop['catename']}" />
+						<h:outputLink value="news.jsf?cateCode=#{param['cate']}">
+							<h:outputText value="#{Lang.prop[MySession.l]['more']}" />
+						</h:outputLink>
+					</h:panelGrid>
+				</f:facet>
+				<div style="overflow:hidden">
+					<rich:dataTable value="#{News.panelList}" var="item" style="width:100%;margin:0px;padding:0px;" rowKeyVar="rowNum">
+						<rich:column style="width:*;white-space: nowrap;background:url(images/title_bg.jpg) no-repeat -14px -441px;">
+							<h:outputLink title="#{item.prop['title']}" value="newsview.jsf" style="margin:0 0 3px 10px;text-decoration:none;" class="libg">
+								<h:outputText value="#{item.prop['title']}" style=""/>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="uuid" value="#{item.prop['uuid']}" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:16px;">
+							<h:graphicImage rendered="#{item.prop['isNew']=='true'}" style="border:0px;width:16px;margin-right:6px;" url="images/new.gif">
+							</h:graphicImage>
+						</rich:column>
+						<rich:column style="width:36px;white-space: nowrap;">
+							<h:outputText value="#{item.prop['cDate']}" class="datetimeBlue" />
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</rich:panel>
+		</a4j:form>
+	</a4j:region>
+	<script language="javascript">
+		reload("panelForm:btn");
+	</script>
+</ui:composition>
+</html>

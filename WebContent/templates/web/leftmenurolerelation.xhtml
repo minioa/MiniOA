@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['operationsetting']}" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:region selfRendered="true" rendered="#{MySession.hasOp['core.op.admin']==true}">
+			<h:outputText value="#{Role.init}" style="display:none;"/>
+			<a4j:form>
+				<h:outputText value="#{Lang.prop[MySession.l]['role']} : #{Role.prop['roleName']}" />
+
+				<a4j:commandLink onclick="javascript:selectAll();return false;" style="margin-right:3px;">
+					<h:outputText class="btn" value="#{Lang.prop[MySession.l]['selectall']}" />
+				</a4j:commandLink>
+				
+				<a4j:commandLink onclick="javascript:selectNone();return false;" style="margin-right:3px;">
+					<h:outputText class="btn" value="#{Lang.prop[MySession.l]['selectnone']}" />
+				</a4j:commandLink>
+
+				<a4j:commandLink reRender="subMsg" action="#{LeftMenuRoleRelation.updateRecords}" style="margin-right:3px;">
+					<h:outputText value="#{Lang.prop[MySession.l]['save']}" class="btn" />
+					<f:param name="relationId" value="#{param['id']}" />
+				</a4j:commandLink>
+
+				<rich:spacer height="3" width="100%" style="margin-top:5px;background-color:#60c8f2;" />
+
+				<rich:tree style="margin:0px 5px 0px 1px;width:300px;" ajaxSubmitSelection="false" switchType="client" value="#{LeftMenuRoleRelation.treeNode}" var="item" ajaxKeys="#{null}">
+					<rich:treeNode id="node" style="margin-left:3px;margin-top:3px;">
+						<h:selectBooleanCheckbox value="#{LeftMenuRoleRelation.checkIdsMap[item.menuId]}">
+						</h:selectBooleanCheckbox>
+						<h:outputText value="#{item.menuName}" />
+					</rich:treeNode>
+				</rich:tree>
+			</a4j:form>
+			<ui:include src="submsg.xhtml" />
+		</a4j:region>
+	</ui:define>
+</ui:composition>
+</html>

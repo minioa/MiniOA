@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['ballotadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:form id="dataForm" rendered="#{MySession.hasOp['core.ballot.read']==true}">
+			<rich:dataTable id="dataTable" value="#{BallotItems.items}" var="item" rowKeyVar="rowNum">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column>
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['title']}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['orderNum']}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['modifiedby']}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['modifieddate']}" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="width:200px;">
+					<h:outputText value="#{item.title}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.orderNum}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.MUSER}" />
+				</rich:column>
+				<rich:column style="width:90px;text-align:center;">
+					<h:outputText value="#{item.MDATE}" class="datetimeBlue" />
+				</rich:column>
+			</rich:dataTable>
+		</a4j:form>
+		<a4j:form id="actionForm">
+			<h:panelGrid columns="3">
+				<a4j:commandLink action="#{BallotItems.ballot}" rendered="#{MySession.tempStr['BallotItems.hasOp'] == 'true'}" reRender="dataForm,msg,actionForm">
+					<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ballot']}" />
+					<f:param name="redirect" value="false" />
+					<f:param name="reload" value="false" />
+					<f:param name="headerId" value="#{param['headerId']}" />
+				</a4j:commandLink>
+				<h:outputText value="#{Lang.prop[MySession.l]['ballotnotice']}" class="note" />
+			</h:panelGrid>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

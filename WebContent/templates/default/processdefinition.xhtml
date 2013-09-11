@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="流程定义" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:outputText value="流程名称:" />
+					<h:inputText id="key" value="#{MySession.tempStr['ProcessDefinition.key']}" style="width:160px;" />
+					<a4j:commandLink action="#{ProcessDefinition.buildItems}"
+						reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{ProcessDefinition.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:700px;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="流程名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="状态" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="创建时间" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="修改时间" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="formId" value="#{item.formId}" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{ProcessDefinitionDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:*;">
+							<h:outputLink value="processdefinitiontask.jsf">
+								<h:outputText value="#{item.processName}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="processDefinitionId" value="#{item.ID_}" />
+								<f:param name="formId" value="#{item.formId}" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.isPublish=='N'}" value="未发布" />
+							<h:outputText rendered="#{item.isPublish=='Y'}" value="已发布" />
+						</rich:column>
+						<rich:column style="width:90px;text-align:center;">
+							<h:outputText value="#{item.CDATE_}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:90px;text-align:center;">
+							<h:outputText value="#{item.MDATE_}" class="datetimeBlue" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{ProcessDefinition.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{ProcessDefinition.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="流程名称:" />
+							<h:inputText value="#{ProcessDefinition.processName}" id="processName" style="width:300px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="processName" />
+
+							<h:outputText value="表单名称:" />
+							<h:selectOneMenu id="formId" class="select" value="#{ProcessDefinition.formId}">
+								<f:selectItem itemValue="0" itemLabel="" />
+								<f:selectItems value="#{FormDao.si}" />
+								<a4j:support event="onchange" action="#{ProcessDefinition.setTempFormViewId}" reRender="formViewId" />
+							</h:selectOneMenu>
+							<rich:message for="formId" />
+							
+							<h:outputText value="表单视图名称:" />
+							<h:selectOneMenu id="formViewId" class="select" value="#{ProcessDefinition.formViewId}">
+								<f:selectItem itemValue="0" itemLabel="" />
+								<f:selectItems value="#{FormView.si}" />
+								<f:selectItem itemValue="0" itemLabel="" />
+							</h:selectOneMenu>
+							<rich:message for="formViewId" />
+
+							<h:outputText value="状态:" />
+							<h:selectOneRadio value="#{ProcessDefinition.isPublish}" id="isPublish">
+								<f:selectItem itemValue="N" itemLabel="未发布" />
+								<f:selectItem itemValue="Y" itemLabel="已发布" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="isPublish" />
+
+							<h:outputText value="公告信息:" />
+							<h:inputText value="#{ProcessDefinition.notice}" id="notice" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="notice" />
+
+							<h:outputText value="流程描述:" />
+							<h:inputText value="#{ProcessDefinition.processDesc}" id="processDesc" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="processDesc" />
+
+							<h:outputText value="流程创建时执行的SQL:" />
+							<h:inputTextarea value="#{ProcessDefinition.sqlWhenCreate}" id="sqlWhenCreate" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="sqlWhenCreate" />
+
+							<h:outputText value="流程删除时执行的SQL:" />
+							<h:inputTextarea value="#{ProcessDefinition.sqlWhenDelete}" id="sqlWhenDelete" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="sqlWhenDelete" />
+
+							<h:outputText value="流程通过时执行的SQL:" />
+							<h:inputTextarea value="#{ProcessDefinition.sqlWhenAgree}" id="sqlWhenAgree" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="sqlWhenAgree" />
+
+							<h:outputText value="流程拒绝时执行的SQL:" />
+							<h:inputTextarea value="#{ProcessDefinition.sqlWhenReject}" id="sqlWhenReject" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="sqlWhenReject" />
+
+							<h:outputText value="流程图片:" />
+							<rich:fileUpload fileUploadListener="#{ProcessDefinitionDao.uploadListener}" maxFilesQuantity="1" listWidth="200" listHeight="50">
+								<a4j:support event="onuploadcomplete" reRender="msg" />
+								<f:param name="id" value="#{param['id']}" />
+							</rich:fileUpload>
+							<a href="../../#{ProcessDefinition.processImage}" target="_blank"><img src="../../#{ProcessDefinition.processImageThum}" alt="" /> </a>
+
+							<h:outputText value="" />
+							<h:panelGrid columns="2">
+								<a4j:commandLink action="#{ProcessDefinition.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{ProcessDefinition.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{ProcessDefinition.ID_}" />
+							<h:inputHidden value="#{ProcessDefinition.CID_}" />
+							<h:inputHidden value="#{ProcessDefinition.CDATE_}" />
+							<h:inputHidden value="#{ProcessDefinition.processImage}" />
+							<h:inputHidden value="#{ProcessDefinition.processImageThum}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{ProcessDefinitionDao
+						.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

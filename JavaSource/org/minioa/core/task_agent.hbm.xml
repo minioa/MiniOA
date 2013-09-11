@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="TaskAgent" table="core_task_agent">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="taskDefId" column="taskDefId" type="java.lang.Integer" />
+		<property name="startDate" column="startDate" type="java.util.Date" />
+		<property name="endDate" column="endDate" type="java.util.Date" />
+		<property name="agentId" column="agentId" type="java.lang.Integer" />
+		<property name="taskId" column="taskId" type="java.lang.Integer" />
+	</class>
+	<sql-query name="core.task.agent.items.count">
+    <![CDATA[
+        select count(*) as result from core_task_agent
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.agent.items">
+    <![CDATA[
+        select ta.ID_, ta.CID_, ta.CDATE_, ta.MID_, ta.MDATE_, ta.UUID_,
+        	ta.taskDefId, ta.startDate, ta.endDate, ta.agentId, tc.processName, tb.taskName, td.displayName
+        from core_task_agent ta
+        left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+        left join core_processdefinition tc on tc.ID_ = tb.headerId
+        left join core_user td on td.ID_ = ta.agentId
+        where ta.CID_ = :cId
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.agent.getuseragent">
+    <![CDATA[
+        select ta.agentId
+        from core_task_agent ta
+        where ta.CID_ = :cId and ta.taskDefid = :taskDefId and (ta.taskId = :taskId or ((sysdate() between ta.startDate and ta.endDate) and ta.taskId = -1))
+        order by ta.ID_ desc
+        limit 1
+    ]]>
+	</sql-query>
+	
+</hibernate-mapping>

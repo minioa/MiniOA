@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理：联系人查询" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	background: url(../images/search.png) no-repeat;
+}
+</style>
+		<rich:simpleTogglePanel opened="false" switchType="client" style="width:100%;">
+			<a4j:form id="searchForm">
+				<h:outputText value="姓名昵称：" />
+				<h:inputText id="key" value="#{MySession.tempStr['ContactView.key']}" style="width:80px;" />
+				<h:outputText value="电话：" />
+				<h:inputText id="key2" value="#{MySession.tempStr['ContactView.key2']}" style="width:80px;" />
+				<h:outputText value="邮件：" />
+				<h:inputText id="key3" value="#{MySession.tempStr['ContactView.key3']}" style="width:80px;" />
+				<h:outputText value="客户经理：" />
+				<h:selectOneMenu id="key6" value="#{MySession.tempStr['ContactView.key6']}">
+					<f:selectItem itemValue="" itemLabel="" />
+					<f:selectItems value="#{Application.userSelectItem}" />
+				</h:selectOneMenu>
+				<h:panelGrid columns="10" style="margin-left:-2px;">
+					<h:outputText value="开始日期： " />
+					<a4j:outputPanel layout="block" style="margin-left:-5px;">
+						<rich:calendar id="startDate" value="#{MySession.tempDate['ContactView.startDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<h:outputText value="结束日期：" />
+					<a4j:outputPanel layout="block">
+						<rich:calendar id="endDate" value="#{MySession.tempDate['ContactView.endDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+					</a4j:outputPanel>
+					<a4j:commandLink action="#{ContactView.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';$('searchForm:key2').value='';$('searchForm:key3').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+					<h:commandLink action="#{ContactView.download}" rendered="#{MySession.hasOp['crm.admin']}">
+						<h:outputText value="下载" class="btn" />
+					</h:commandLink>
+				</h:panelGrid>
+			</a4j:form>
+		</rich:simpleTogglePanel>
+		<a4j:form id="dataForm" style="margin-top:3px;">
+			<rich:dataTable id="dataTable" value="#{ContactView.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column styleClass="left">
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="编码" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="名称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="姓名" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="昵称" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="部门" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="职位" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="职责" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="等级" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="生日" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建人" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="创建时间" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="修改人" />
+						</rich:column>
+						<rich:column styleClass="right">
+							<h:outputText value="修改时间" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['kehubm']}" />
+				</rich:column>
+				<rich:column style="width:80px;text-align:center;">
+					<h:outputText value="#{item.prop['gongsimc']}" />
+				</rich:column>
+				<rich:column style="width:80px;">
+					<rich:panel style="border-width:0;">
+						<h:outputText value="#{item.prop['xingming']}" />
+						<rich:toolTip>
+							<h:panelGrid columns="1">
+								<h:outputText value="QQ:#{item.prop['qq']}" />
+								<h:outputText value="MSN:#{item.prop['msn']}" />
+								<h:outputText value="邮件:#{item.prop['youjian']}" />
+								<h:outputText value="办公电话:#{item.prop['gudingdh']}" />
+								<h:outputText value="手机:#{item.prop['yidongdh']}" />
+								<h:outputText value="毕业院校:#{item.prop['biyeyx']}" />
+							</h:panelGrid>
+						</rich:toolTip>
+					</rich:panel>
+				</rich:column>
+				<rich:column style="width:40px;text-align:center;">
+					<h:outputText value="#{item.prop['nickname']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['bumen']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['zhiwei']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['zhize']}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText value="#{item.prop['lianxidj']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['birthday']}" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['cUser']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['CDATE_']}" class="datetimeBlue" />
+				</rich:column>
+				<rich:column style="width:45px;text-align:center;">
+					<h:outputText value="#{item.prop['mUser']}" />
+				</rich:column>
+				<rich:column style="width:55px;text-align:center;">
+					<h:outputText value="#{item.prop['mDate']}" class="datetimeBlue" />
+				</rich:column>
+			</rich:dataTable>
+			<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{ContactView.dsList}" var="item" style="width:100%;" reRender="ds">
+				<ui:include src="../ds.xhtml" />
+			</rich:dataTable>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

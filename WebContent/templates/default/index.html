@@ -1,0 +1,36 @@
+<html>
+	<title>MiniOA</title>
+	<script language="javascript">
+		var wincount=1;
+		var tabIndex=1;
+		var hidemenu=0;
+		var framesetcols="200,*";
+		function frameControl(){
+			if(hidemenu==0)
+        		framesetcols = "200";
+			else
+				framesetcols = "0";
+            var frameset = document.getElementById("frameset02");
+            var j = 0;
+            for(var i=1; i < frameset.children.length; i++){
+            	var frame = frameset.children[i];
+            	if(frame.name=='tab'+tabIndex)
+                	framesetcols = framesetcols + ",*";
+                else
+                	framesetcols = framesetcols + ",0";
+            }
+            document.all.frameset02.cols = framesetcols;
+		}
+	</script>
+	<frameset id="frameset01" border="0" rows="96,*,30">
+		<frame id="frameHeader" name="frameHeader" scrolling=no src="header.jsf">
+		<frameset id="frameset02" border="0" cols="200,*">
+			<frame name="frameLeft" scrolling="auto" src="menu.jsf" noresize >
+    	<frame name="tab1" scrolling="auto" src="portal.jsf">
+    </frameset>
+    <frame name="frameFooter" scrolling="no" src="footer.jsf">
+		<noframes>
+			<span style="font-size:14pt;font-weight:bold;color:red;">你的浏览器不支持内嵌框架。</span>
+		</noframes>
+	</frameset>
+</html>

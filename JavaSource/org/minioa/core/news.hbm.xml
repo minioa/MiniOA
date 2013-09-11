@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.news.newrecord">
+    <![CDATA[
+        insert into core_news(CID_,CDATE_,UUID_,cate,title,content,ispicnews, keywords, imgurl) values(:cId,sysdate(),:uuid,:cate,:title,:content,:ispicnews, :keywords, :imgurl)
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.cate,ta.title,ta.ispicnews,ta.status_,ta.times,tb.value
+        from core_news ta 
+        left join core_basicdata tb on tb.value2 = ta.cate and tb.name='news'
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.panellist">
+    <![CDATA[
+        select ta.ID_,ta.CDATE_,ta.UUID_,ta.title
+        from core_news ta 
+        left join core_basicdata tb on tb.value2 = ta.cate and tb.name='news'
+        where ta.status_ = 1 and ta.cate = :cate
+        order by ta.CDATE_ desc limit 10
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.catename">
+    <![CDATA[
+        select ifnull((select value from core_basicdata where value2 = :cate and name='news'),"") from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.records.count">
+    <![CDATA[
+        select count(*) as ds from core_news
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.cate,ta.title,ta.content,ta.ispicnews,ta.status_,ta.times,tb.displayName,tc.value
+        from core_news ta
+        left join core_user tb on tb.ID_ = ta.CID_
+        left join core_basicdata tc on tc.name='news' and tc.value2 = ta.cate
+        where ta.ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.updaterecordbyid">
+    <![CDATA[
+        update core_news set MID_ = :mId, MDATE_ = sysdate(), 
+        	cate = :cate, title = :title, content = :content, ispicnews = :ispicnews, keywords = :keywords, imgurl = :imgurl
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.updatestatusbyid">
+    <![CDATA[
+        update core_news set MID_ = :mId, MDATE_ = sysdate(), status_ = :status where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.updatetimesbyid">
+    <![CDATA[
+        update core_news set times = times + 1
+        where ID_ = :id and status_ = 1
+    ]]>
+	</sql-query>
+	<sql-query name="core.news.deleterecordbyid">
+    <![CDATA[
+        delete from core_news where ID_ = :id
+    ]]>
+	</sql-query>
+    <sql-query name="core.news.newspic">
+    <![CDATA[
+        select ta.ID_,ta.title,ta.UUID_,ta.imgurl
+        from core_news ta
+        where ta.ispicnews = 'Y' and ta.status_ = 1 and ta.imgurl is not null
+		order by ta.CDATE_ desc limit 5
+    ]]>
+    </sql-query>
+    <sql-query name="core.news.newspic.count">
+    <![CDATA[
+        select ifnull((select count(*)
+        from core_news ta
+        where ta.ispicnews = 'Y' and ta.status_ = 1 and ta.imgurl is not null),0) from dual
+    ]]>
+    </sql-query>
+</hibernate-mapping>

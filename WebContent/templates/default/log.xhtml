@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="日志管理" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left" rendered="#{MySession.hasOp['core.log.read']==true}">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:outputText value="标签:" />
+					<h:inputText id="key" value="#{MySession.tempStr['Log.key']}" style="width:80px;" />
+					<a4j:commandLink action="#{Log.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<h:commandLink action="#{Log.export}" rendered="#{MySession.hasOp['core.log.edit']==true}">
+						<h:outputText value="下载" class="btn" />
+					</h:commandLink>
+					<a4j:commandLink action="#{Log.deleteRecords}" reRender="msg" rendered="#{MySession.hasOp['core.log.edit']==true}">
+						<h:outputText value="批量删除" class="btn" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';return false;">
+						<h:outputText value="清除" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" rows="#{MySession.pageSize}" value="#{Log.items}" var="item" rowKeyVar="rowNum" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="标签" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="摘要" />
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="操作人" />
+								</rich:column>
+								<rich:column style="text-align:center;">
+									<h:outputText value="ip" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;white-space:nowrap;width:21px;">
+							<a4j:commandLink action="#{Log.showDialog}" rendered="#{MySession.hasOp['core.log.edit']==true}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:120px;text-align:left;">
+							<a4j:commandLink reRender="viewPanel" onclick="RichFaces.switchTab('tab','tab2','tab2');">
+								<h:outputText value="#{item.prop['tag']}" />
+								<f:param name="id" value="#{item.prop['id']}" />
+								<f:param name="type" value="role" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputText value="#{item.prop['summary']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['cUser']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['ip']}" class="datetimeBlue" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Log.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="浏览">
+				<a4j:outputPanel id="viewPanel">
+					<h:outputText value="#{Log.init}" style="display:none;" />
+					<h:panelGrid columns="2" columnClasses="co1,co2">
+						<h:outputText value="标签:" />
+						<h:outputText value="#{Log.prop['tag']}" />
+						<h:outputText value="操作人:" />
+						<h:outputText value="#{Log.prop['cUser']}" />
+						<h:outputText value="IP地址:" />
+						<h:outputText value="#{Log.prop['ip']}" />
+						<h:outputText value="时间:" />
+						<h:outputText value="#{Log.prop['cDate']}" class="datetimeBlue" />
+						<h:outputText value="摘要:" />
+						<h:outputText value="#{Log.prop['summary']}" />
+						<h:outputText value="明细:" rendered="#{MySession.hasOp['core.log.edit']==true}" />
+						<h:outputText value="#{Log.prop['details']}" rendered="#{MySession.hasOp['core.log.edit']==true}" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="您确认要删除当前记录？" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{Log.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="确认" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="取消" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

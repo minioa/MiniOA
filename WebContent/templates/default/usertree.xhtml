@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+	<rich:tree reRender="selectedUser1" toggleOnClick="true" immediate="true" ondblclick="#{rich:component('mpForUserTree')}.hide()" style="margin:0px 5px 0px 1px;width:300px;" ajaxSubmitSelection="true" switchType="client" value="#{UserTree.treeNode}" var="item" nodeSelectListener="#{UserTree.processSelection}" ajaxKeys="#{null}">
+		<rich:treeNode rendered="#{item.type=='user'}" style="margin-left:3px;margin-top:3px;" iconLeaf="images/male.png" icon="images/male.png">
+			<h:outputText value="#{item.displayName}"/>
+		</rich:treeNode>
+		<rich:treeNode rendered="#{item.type=='depa'}" style="margin-left:3px;margin-top:3px;" iconLeaf="images/department.png" icon="images/department.png">
+			<h:outputText value="#{item.displayName}"/>
+		</rich:treeNode>
+		<rich:treeNode rendered="#{item.type=='org'}" style="margin-left:3px;margin-top:3px;" iconLeaf="images/home.png" icon="images/home.png">
+			<h:outputText value="#{item.displayName}"/>
+		</rich:treeNode>
+	</rich:tree>
+</ui:composition>
+</html>

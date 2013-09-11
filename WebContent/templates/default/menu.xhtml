@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<head>
+<script language="javaScript">
+<!--
+function addFrame(pagename, frametext) {
+	if(pagename=='')
+		return ;
+	var isExists = false;
+	
+	var frameset = parent.document.all.frameset02;
+	
+	for(var i=1; i < frameset.children.length; i++){
+		var f =  frameset.children[i];
+		if(!f.src.endsWith('portal.jsf')){
+			if(f.tag == pagename)
+				isExists = true;
+		}	
+	}
+	if(isExists){
+		var j = 1;
+		if(window.parent.hidemenu==0)
+			window.parent.framesetcols = "200";
+		else
+			window.parent.framesetcols = "0";
+		for(var i=1; i < frameset.children.length; i++){
+			var f =  frameset.children[i];
+			if(!f.src.endsWith('portal.jsf')){
+				if(f.tag == pagename){
+					window.parent.framesetcols = window.parent.framesetcols + ",*";
+					j = i;
+				}
+				else
+					window.parent.framesetcols = window.parent.framesetcols + ",0";	
+			}else
+				window.parent.framesetcols = window.parent.framesetcols + ",0";
+		}
+		frameset.cols = window.parent.framesetcols;
+		var header = parent.frames["frameHeader"];
+		var ulList = header.document.getElementById('tabcontainer').childNodes;
+		for(var i = 2; i < ulList.length; i ++)
+			ulList[i].className = "";
+		for(var i = 2; i < ulList.length; i ++){
+			if(j == i -1)
+				ulList[i].className = "ui-tabs-selected";
+		}
+	}else{
+		var wincount = window.parent.wincount + 1;
+		if(window.parent.hidemenu==0)
+			window.parent.framesetcols = "200";
+		else
+			window.parent.framesetcols = "0";
+		for(var i=1; i < frameset.children.length; i++){
+			window.parent.framesetcols = window.parent.framesetcols + ",0";
+		}
+		window.parent.framesetcols = window.parent.framesetcols + ",*";
+		frameset.cols = window.parent.framesetcols;
+		var frame = parent.document.createElement("frame");
+		frame.id = "tab" + wincount;
+		frame.name = "tab" + wincount;
+		frame.src = pagename;
+		frame.tag = pagename;
+		frameset.appendChild(frame);
+		window.parent.wincount = wincount;
+		window.parent.tabIndex = wincount;
+		self.parent.frames[0].addTab(frametext);
+		self.parent.frameHeader.document.getElementById("loading").style.cssText='border:0px;width:21px;margin:-8px 0 30px 8px;';
+	}
+}
+//-->
+</script>
+</head>
+<body style="background-color:#E9F1F5;padding:0;margin:0;">
+<h:outputText value="#{Application.init} #{MySession.templateName}" style="display:none;" />
+<h:outputText escape="false" value="#{MySession.isLogin}" style="display:none;" />
+<h:outputText value="#{MySession.l}" style="display:none;" />
+<div style="padding:3px 0 3px 0;margin:0;width:100%;background-image: url(images/bgx.png); background-position: 0 -220px;">
+<h:outputText value="菜单导航" style="font-size:9pt;color:white;font-weight:bold;background: url(images/menu.png) no-repeat left;padding-left:18px;margin-left:3px;" />
+</div>
+<div>
+<rich:tree toggleOnClick="true" style="margin:8px 5px 0px 21px;" switchType="client" value="#{MainMenu.treeNode}" var="item" ajaxKeys="#{null}">
+	<rich:treeNode onclick="javascript:addFrame('#{item.menuUrl}','#{item.menuName}')" style="margin-left:3px;margin-top:3px;">
+		<h:outputText value="#{item.menuName}" style="font-size:10pt;" />
+	</rich:treeNode>
+</rich:tree>
+</div>
+</body>
+</html>

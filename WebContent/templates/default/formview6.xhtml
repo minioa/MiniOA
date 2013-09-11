@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="机房温湿度记录表&gt;默认视图" style="font-size:10pt;" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:panelGrid columns="12">
+<h:outputText value="登记日期:" />
+<a4j:outputPanel layout="block" >
+<rich:calendar id="field26" value="#{MySession.tempDate['FormMain.field26']}" locale="zh/CN"  cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" required="" requiredMessage="登记日期不能空"/>
+</a4j:outputPanel>
+<a4j:outputPanel layout="block" >
+<rich:calendar id="field26_2" value="#{MySession.tempDate['FormMain.field26_2']}" locale="zh/CN"  cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" required="" requiredMessage="登记日期不能空"/>
+</a4j:outputPanel>
+<a4j:commandLink action="#{FormMain.buildItems}" reRender="dataForm">
+<h:outputText value="搜索" class="btn" />
+<f:param name="reload" value="true" />
+<f:param name="formId" value="#{param['formId']}" />
+<f:param name="viewId" value="6" />
+<f:param name="resetPageNo" value="true" />
+<f:param name="fieldsText" value="" />
+<f:param name="fieldsDate" value="field26,field26_2," />
+</a4j:commandLink>
+<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:field26').value='';$('searchForm:field26_2').value='';return false;">
+<h:outputText value="清空" class="btn" />
+</a4j:commandLink>
+</h:panelGrid>
+
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{FormMain.items}" var="item" rowKeyVar="rowNum" rendered="#{MySession.hasOp['form.13.view.6.read']}" style="width:100%;">
+<f:facet name="header">
+<rich:columnGroup>
+<rich:column styleClass="left" style="width:1%;">
+<a4j:commandLink action="#{FormMain.buildItems}" reRender="dataForm">
+<h:graphicImage title="刷新" class="imgBtn" url="images/reload.png" style="width:16px;">
+</h:graphicImage>
+<f:param name="reload" value="true" />
+<f:param name="resetPageNo" value="true" />
+<f:param name="formId" value="13" />
+</a4j:commandLink>
+</rich:column>
+<rich:column style="width:1%;text-align:center;">
+<h:outputText value="" />
+</rich:column>
+<rich:column style="width:*;text-align:center;">
+<h:outputText value="登记日期" />
+</rich:column>
+<rich:column style="width:30%;text-align:right;">
+<h:outputText value="温度" />
+</rich:column>
+<rich:column style="width:30%;text-align:right;">
+<h:outputText value="湿度" />
+</rich:column>
+<rich:column styleClass="right" style="width:1%;">
+<h:outputText value="" />
+</rich:column>
+</rich:columnGroup>
+</f:facet>
+<rich:column style="width:1%;text-align:center;">
+<h:outputText value="#{rowNum + 1}" />
+</rich:column>
+<rich:column style="text-align:center;width:18px;white-space:nowrap">
+<h:panelGrid columns="2">
+<a4j:commandLink reRender="editForm">
+<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+</h:graphicImage>
+<f:param name="id" value="#{item.ID_}" />
+<f:param name="headerId" value="#{item.ID_}" />
+<f:param name="reload" value="false" />
+<f:param name="formId" value="13" />
+<f:param name="viewId" value="#{item.ID_}" />
+<f:param name="processId" value="#{item.processId}" />
+<f:param name="processDefId" value="#{item.processDefId}" />
+<f:param name="instanceId" value="#{item.ID_}" />
+</a4j:commandLink>
+</h:panelGrid>
+</rich:column>
+<rich:column style="text-align:center;">
+<h:outputText value="#{item.field26}" class="datetimeBlue"/>
+</rich:column>
+<rich:column style="text-align:right;">
+<h:outputText value="#{item.field11}" />
+</rich:column>
+<rich:column style="text-align:right;">
+<h:outputText value="#{item.field12}" />
+</rich:column>
+<rich:column style="text-align:center;width:40px;white-space:nowrap">
+<a4j:commandLink action="#{FormMainDao.showDialog}"
+onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+</h:graphicImage>
+<f:param name="id" value="#{item.ID_}" />
+<f:param name="reload" value="false" />
+<f:param name="formId" value="13" />
+</a4j:commandLink>
+</rich:column>
+</rich:dataTable>
+
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{FormMain.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="formds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{FormMain.init}" style="display:none;" />
+					<fieldset class="fieldset"><legend> <h:outputText value="基本属性" /> </legend>
+<a4j:form>
+<h:panelGrid columns="4" columnClasses="co1,co2,co3,co3">
+<h:outputText value="登记日期:" />
+<a4j:outputPanel layout="block">
+<rich:calendar id="field26" value="#{FormMain.field26}" locale="zh/CN"  cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" required="true" requiredMessage="登记日期不能空"/>
+</a4j:outputPanel>
+<h:graphicImage title="" class="imgBtn" url="images/help.png" />
+<rich:message for="field26" style="color:red;margin-left:3px;">
+<f:facet name="errorMarker">
+<h:outputText value="" />
+</f:facet>
+</rich:message>
+<h:outputText value="温度:" />
+<h:inputText value="#{FormMain.field11}" id="field11" required="true" requiredMessage="温度不能空" size="3">
+<rich:ajaxValidator event="onblur" />
+</h:inputText>
+<h:graphicImage title="温度必须是整数" class="imgBtn" url="images/help.png" />
+<rich:message for="field11" style="color:red;margin-left:3px;">
+<f:facet name="errorMarker">
+<h:outputText value="温度必须是整数" />
+</f:facet>
+</rich:message>
+<h:outputText value="湿度:" />
+<h:inputText value="#{FormMain.field12}" id="field12" required="true" requiredMessage="湿度不能空" size="3">
+<rich:ajaxValidator event="onblur" />
+</h:inputText>
+<h:graphicImage title="湿度必须是整数" class="imgBtn" url="images/help.png" />
+<rich:message for="field12" style="color:red;margin-left:3px;">
+<f:facet name="errorMarker">
+<h:outputText value="湿度必须是整数" />
+</f:facet>
+</rich:message>
+<h:outputText value="" />
+<h:panelGrid columns="2">
+<a4j:commandLink action="#{FormMain.newRecord}" onclick="if(lock) return false; else{lock=true;setTimeout(('lock=false'),5000);}" reRender="msg">
+<h:outputText class="btn" value="新建" />
+<f:param name="redirect" value="false" />
+<f:param name="reload" value="false" />
+<a4j:actionparam name="formId" value="13" assignTo="#{FormMain.formId}" />
+</a4j:commandLink>
+<a4j:commandLink action="#{FormMain.updateRecordById}" onclick="if(lock) return false; else{lock=true;setTimeout(('lock=false'),5000);}" reRender="msg">
+<h:outputText class="btn" value="保存" />
+<f:param name="redirect" value="false" />
+<f:param name="reload" value="false" />
+<f:param name="id" value="#{param['id']}" />
+<a4j:actionparam name="formId" value="13" assignTo="#{FormMain.formId}" />
+</a4j:commandLink>
+</h:panelGrid>
+</h:panelGrid>
+<h:inputHidden value="#{FormMain.ID_}" />
+<h:inputHidden value="#{FormMain.CID_}" />
+<h:inputHidden value="#{FormMain.CDATE_}" />
+<h:inputHidden value="#{FormMain.UUID_}" />
+<h:inputHidden value="#{FormMain.isArc}" />
+</a4j:form>
+</fieldset>
+
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{FormMainDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmAtt" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg,attachmentTable" action="#{FormMainAttachment.deleteRecordById}" onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

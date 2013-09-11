@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="网站设置" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab20" switchType="client" headerAlignment="left">
+			<rich:tab id="tab21" name="tab21" label="列表">
+				<a4j:form id="dataForm20" style="margin-top:3px;">
+					<rich:dataTable id="dataTable20" value="#{WebHtmlProp.items}" var="item" rowKeyVar="rowNum" style="width:700px;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<a4j:commandButton action="#{WebHtmlProp.buildItems}" image="../images/reload.png"  reRender="dataTable20">
+										<f:param name="xtype" value="#{param['xtype']}" />
+									</a4j:commandButton>
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="名称" />
+								</rich:column>
+								<rich:column style="text-align:left;">
+									<h:outputText value="值"/>
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm20">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab20','tab22','tab22');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="xtype" value="#{param['xtype']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:160px;text-align:left;">
+							<h:outputText value="#{item.propName}" />
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputText value="#{item.propValue}" escape="false"/>
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink action="#{WebHtmlPropDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm20:dataTable20:#{rowNum}:edit');hideObject('dataForm20:dataTable20:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="xtype" value="#{param['xtype']}" />
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab22" name="tab22" label="编辑">
+				<a4j:outputPanel id="editForm20">
+					<h:outputText value="#{WebHtmlProp.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="名称:" />
+							<h:inputText value="#{WebHtmlProp.propName}" id="propName" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="propName" />
+							<h:outputText value="类型:" />
+							<h:selectOneMenu value="#{WebHtmlProp.propType}" id="propType">
+								<f:selectItem itemValue="text" itemLabel="文本" />
+								<f:selectItem itemValue="module" itemLabel="模块" />
+								<f:selectItem itemValue="template" itemLabel="模板" />
+								<f:selectItem itemValue="file" itemLabel="网页" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="propName" />
+							
+							<h:outputText value="值:" />
+							<h:panelGroup style="padding-bottom:10px;" layout="block">
+								<h:inputTextarea value="#{WebHtmlProp.propValue}" 
+									style="height:60px;width:400px;border: 1px dotted #D5D8DC;margin:0px 3px -10px 0px;font-size:10pt;"
+									size="3">
+								</h:inputTextarea>
+							</h:panelGroup>
+							<rich:message for="propValue" />
+							<h:outputText value="" />
+							<h:panelGrid columns="4">
+								<a4j:commandLink action="#{WebHtmlProp.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="xtype" value="#{param['xtype']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{WebHtmlProp.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" rendered="#{param['id'] gt 0}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="xtype" value="#{param['xtype']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{WebHtmlProp.ID_}" />
+							<h:inputHidden value="#{WebHtmlProp.CID_}" />
+							<h:inputHidden value="#{WebHtmlProp.CDATE_}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3002" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="您确定要删除指定参数吗？" style="font-size:10pt;" />
+						<a4j:commandLink reRender="treeForm,editForm,msg" action="#{WebHtmlProp.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="确认" />
+							<f:param name="id" value="#{WebHtmlProp.ID_}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="取消" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

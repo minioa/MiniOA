@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.timer.taskduation">
+    <![CDATA[
+		select tf.ID_ as processDefId,
+        	te.ID_ as processId,tf.formId,te.instanceId,tf.processName,te.processDesc,tb.taskName,
+        	tb.emailNotice,tb.smsNotice,tb.imNotice,
+			tc.userName,tc.displayName,tc.email,tc.mobilePhone,
+			td.userName as agentName,td.displayName as agentDisplayName,
+			td.email as agentEmail,td.mobilePhone as agentMobilePhone,ta.ID_ as taskId
+		from core_task ta
+    	left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+    	left join core_user tc on tc.ID_ = ta.approverId
+   		left join core_user td on td.ID_ = ta.agentId
+      	left join core_process te on te.ID_ = ta.processId
+        left join core_processdefinition tf on tf.ID_ = tb.headerId
+		where ta.taskStatus='running' and date_add(ta.startDate,interval tb.taskDuation hour) < sysdate()
+			and (ta.MDATE_ is null or date_add(ta.MDATE_,interval 1 day) < sysdate())
+			and dayofweek(sysdate()) > 1 and dayofweek(sysdate()) < 7
+	]]>
+	</sql-query>
+	<sql-query name="core.timer.taskduation.update">
+    <![CDATA[
+		update core_task set MDATE_ = sysdate() where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.prop.items">
+    <![CDATA[
+		select propName,propValue from core_prop order by propName
+    ]]>
+	</sql-query>
+</hibernate-mapping>

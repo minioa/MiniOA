@@ -1,0 +1,55 @@
+package org.minioa.core.suggestionbox;
+
+import java.io.Serializable;
+
+public class UserEntity implements Serializable {
+	private static final long	serialVersionUID	= -1042449580199397136L;
+	private boolean				checked				= false;
+	private String				id;
+	private String				name;
+	private String				displayName;
+	private String				depaName;
+
+	public UserEntity() {
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String data) {
+		this.id = data;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String data) {
+		this.name = data;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String data) {
+		this.displayName = data;
+	}
+
+	public String getDepaName() {
+		return depaName;
+	}
+
+	public void setDepaName(String data) {
+		this.depaName = data;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+}

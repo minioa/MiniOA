@@ -1,0 +1,438 @@
+
+增加存储过程
+删除表单
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `core_delete_form_p`(in id int)
+BEGIN
+	delete from core_form_view_field
+	where viewId in (select ID_ from core_form_view where formId = id);
+	delete from core_form_view where formId = id;
+	delete from core_op_role_relation
+	where opId in (select ID_ from core_op where opName like concat('form.', cast(id as char(10)), '.%'));
+	delete from core_op where opName like concat('form.', cast(id as char(10)), '.%');
+	delete from core_form where ID_ = id;
+END
+删除视图
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `core_delete_form_view_p`(in id int)
+BEGIN
+	delete from core_op_role_relation	where opId in (select ID_ from core_op where opName like concat('%view.',CAST(id as char(10)),'.%'));
+	delete from core_op where opName like concat('%view.',CAST(id as char(10)),'.%');
+	delete from core_form_view_field where viewId = id;
+	delete from core_form_view where ID_ = id;
+END
+
+
+
+
+修改表core_processdefinition增加processNote字段，varchar(450)
+
+创建函数取得流程申请人的经理
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_getmanager_f`(processId int) RETURNS int(11)
+BEGIN
+  -- Get the immediate superior
+  DECLARE jobId int;
+  DECLARE managerJobId int;
+  DECLARE userId int;
+  
+  select ifnull((select pro.jobId from core_process pro where pro.ID_ = processId),0) into jobId from dual;
+  IF jobId > 0 THEN
+  	 set userId = core_getparentjob_f(jobId,1,1);
+  END IF;
+  return(userId);
+END
+
+创建函数取得流程申请人的上级
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_getsuperior_f`(processId int) RETURNS int(11)
+BEGIN
+  -- Get the immediate superior
+  DECLARE jobId int;
+  DECLARE superiorJobId int;
+  DECLARE userId int;
+  
+  select ifnull((select pro.jobId from core_process pro where pro.ID_ = processId),0) into jobId from dual;
+  IF jobId > 0 THEN
+  	 set userId = core_getparentjob_f(jobId,0,1);
+  END IF;
+  return(userId);
+END
+
+创建函数取得岗位的上级或经理岗位id
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_getparentjob_f`(jobId int, xtype int, userId int) RETURNS int(11)
+begin
+    DECLARE parentJobId int;
+    DECLARE tc int;
+    SET @@max_sp_recursion_depth = 25; 
+    set parentJobId = 0;
+    -- Get the parent job id
+    select parentId into parentJobId from core_job ta where ta.ID_ = jobId;
+    -- Get the manager
+    if xtype = 1 then
+        set tc = 0;
+        select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+        -- No.1
+        if tc = 0 and parentJobId > 0 then
+            select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+            select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+            -- No.2
+            if tc = 0 and parentJobId > 0 then
+                select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                -- No.3
+                if tc = 0 and parentJobId > 0 then
+                    select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                    select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                    -- No.4
+                    if tc = 0 and parentJobId > 0 then
+                        select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                        select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                        -- No.5
+                        if tc = 0 and parentJobId > 0 then
+                            select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                            select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                            -- No.6
+                            if tc = 0 and parentJobId > 0 then
+                                select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                                select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                                -- No.7
+                                if tc = 0 and parentJobId > 0 then
+                                    select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                                    select count(*) into tc from core_job ta where ta.ID_ = parentJobId and ta.isManager = 1;
+                                    -- No.8
+                                    if tc = 0 and parentJobId > 0 then
+                                        select parentId into parentJobId from core_job ta where ta.ID_ = parentJobId;
+                                    end if; 
+                                end if; 
+                            end if; 
+                        end if; 
+                    end if; 
+                end if; 
+            end if; 
+        end if;
+    end if;
+    if userId = 1 then
+        -- return the job user id
+        select ifnull((SELECT tb.ID_ from core_user tb where tb.jobId = parentJobId or tb.jobId2 = parentJobId limit 1),0) into parentJobId from dual;
+    end if;
+    RETURN(parentJobId);
+end
+
+
+创建函数，判断是否是上级
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_issuperior_f`(userid int, userid2 int) RETURNS int(11)
+BEGIN
+		DECLARE tc int;
+    DECLARE jobId int;
+    DECLARE jobId2 int;
+    DECLARE parentJobId int;
+    set tc = 0;
+
+    select ta.jobId,ta.jobId2 into jobId,jobId2 from core_user ta where ta.ID_ = userid;
+    IF jobId > 0 THEN
+        -- No.1
+        select tb.parentId into parentJobId from core_job tb where tb.ID_ = jobId;
+        select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+        if tc = 0  and parentJobId > 0 then
+            -- No.2
+            select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+            select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+            if tc = 0  and parentJobId > 0 then
+                -- No.3
+                select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                if tc = 0  and parentJobId > 0 then
+                    -- No.4
+                    select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                    select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                    if tc = 0  and parentJobId > 0 then
+                        -- No.5
+                        select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                        select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                        if tc = 0  and parentJobId > 0 then
+                            -- No.6
+                            select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                            select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = paparentJobIdrentId);
+                            if tc = 0  and parentJobId > 0 then
+                                -- No.7
+                                select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                                select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                                if tc = 0  and parentJobId > 0 then
+                                    -- No.7
+                                    select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                                    select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                                end if;
+                            end if;
+                        end if;
+                    end if;
+                end if;
+            end if;
+        end if;
+    END IF;
+    IF tc=0 AND jobId2 > 0 THEN
+        select tb.parentId into parentJobId from core_job tb where tb.ID_ = jobId2;
+        select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+        if tc = 0  and parentJobId > 0 then
+            -- No.2
+            select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+            select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+            if tc = 0  and parentJobId > 0 then
+                -- No.3
+                select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                if tc = 0  and parentJobId > 0 then
+                    -- No.4
+                    select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                    select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                    if tc = 0  and parentJobId > 0 then
+                        -- No.5
+                        select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                        select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                        if tc = 0  and parentJobId > 0 then
+                            -- No.6
+                            select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                            select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = paparentJobIdrentId);
+                            if tc = 0  and parentJobId > 0 then
+                                -- No.7
+                                select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                                select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                                if tc = 0  and parentJobId > 0 then
+                                    -- No.8
+                                    select tb.parentId into parentJobId from core_job tb where tb.ID_ = parentJobId;
+                                    select count(*) into tc from core_user ta where ta.ID_ = userid2 and (ta.jobId = parentJobId or ta.jobId2 = parentJobId);
+                                end if;
+                            end if;
+                        end if;
+                    end if;
+                end if;
+            end if;
+        end if;
+    END IF;
+    return tc;
+END
+
+
+创建函数，判断是否是同事
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_iscolleague_f`(userid int, userid2 int) RETURNS int(11)
+BEGIN
+		DECLARE tc int;
+    DECLARE depaId int;
+    DECLARE parentDepaId int;
+    set tc = 0;
+
+    select ta.depaId into depaId from core_user ta where ta.ID_ = userid;
+    select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = depaId;
+    if tc = 0 and depaId > 0 then
+        -- No.2
+        select tb.parentId into parentDepaId from core_department tb where ID_ = depaId;
+        select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+        if tc = 0 and parentDepaId > 0 then
+            -- No.3
+            select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+            select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+            if tc = 0 and parentDepaId > 0 then
+                -- No.4
+                select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+                select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+                if tc = 0 and parentDepaId > 0 then
+                    -- No.5
+                    select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+                    select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+                    if tc = 0 and parentDepaId > 0 then
+                        -- No.6
+                        select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+                        select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+                        if tc = 0 and parentDepaId > 0 then
+                            -- No.7
+                            select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+                            select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+                            if tc = 0 and parentDepaId > 0 then
+                                -- No.8
+                                select tb.parentId into parentDepaId from core_department tb where ID_ = parentDepaId;
+                                select count(*) into tc from core_user ta where ta.ID_ = userid2 and ta.depaId = parentDepaId;
+                            end if;
+                        end if;
+                    end if;
+                end if;
+            end if;
+        end if;
+    end if;
+    return tc;
+END
+
+
+修改FormMainDao.java
+buildDsList,buildItems的core_issuperior为core_issuperior_f，core_iscolleague为core_iscolleague_f
+
+创建自由审批表
+delimiter $$
+
+CREATE TABLE `core_task_approvers` (
+  `ID_` int(11) NOT NULL AUTO_INCREMENT,
+  `proessId` int(11) DEFAULT NULL,
+  `taskDefCode` varchar(45) DEFAULT NULL,
+  `approverId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID_`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+创建函数，依据岗位返回用户id
+delimiter $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_getuseridsbyjobid_f`(jId int, xtype int) RETURNS varchar(100) CHARSET utf8
+BEGIN
+    declare ids varchar(100);
+    declare displaynames varchar(100);
+    declare str varchar(45);
+    declare uId int;
+    declare stop int default 0;
+    declare cur cursor for(SELECT ID_ FROM core_user where jobId = jId or jobId2 = jId);
+    declare CONTINUE HANDLER FOR SQLSTATE '02000' SET stop=1;
+    set ids = '';
+    set displaynames = '';
+    OPEN cur;
+    FETCH cur INTO uId;
+    WHILE stop <> 1 DO
+        set ids = concat(ids,',',cast(uId as char(10)));
+        select displayName into str from core_user where ID_ = uId;
+        set displaynames = concat(displaynames,',',str);
+        FETCH cur INTO uId;
+    END WHILE;
+    CLOSE cur;
+    if xtype = 0 then
+        return(ids);
+    end if;
+    return(displaynames);
+end$$
+
+创建函数，依据角色返回用户ids
+delimiter $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_getuseridsbyroleid_f`(rId int, xtype int) RETURNS varchar(100) CHARSET utf8
+BEGIN
+    declare ids varchar(100);
+    declare displaynames varchar(100);
+    declare str varchar(45);
+    declare uId int;
+    declare stop int default 0;
+    declare cur cursor for(SELECT userId FROM core_role_user_relation where roleId = rId);
+    declare CONTINUE HANDLER FOR SQLSTATE '02000' SET stop=1;
+    set ids = '';
+    set displaynames = '';
+    OPEN cur;
+    FETCH cur INTO uId;
+    WHILE stop <> 1 DO
+        set ids = concat(ids,',',cast(uId as char(10)));
+        select displayName into str from core_user where ID_ = uId;
+        set displaynames = concat(displaynames,',',str);
+        FETCH cur INTO uId;
+    END WHILE;
+    CLOSE cur;
+    if xtype = 0 then
+        return(ids);
+    end if;
+    return(displaynames);
+end$$
+
+创建函数，返回审批人
+-- --------------------------------------------------------------------------------
+-- Routine DDL
+-- Note: comments before and after the routine body will not be stored by the server
+-- --------------------------------------------------------------------------------
+DELIMITER $$
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `core_gettaskapproverids_f`(taskId int, xtype int) RETURNS varchar(100) CHARSET utf8
+BEGIN
+    /**
+    0 指派给人
+    1 指派给角色
+    2 申请人上级
+    3 申请人经理
+    4 申请人本人
+    5 指派给岗位
+    9 自由审批
+    xtype 0 表示 返回ids, 返回names
+    */
+    declare ids varchar(45);
+    declare displaynames varchar(100);
+    declare tempId int;
+    
+		declare processId int;
+    declare taskDefId int;
+    declare processDefId int;
+    declare taskDefCode varchar(45);
+    declare taskApproveType int;
+    declare taskApproverId int;
+    declare taskApproverRoleId int;
+
+    select ta.processId, ta.taskDefId into processId, taskDefId from core_task ta where ta.ID_ = taskId;
+    select ta.headerId,ta.taskApproveType,ta.taskApproverId,ta.taskApproverRoleId,ta.taskCode into
+        processDefId, taskApproveType, taskApproverId, taskApproverRoleId, taskDefCode
+    from core_processdefinition_task ta where ta.ID_ = taskDefId;
+
+    if taskApproveType = 0 then
+        set ids = cast(taskApproverId as char(45));
+        select displayName into displaynames from core_user where ID_ = taskApproverId;
+    end if;
+    if taskApproveType = 1 then
+        set ids = core_getuseridsbyroleid_f(taskApproverRoleId,0);
+        set displaynames = core_getuseridsbyroleid_f(taskApproverRoleId,1);
+    end if;
+    -- 申请人上级
+    if taskApproveType = 2 then
+        select core_getsuperior_f(ta.ID_) into tempId from core_process ta where ta.ID_ = processId;
+        set ids = cast(tempId as char(45));
+        select displayName into displaynames from core_user where ID_ = tempId;
+    end if;
+    -- 申请人经理
+    if taskApproveType = 3 then
+        select core_getmanager_f(ta.ID_) into tempId from core_process ta where ta.ID_ = processId;
+        set ids = cast(tempId as char(45));
+        select displayName into displaynames from core_user where ID_ = tempId;
+    end if;
+    -- 申请人本人
+    if taskApproveType = 4 then
+        SELECT ta.CID_ into tempId FROM core_process ta where ta.ID_ = processId;
+        set ids = cast(tempId as char(45));
+        select displayName into displaynames from core_user where ID_ = tempId;
+    end if;
+    
+    -- 指派给岗位
+    if taskApproveType = 5 then
+        SELECT ta.jobId into tempId FROM core_process ta where ta.ID_ = processId;
+        set ids = core_getuseridsbyjobid_f(tempId, 0);
+        set displaynames = core_getuseridsbyjobid_f(tempId, 1);
+    end if;
+    -- 自由审批
+    if taskApproveType = 9 then
+        SELECT ifnull(ta.approverId,0) into tempId FROM core_task_approvers ta where ta.processId = processId and ta.taskDefCode = taskDefCode;
+        set ids = cast(tempId as char(45));
+        select displayName into displaynames from core_user where ID_ = tempId;
+    end if;
+
+    if xtype = 0 then
+        return(ids);
+    end if;
+    return(displaynames);
+END
+

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Task" table="core_task">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="processId" column="processId" type="java.lang.Integer" />
+		<property name="taskDefId" column="taskDefId" type="java.lang.Integer" />
+		<property name="taskFrom" column="taskFrom" type="java.lang.Integer" />
+		<property name="startDate" column="startDate" type="java.util.Date" />
+		<property name="endDate" column="endDate" type="java.util.Date" />
+		<property name="taskStatus" column="taskStatus" type="java.lang.String" />
+		<property name="note" column="note" type="java.lang.String" />
+		<property name="approverId" column="approverId" type="java.lang.Integer" />
+	</class>
+	<sql-query name="core.task.items.count">
+    <![CDATA[
+        select count(*) as result from core_task ta
+        left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+		left join core_process tc on tc.ID_ = ta.processId
+    	left join core_user td on td.ID_ = tc.CID_
+		left join core_user te on te.ID_ = ta.MID_
+		left join core_user tf on tf.ID_ = ta.approverId
+		left join core_processdefinition th on th.ID_ = tc.processDefId
+        where ta.taskStatus not in ('running','auto')
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.items">
+    <![CDATA[
+		select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.processId, 
+        	ta.taskDefId, 
+        	tb.taskName,
+        	ta.startDate, 
+        	ta.endDate, 
+        	ta.taskStatus, 
+			tb.taskApproveType,
+			tb.taskNextStep,
+  			date_add(ta.startDate,interval tb.taskDuation day) as duDate,
+  			ta.note,
+  			tc.CID_ as applicantId,
+  			ta.approverId,
+    		td.displayName as applicant,
+  			core_gettaskapproverids_f(ta.ID_,1) as approver,
+  			th.processName,
+  			tc.processDesc,
+  			th.formId,
+  			tc.processDefId,
+  			tc.instanceId,
+  			concat('formview',th.formviewId, '.jsf'),
+  			core_gettaskapproverids_f(ta.ID_,0) as approverIds,
+  			core_gettaskagentid_f(ta.ID_,0) as agentId,
+  			core_gettaskagentid_f(ta.ID_,1) as agentName,
+  			te.signameImage
+		from core_task ta
+		left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+		left join core_process tc on tc.ID_ = ta.processId
+    	left join core_user td on td.ID_ = tc.CID_
+    	left join core_user te on te.ID_ = ta.approverId
+		left join core_processdefinition th on th.ID_ = tc.processDefId
+		where tc.instanceId = :instanceId and tc.processDefId= :processDefId
+			 and tb.taskType = 1 and ta.taskStatus !='auto'
+		order by ta.ID_ asc
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.items.running">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.processId, 
+        	ta.taskDefId, 
+        	tb.taskName,
+        	ta.startDate, 
+        	ta.endDate, 
+        	ta.taskStatus, 
+			tb.taskApproveType,
+			tb.taskNextStep,
+  			date_add(ta.startDate,interval tb.taskDuation day) as duDate,
+  			ta.note,
+  			tc.CID_ as applicantId,
+  			ta.approverId,
+    		td.displayName as applicant,
+  			core_gettaskapproverids_f(ta.ID_,1) as approver,
+  			th.processName,
+  			tc.processDesc,
+  			th.formId,
+  			tc.processDefId,
+  			tc.instanceId,
+  			concat('formview',th.formviewId, '.jsf'),
+  			core_gettaskapproverids_f(ta.ID_,0) as approverIds,
+  			core_gettaskagentid_f(ta.ID_,0) as agentId,
+  			core_gettaskagentid_f(ta.ID_,1) as agentName,
+  			te.signameImage
+		from core_task ta
+		left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+		left join core_process tc on tc.ID_ = ta.processId
+    	left join core_user td on td.ID_ = tc.CID_
+    	left join core_user te on te.ID_ = ta.approverId
+		left join core_processdefinition th on th.ID_ = tc.processDefId
+		where ta.taskStatus = 'running' and tb.taskType = 1
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.items.completed">
+    <![CDATA[
+         select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.processId, 
+        	ta.taskDefId, 
+        	tb.taskName,
+        	ta.startDate, 
+        	ta.endDate, 
+        	ta.taskStatus, 
+			tb.taskApproveType,
+			tb.taskNextStep,
+  			date_add(ta.startDate,interval tb.taskDuation day) as duDate,
+  			ta.note,
+  			tc.CID_ as applicantId,
+  			ta.approverId,
+    		td.displayName as applicant,
+  			core_gettaskapproverids_f(ta.ID_,1) as approver,
+  			th.processName,
+  			tc.processDesc,
+  			th.formId,
+  			tc.processDefId,
+  			tc.instanceId,
+  			concat('formview',th.formviewId, '.jsf'),
+  			core_gettaskapproverids_f(ta.ID_,0) as approverIds,
+  			core_gettaskagentid_f(ta.ID_,0) as agentId,
+  			core_gettaskagentid_f(ta.ID_,1) as agentName,
+  			te.signameImage
+		from core_task ta
+		left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+		left join core_process tc on tc.ID_ = ta.processId
+    	left join core_user td on td.ID_ = tc.CID_
+    	left join core_user te on te.ID_ = ta.approverId
+		left join core_processdefinition th on th.ID_ = tc.processDefId
+		where ta.taskStatus not in ('running','auto')
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.completetaskbyuuid">
+    <![CDATA[
+        update core_task set approverId = :approverId, MDATE_ = sysdate(), 
+        	endDate = sysdate(), taskStatus = :taskStatus, note = :note
+        where UUID_ = :uuid
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.updatetaskapprovers">
+    <![CDATA[
+        select ta.processId,ta.taskDefId,tb.taskApproveType,ta.ID_ 
+		from core_task ta 
+		left join core_processdefinition_task tb on tb.ID_ = ta.taskDefId
+		where ta.taskStatus='running' and ta.taskDefId=:taskDefId
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.runningtaskdefid">
+    <![CDATA[
+    	select ifnull((
+        select ta.taskDefId
+		from core_task ta 
+		where ta.taskStatus='running' and ta.processId=:processId
+		order by ta.ID_ desc limit 1),0) from dual
+    ]]>
+	</sql-query>
+	
+	<sql-query name="core.task.update.record.note.where.id">
+    <![CDATA[
+        update core_task set MID_ = :mId, MDATE_ = sysdate(), note = :note
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.update.record.complete.where.id">
+    <![CDATA[
+        update core_task set MID_ = :mId, MDATE_ = sysdate(), endDate = sysdate(), taskStatus = :taskStatus
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.cancel">
+    <![CDATA[
+        update core_task set taskStatus = 'cancel' where processId = :processId and taskStatus = 'running'
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.delete.record.where.processId">
+    <![CDATA[
+        delete from core_task where processId = :processId
+    ]]>
+	</sql-query>
+	<sql-query name="core.task.getsubtaskcount">
+    <![CDATA[
+        call core_task_getsubtaskcount(:pDefId,:taskDefCode,:pId)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

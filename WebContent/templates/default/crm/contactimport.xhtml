@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="联系人信息导入" />
+	</ui:define>
+	<ui:define name="body">
+		<h:outputText value="注意：导入的文件必须是xls格式，且包括23个字段，具体模版可以从【联系人查询】页面获得。【客户编码】字段必须与客户资料表中客户编码一致。具体操作：点击Add，然后Upload" />
+		<a4j:form style="margin-top:8px;">
+			<rich:fileUpload fileUploadListener="#{ContactDao.uploadListener}" acceptedTypes="xls" maxFilesQuantity="1" id="upload" listHeight="80" listWidth="300">
+				<a4j:support event="onuploadcomplete" reRender="msg" />
+			</rich:fileUpload>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

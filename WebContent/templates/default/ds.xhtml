@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<f:facet name="footer">
+	<rich:datascroller maxPages="20" fastControls="hide" page="#{MySession.scrollerPage}" pagesVar="pages" id="ds" reRender="dataTable" for="dsTable">
+		<f:facet name="first">
+			<h:outputText value="&lt;&lt;" />
+		</f:facet>
+		<f:facet name="first_disabled">
+			<h:outputText value="&lt;&lt;" />
+		</f:facet>
+		<f:facet name="last">
+			<h:outputText value="&gt;&gt;" />
+		</f:facet>
+		<f:facet name="last_disabled">
+			<h:outputText value="&gt;&gt;" />
+		</f:facet>
+		<f:facet name="previous">
+			<h:outputText value="&lt;" />
+		</f:facet>
+		<f:facet name="previous_disabled">
+			<h:outputText value="&lt;" />
+		</f:facet>
+		<f:facet name="next">
+			<h:outputText value="&gt;" />
+		</f:facet>
+		<f:facet name="next_disabled">
+			<h:outputText value="&gt;" />
+		</f:facet>
+		<f:facet name="pages">
+			<h:panelGroup>
+				<h:selectOneMenu value="#{MySession.scrollerPage}" onchange="#{rich:component('ds')}.switchToPage(this.value)">
+					<f:selectItems value="#{MySession.pagesToScroll}" />
+				</h:selectOneMenu>
+				<h:outputText value="/ #{pages}" />
+			</h:panelGroup>
+		</f:facet>
+		<f:param name="headerId" value="#{param['headerId']}" />
+		<f:param name="status" value="#{param['status']}" />
+	</rich:datascroller>
+</f:facet>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="表单视图管理" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:form style="width:100%;">
+			<a4j:commandLink action="#{FormViewField.buildFormFile}" style="float:right;" reRender="msg">
+				<h:outputText value="生成页面" class="btn" />
+				<f:param name="formId" value="#{param['formId']}" />
+				<f:param name="viewId" value="#{param['viewId']}" />
+			</a4j:commandLink>
+		</a4j:form>
+		<br />
+		<fieldset class="fieldset"><legend> <h:outputText value="列表字段" /> </legend> <a4j:form id="form">
+			<a4j:outputPanel id="table">
+				<table border="1" class="dr-table rich-table">
+					<thead class="dr-table-thead">
+						<tr class="dr-table-header rich-table-header">
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="No" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="字段名称" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="显示宽度" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="对齐方式" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="是否显示" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="操作" /></th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<a4j:repeat id="repeater" value="#{FormViewField.items}" var="item" binding="#{FormViewFieldRepeater.repeater}" rowKeyVar="rowNum">
+							<tr>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText value="#{rowNum + 1}" /></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText value="#{item.fieldText}" /> <h:inputHidden binding="#{FormViewFieldRepeater.fieldId}"
+									value="#{item.fieldId}" /></td>
+								<td class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.displayWidth}" immediate="false" value="#{item.displayWidth}">
+									<f:selectItem itemValue="5%" itemLabel="5%" />
+									<f:selectItem itemValue="10%" itemLabel="10%" />
+									<f:selectItem itemValue="20%" itemLabel="20%" />
+									<f:selectItem itemValue="30%" itemLabel="30%" />
+									<f:selectItem itemValue="40%" itemLabel="40%" />
+									<f:selectItem itemValue="50%" itemLabel="50%" />
+									<f:selectItem itemValue="60%" itemLabel="60%" />
+									<f:selectItem itemValue="*" itemLabel="*" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.textAlign}" value="#{item.textAlign}">
+									<f:selectItem itemValue="left" itemLabel="居左对齐" />
+									<f:selectItem itemValue="center" itemLabel="居中对齐" />
+									<f:selectItem itemValue="right" itemLabel="居右对齐" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.isShow}" value="#{item.isShow}">
+									<f:selectItem itemValue="N" itemLabel="隐藏" />
+									<f:selectItem itemValue="Y" itemLabel="显示" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:graphicImage title="保存当前记录" class="imgBtn" url="images/saveicon.png">
+									<a4j:support immediate="true" id="save" action="#{FormViewFieldRepeater.saveTable}" event="onclick">
+										<a4j:actionparam name="id" value="#{item.ID_}" />
+										<a4j:actionparam name="tableOrEdit" value="0" />
+										<a4j:actionparam name="formId" value="#{param['formId']}" />
+										<a4j:actionparam name="viewId" value="#{param['viewId']}" />
+									</a4j:support>
+								</h:graphicImage></td>
+							</tr>
+						</a4j:repeat>
+					</tbody>
+				</table>
+			</a4j:outputPanel>
+		</a4j:form></fieldset>
+		<fieldset class="fieldset"><legend> <h:outputText value="属性字段" /> </legend> <a4j:form id="form2">
+			<a4j:outputPanel id="table2">
+				<table border="1" class="dr-table rich-table">
+					<thead class="dr-table-thead">
+						<tr class="dr-table-header rich-table-header">
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="No" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="字段名称" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="长度" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="控件类型" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="可编辑" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="必填" /></th>
+							<th class="dr-table-headercell rich-table-headercell"><h:outputText value="操作" /></th>
+						</tr>
+					</thead>
+					<tbody>
+						<a4j:repeat id="repeater2" value="#{FormViewField.items2}" var="item" binding="#{FormViewFieldRepeater.repeater2}" rowKeyVar="rowNum">
+							<tr>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText value="#{rowNum + 1}" /></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText value="#{item.fieldText}" /> <h:inputHidden binding="#{FormViewFieldRepeater.fieldId}"
+									value="#{item.fieldId}" /></td>
+								<td class="dr-subtable-cell rich-subtable-cell"><h:inputText id="inputTextBoxSize" binding="#{FormViewFieldRepeater.inputTextBoxSize}" immediate="true" value="#{item.inputTextBoxSize}"
+									size="2" /></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.inputType}" value="#{item.inputType}">
+									<f:selectItem itemValue="" itemLabel="" />
+									<f:selectItem itemValue="text" itemLabel="文本框" />
+									<f:selectItem itemValue="textarea" itemLabel="多行文本框" />
+									<f:selectItem itemValue="radio" itemLabel="单选框" />
+									<f:selectItem itemValue="checkbox" itemLabel="复选框" />
+									<f:selectItem itemValue="select" itemLabel="下拉框" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.canEdit}" value="#{item.canEdit}">
+									<f:selectItem itemValue="N" itemLabel="只读" />
+									<f:selectItem itemValue="Y" itemLabel="修改" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:selectOneMenu binding="#{FormViewFieldRepeater.required}" value="#{item.required}">
+									<f:selectItem itemValue="false" itemLabel="否" />
+									<f:selectItem itemValue="true" itemLabel="是" />
+								</h:selectOneMenu></td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:graphicImage title="保存当前记录" class="imgBtn" url="images/saveicon.png">
+									<a4j:support immediate="true" id="save2" action="#{FormViewFieldRepeater.saveEdit}" event="onclick">
+										<a4j:actionparam name="id" value="#{item.ID_}" />
+										<a4j:actionparam name="tableOrEdit" value="1" />
+										<a4j:actionparam name="formId" value="#{param['formId']}" />
+										<a4j:actionparam name="viewId" value="#{param['viewId']}" />
+									</a4j:support>
+								</h:graphicImage></td>
+							</tr>
+						</a4j:repeat>
+					</tbody>
+				</table>
+			</a4j:outputPanel>
+		</a4j:form></fieldset>
+	</ui:define>
+</ui:composition>
+</html>

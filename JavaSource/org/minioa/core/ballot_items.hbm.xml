@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="BallotItems" table="core_ballot_items">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="headerId" column="headerId" type="java.lang.Integer" />
+		<property name="title" column="title" type="java.lang.String" />
+		<property name="orderNum" column="orderNum" type="java.lang.Integer" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.ballot.items.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.headerId,ta.title,ta.orderNum,tb.displayName
+        from core_ballot_items ta
+        left join core_user tb on tb.ID_ = ta.MID_
+        where ta.headerId = :headerId order by ta.orderNum asc
+    ]]>
+	</sql-query>
+	<sql-query name="core.ballot.items.records.count">
+    <![CDATA[
+        select count(*) from core_ballot_items where headerId = :headerId 
+    ]]>
+	</sql-query>
+	<sql-query name="core.ballot.items.check">
+    <![CDATA[
+        select ifnull((select min(ID_) from core_ballot_items where headerId = :headerId and MID_ = :mId and orderNum = 0),0) from dual
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.ballot.items.getrecordbyid">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	title,orderNum
+        from core_ballot_items where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.ballot.items.getordernum">
+    <![CDATA[
+        select count(*)
+        from core_ballot_items where (ID_ = :id and orderNum > 0) or exists (select 1 from core_ballot_items where orderNum = :orderNum and headerId = :headerId)
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.ballot.items.updaterecordbyid">
+    <![CDATA[
+        update core_ballot_items set MID_ = :mId, MDATE_ = sysdate(),
+        	orderNum = :orderNum
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.ballot.items.deleterecordbyid">
+    <![CDATA[
+        delete from core_ballot_items where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.ballot.items.deleterecordbyheaderid">
+    <![CDATA[
+        delete from core_ballot_items where headerId = :headerId
+    ]]>
+	</sql-query>
+	<sql-query name="core.ballot.items.completed">
+    <![CDATA[
+        call core_ballot_update(:headerId)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

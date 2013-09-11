@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="show_sql">false</property>
+		<property name="hibernate.dialect">org.minioa.core.ExtMySQLInnoDBDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:9398/oa</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">hsj@3306</property>
+		<property name="hibernate.cache.provider_class">org.hibernate.cache.HashtableCacheProvider</property>
+		<property name="hibernate.c3p0.min_size">2</property>
+		<property name="hibernate.c3p0.max_size">200</property>
+		<property name="hibernate.c3p0.timeout">600</property>
+		<property name="hibernate.c3p0.max_statements">0</property>
+		<property name="hibernate.c3p0.idle_test_period">120</property>
+		<property name="hibernate.c3p0.acquire_increment">2</property>
+		<property name="hibernate.c3p0.validate">true</property>
+		<mapping resource="org/minioa/core/org.hbm.xml" />
+		<mapping resource="org/minioa/core/department.hbm.xml" />
+		<mapping resource="org/minioa/core/user.hbm.xml" />
+		<mapping resource="org/minioa/core/job.hbm.xml" />
+		<mapping resource="org/minioa/core/role.hbm.xml" />
+		<mapping resource="org/minioa/core/role_user_relation.hbm.xml" />
+		<mapping resource="org/minioa/core/op.hbm.xml" />
+		<mapping resource="org/minioa/core/op_role_relation.hbm.xml" />
+		<mapping resource="org/minioa/core/topmenu.hbm.xml" />
+		<mapping resource="org/minioa/core/topmenu_role_relation.hbm.xml" />
+		<mapping resource="org/minioa/core/leftmenu.hbm.xml" />
+		<mapping resource="org/minioa/core/leftmenu_role_relation.hbm.xml" />
+		<mapping resource="org/minioa/core/pinyin.hbm.xml" />
+		<mapping resource="org/minioa/core/basicdata.hbm.xml" />
+		<mapping resource="org/minioa/core/news.hbm.xml" />
+		<mapping resource="org/minioa/core/news_attachment.hbm.xml" />
+		<mapping resource="org/minioa/core/search.hbm.xml" />
+		<mapping resource="org/minioa/core/ballot.hbm.xml" />
+		<mapping resource="org/minioa/core/ballot_items.hbm.xml" />
+		<mapping resource="org/minioa/core/log.hbm.xml" />
+		<mapping resource="org/minioa/core/form.hbm.xml" />
+		<mapping resource="org/minioa/core/form_field.hbm.xml" />
+		<mapping resource="org/minioa/core/form_main.hbm.xml" />
+		<mapping resource="org/minioa/core/form_main_attachment.hbm.xml" />
+		<mapping resource="org/minioa/core/form_view.hbm.xml" />
+		<mapping resource="org/minioa/core/form_view_field.hbm.xml" />
+		<mapping resource="org/minioa/core/prop.hbm.xml" />
+		<mapping resource="org/minioa/core/processdefinition.hbm.xml" />
+		<mapping resource="org/minioa/core/processdefinition_task.hbm.xml" />
+		<mapping resource="org/minioa/core/process.hbm.xml" />
+		<mapping resource="org/minioa/core/task.hbm.xml" />
+		<mapping resource="org/minioa/core/task_agent.hbm.xml" />
+		<mapping resource="org/minioa/core/message_list.hbm.xml" />
+		<mapping resource="org/minioa/core/userinfo.hbm.xml" />
+		<mapping resource="org/minioa/crm/customer.hbm.xml" />
+		<mapping resource="org/minioa/crm/customer_attachment.hbm.xml" />
+		<mapping resource="org/minioa/crm/contact.hbm.xml" />
+		<mapping resource="org/minioa/crm/visit.hbm.xml" />
+		<mapping resource="org/minioa/crm/record.hbm.xml" />
+		<mapping resource="org/minioa/crm/mail.hbm.xml" />
+		<mapping resource="org/minioa/crm/mail_attachment.hbm.xml" />
+		<mapping resource="org/minioa/core/eqtest.hbm.xml" />
+		<mapping resource="org/minioa/web/htmlprop.hbm.xml" />
+	</session-factory>
+</hibernate-configuration>

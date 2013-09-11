@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.search.count">
+    <![CDATA[
+        select count(*) as result from core_news
+		where status_=1 and match(keywords) against(:key in boolean mode)
+    ]]>
+	</sql-query>
+	<sql-query name="core.search.selectrecords">
+    <![CDATA[
+         select ta.ID_,ta.UUID_,ta.title,ta.content from core_news ta 
+         where ta.status_=1 and match(ta.keywords) against(:key in boolean mode)
+         order by ta.ID_ desc limit :limit offset :offset
+    ]]>
+	</sql-query>
+</hibernate-mapping>

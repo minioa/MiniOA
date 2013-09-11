@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+	<h:outputText value="#{News.newsPic}" style="display:none" />
+	<div class="focusPic" style="text-align: left; margin-top: -3px;">
+		<div id="focus_tab" class="main clearfix tab">
+			<h:outputText escape="false" value="#{News.prop['text']}" />
+		</div>
+		<ul class="sidePic picBtn">
+			<h:outputText escape="false" value="#{News.prop['js']}" />
+		</ul>
+	</div>
+</ui:composition>
+</html>

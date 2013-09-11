@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Org" table="core_org">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="orgName" column="orgName" type="java.lang.String" />
+		<property name="orgDesc" column="orgDesc" type="java.lang.String" />
+		<property name="sequence" column="sequence" type="java.lang.Integer" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.org.records">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgName,orgDesc,sequence
+        from core_org order by sequence
+    ]]>
+	</sql-query>
+	<!-- 选择记录总数，便于分页 -->
+	<!-- Select records count, use for paging. -->
+	<sql-query name="core.org.records.count">
+    <![CDATA[
+        select count(*) as result from core_org
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.org.getrecordbyid">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgName,orgDesc,sequence
+        from core_org where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.org.updaterecordbyid">
+    <![CDATA[
+        update core_org set MID_ = :mId, MDATE_ = sysdate(),
+        	orgName = :orgName, orgDesc = :orgDesc, sequence= :sequence
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.org.deleterecordbyid">
+    <![CDATA[
+        delete from core_org where ID_ = :id
+    ]]>
+	</sql-query>
+</hibernate-mapping>

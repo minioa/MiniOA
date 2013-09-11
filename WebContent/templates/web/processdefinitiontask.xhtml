@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{ProcessDefinition.init}" style="display:none;" />
+		<h:outputText value="《#{ProcessDefinition.processName}》流程节点定义" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{ProcessDefinitionTask.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<a4j:commandLink action="#{ProcessDefinitionTask.buildItems}" reRender="dataForm">
+										<h:graphicImage title="刷新" class="imgBtn" url="images/reload.png">
+										</h:graphicImage>
+										<f:param name="reload" value="true" />
+										<f:param name="resetPageNo" value="true" />
+										<f:param name="headerId" value="#{param['headerId']}" />
+										<f:param name="formId" value="#{param['formId']}" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="节点名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="创建时间" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="修改时间" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{param['headerId']}" />
+								<f:param name="formId" value="#{param['formId']}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{ProcessDefinitionTaskDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="headerId" value="#{param['headerId']}" />
+								<f:param name="formId" value="#{param['formId']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:*;">
+							<h:outputText value="#{item.taskName}" />
+						</rich:column>
+						<rich:column style="width:90px;text-align:center;">
+							<h:outputText value="#{item.CDATE_}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:90px;text-align:center;">
+							<h:outputText value="#{item.MDATE_}" class="datetimeBlue" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{ProcessDefinitionTask.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="节点代码:" />
+							<h:inputText value="#{ProcessDefinitionTask.taskCode}" id="taskCode" style="width:30px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="taskCode" />
+
+							<h:outputText value="节点名称:" />
+							<h:inputText value="#{ProcessDefinitionTask.taskName}" id="taskName" style="width:300px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="taskName" />
+
+							<h:outputText value="任务类型:" />
+							<h:selectOneRadio value="#{ProcessDefinitionTask.taskType}" disabled="true">
+								<f:selectItem itemValue="1" itemLabel="人工" />
+								<f:selectItem itemValue="0" itemLabel="自动" />
+							</h:selectOneRadio>
+							<h:outputText value="" />
+
+							<h:outputText value="审批方式:" />
+							<h:selectOneMenu value="#{ProcessDefinitionTask.taskApproveType}">
+								<f:selectItem itemValue="" itemLabel="" />
+								<f:selectItem itemValue="0" itemLabel="指派给人" />
+								<f:selectItem itemValue="1" itemLabel="指派给角色" />
+								<f:selectItem itemValue="2" itemLabel="申请人上级" />
+								<f:selectItem itemValue="3" itemLabel="申请人经理" />
+								<f:selectItem itemValue="4" itemLabel="申请人本人" />
+								<f:selectItem itemValue="5" itemLabel="指派给岗位" />
+							</h:selectOneMenu>
+							<h:outputText value="" />
+
+							<h:outputText value="指派审批人:" />
+							<a4j:outputPanel>
+								<h:outputText id="userName" value="#{MySession.tempStr['UserTree.displayName']}" />
+								<h:graphicImage title="选择人员" onclick="#{rich:component('mpForUserTree')}.show()" class="imgBtn" url="images/search.png">
+								</h:graphicImage>
+							</a4j:outputPanel>
+							<h:outputText value="" />
+							<h:outputText value="指派审批角色:" />
+							<h:selectOneMenu value="#{ProcessDefinitionTask.taskApproverRoleId}">
+								<f:selectItem itemValue="0" itemLabel="" />
+								<f:selectItems value="#{Application.roleSelectItem}" />
+							</h:selectOneMenu>
+							<rich:message for="taskApproverRole" />
+
+							<h:outputText value="指派审批岗位:" />
+							<a4j:outputPanel>
+								<h:outputText id="jobName" value="#{MySession.tempStr['JobTree.jobName']}" />
+								<h:graphicImage title="选择岗位" onclick="#{rich:component('mpForJobTree')}.show()" class="imgBtn" url="images/search.png">
+								</h:graphicImage>
+							</a4j:outputPanel>
+							<h:outputText value="" />
+
+							<h:outputText value="邮件提醒:" />
+							<h:selectOneRadio value="#{ProcessDefinitionTask.emailNotice}">
+								<f:selectItem itemValue="Y" itemLabel="开启" />
+								<f:selectItem itemValue="N" itemLabel="关闭" />
+							</h:selectOneRadio>
+							<h:outputText value="" />
+							<h:outputText value="短信提醒:" />
+							<h:selectOneRadio value="#{ProcessDefinitionTask.smsNotice}">
+								<f:selectItem itemValue="Y" itemLabel="开启" />
+								<f:selectItem itemValue="N" itemLabel="关闭" />
+							</h:selectOneRadio>
+							<h:outputText value="" />
+							<h:outputText value="即时通讯提醒:" />
+							<h:selectOneRadio value="#{ProcessDefinitionTask.imNotice}">
+								<f:selectItem itemValue="Y" itemLabel="开启" />
+								<f:selectItem itemValue="N" itemLabel="关闭" />
+							</h:selectOneRadio>
+							<h:outputText value="" />
+
+							<h:outputText value="期限:" />
+							<h:selectOneRadio value="#{ProcessDefinitionTask.taskDuation}">
+								<f:selectItem itemValue="1" itemLabel="1小时" />
+								<f:selectItem itemValue="2" itemLabel="2小时" />
+								<f:selectItem itemValue="4" itemLabel="4小时" />
+								<f:selectItem itemValue="24" itemLabel="24小时" />
+								<f:selectItem itemValue="48" itemLabel="48小时" />
+							</h:selectOneRadio>
+							<h:outputText value="" />
+
+
+							<h:outputText value="表单视图名称:" />
+							<h:selectOneMenu id="formViewId" class="select" value="#{ProcessDefinitionTask.formViewId}">
+								<f:selectItems value="#{FormView.si}" />
+							</h:selectOneMenu>
+							<rich:message for="formViewId" />
+
+
+							<h:outputText value="下一节点:" />
+							<h:inputTextarea value="#{ProcessDefinitionTask.taskNextStep}" id="taskNextStep" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="taskNextStep" />
+
+							<h:outputText value="节点完成时执行的SQL:" />
+							<h:inputTextarea value="#{ProcessDefinitionTask.sqlWhenCompleted}" id="sqlWhenCompleted" class="inputTextarea" style="margin-left:3px;width:80%;" rows="2">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputTextarea>
+							<rich:message for="sqlWhenCompleted" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="2">
+								<a4j:commandLink action="#{ProcessDefinitionTask.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="headerId" value="#{param['headerId']}" />
+									<f:param name="formId" value="#{param['formId']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{ProcessDefinitionTask.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="headerId" value="#{param['headerId']}" />
+									<f:param name="formId" value="#{param['formId']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{ProcessDefinitionTask.ID_}" />
+							<h:inputHidden value="#{ProcessDefinitionTask.CID_}" />
+							<h:inputHidden value="#{ProcessDefinitionTask.CDATE_}" />
+							<h:inputHidden value="#{ProcessDefinitionTask.headerId}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{ProcessDefinitionTaskDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+							<f:param name="headerId" value="#{param['headerId']}" />
+							<f:param name="formId" value="#{param['formId']}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForUserTree" width="400" height="300" zindex="3001" style="clear:both;padding:0;">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="人员选择"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<a4j:commandLink reRender="userName" onclick="#{rich:component('mpForUserTree')}.hide()">
+							<h:graphicImage value="images/saveicon.png" style="width:15px;margin-right:1px;" />
+						</a4j:commandLink>
+						<h:graphicImage value="images/close.png" styleClass="hidelink" id="hidelink" />
+						<rich:componentControl for="mpForUserTree" attachTo="hidelink" operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<ui:include src="usertree.xhtml" />
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForJobTree" width="400" height="300" zindex="3002" style="clear:both;padding:0;">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="岗位选择"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<a4j:commandLink reRender="jobName" onclick="#{rich:component('mpForJobTree')}.hide()">
+							<h:graphicImage value="images/saveicon.png" style="width:15px;margin-right:1px;" />
+						</a4j:commandLink>
+						<h:graphicImage value="images/close.png" styleClass="hidelink" id="hidelink" />
+						<rich:componentControl for="mpForJobTree" attachTo="hidelink" operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<ui:include src="jobtree.xhtml" />
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

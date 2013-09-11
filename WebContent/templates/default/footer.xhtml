@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<body style="border-top: 3px solid #E9F1F5; padding: 0; margin: 0; background: url(images/header_bg.png) no-repeat right;">
+<h:outputText value="#{Application.init} #{MySession.templateName}" style="display:none;" />
+<h:outputText escape="false" value="#{MySession.isLogin}" style="display:none;" />
+<h:outputText value="#{MySession.l}" style="display:none;" />
+<table style="width: 100%;">
+	<tr>
+		<td style="width: 300px;">
+		<div style="color: #999; font-size: 8pt;">MiniOA | Powered by <a href="http://www.minioa.net/">MiniOA.net</a></div>
+		</td>
+		<td style="width: *;"><a4j:region renderRegionOnly="true">
+			<h:panelGrid columns="2" columnClasses="co1,co2">
+				<h:outputText id="online" escape="false" value="#{Lang.prop[MySession.l]['online']}:#{UserSession.online}" style="background: url(images/online.png) no-repeat left;padding-left:18px;margin-left:3px;font-size:8pt;color:#005590;" />
+				<a4j:form>
+					<a4j:poll id="poll" interval="60000" enabled="true" reRender="poll,online" />
+				</a4j:form>
+			</h:panelGrid>
+		</a4j:region></td>
+	</tr>
+</table>
+</body>
+</html>

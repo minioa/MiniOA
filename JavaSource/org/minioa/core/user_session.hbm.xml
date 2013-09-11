@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.user.session.newrecord">
+    <![CDATA[
+        insert into core_user_session(CID_,CDATE_, sessionId, ip) values(:cId,sysdate(), :sessionId, :ip)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.session.update">
+    <![CDATA[
+        CALL core_online(:cId, :sId, :cTime, :mTime, :ipAddress)
+    ]]>
+	</sql-query>
+	<sql-query name="core.user.session.deleterecordbyid">
+    <![CDATA[
+        delete from core_user_session where sessionId = :sessionId
+    ]]>
+    </sql-query>
+</hibernate-mapping>

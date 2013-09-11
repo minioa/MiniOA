@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理：联系人群发邮件" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:form id="dataForm">
+			<h:outputText value="姓名或昵称:" />
+			<h:inputText id="key" value="#{MySession.tempStr['ContactView.key']}" style="width:80px;" />
+			<h:outputText value="电话:" />
+			<h:inputText id="key2" value="#{MySession.tempStr['ContactView.key2']}" style="width:80px;" />
+			<h:outputText value="邮件:" />
+			<h:inputText id="key3" value="#{MySession.tempStr['ContactView.key3']}" style="width:80px;" />
+			<h:outputText value="行业:" />
+			<h:selectOneMenu value="#{MySession.tempStr['ContactView.key4']}">
+				<f:selectItem itemValue="" itemLabel="" />
+				<f:selectItem itemValue="银行" itemLabel="银行" />
+				<f:selectItem itemValue="证券" itemLabel="证券" />
+				<f:selectItem itemValue="保险" itemLabel="保险" />
+				<f:selectItem itemValue="企业" itemLabel="企业" />
+				<f:selectItem itemValue="其他" itemLabel="其他" />
+				<rich:ajaxValidator event="onblur" />
+			</h:selectOneMenu>
+			<a4j:commandLink action="#{ContactView.buildItems2}" reRender="dataForm">
+				<h:outputText value="搜索" class="btn" />
+			</a4j:commandLink>
+
+			<a4j:commandLink style="margin-left:6px;" onclick="$('dataForm:key').value='';$('dataForm:key2').value='';$('dataForm:key3').value='';return false;">
+				<h:outputText value="清空" class="btn" />
+			</a4j:commandLink>
+			<a4j:commandLink style="margin-left:6px;" onclick="javascript:selectAll();">
+				<h:outputText value="全选" class="btn" />
+			</a4j:commandLink>
+			<a4j:commandLink style="margin-left:6px;" onclick="javascript:selectNone();">
+				<h:outputText value="全不选" class="btn" />
+			</a4j:commandLink>
+			<a4j:commandLink action="#{ContactView.sendEmail}" rendered="#{MySession.hasOp['crm.admin']}">
+				<h:outputText value="群发邮件" class="btn" />
+			</a4j:commandLink>
+			<rich:dataGrid id="dataTable" value="#{ContactView.items2}" var="item" columns="2" style="border-width:0;">
+				<h:selectBooleanCheckbox id="checkbox_#{rowNum + 1}" value="#{ContactView.checkIdsMap[item.prop['id']]}">
+				</h:selectBooleanCheckbox>
+				<h:outputText value="#{item.prop['gongsimc']}:#{item.prop['xingming']}:#{item.prop['youjian']}" />
+			</rich:dataGrid>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

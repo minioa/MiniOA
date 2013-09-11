@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="开发测试" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<a4j:commandLink action="#{EqTest.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" rows="#{MySession.pageSize}" value="#{EqTest.items}" var="item" rowKeyVar="rowNum">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="物料名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="物料编码" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="数量" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:3%;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{EqTestDao.showDialog}"
+								onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:80px;text-align:left;">
+							<h:outputText value="#{item.itemname}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:left;">
+							<h:outputText value="#{item.itemcode}" />
+						</rich:column>
+						<rich:column style="width:80px;color:blue;text-align:right;">
+							<h:outputText value="#{item.quantity}" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{EqTest.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="修改">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{EqTest.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="物料名称:" />
+							<h:inputText value="#{EqTest.itemname}" id="itemname" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="itemname" />
+							<h:outputText value="物料编码:" />
+							<h:inputText value="#{EqTest.itemcode}" id="itemcode" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="itemcode" />
+							<h:outputText value="数量:" />
+							<h:inputText value="#{EqTest.quantity}" id="quantity" style="width:200px;">
+							    <f:validator validatorId="Float"/>
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="quantity" style="color:red;margin-left:3px;">
+							    <f:facet name="errorMarker">
+							        <h:outputText value="" />
+							    </f:facet>
+							</rich:message>
+							<h:outputText value="" />
+							<h:panelGrid columns="3">
+								<a4j:commandLink action="#{EqTest.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{EqTest.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="您确定要删除当前记录？" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{EqTestDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="确定" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="取消" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

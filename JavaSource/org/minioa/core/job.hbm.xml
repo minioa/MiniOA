@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Job" table="core_job">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="orgId" column="orgId" type="java.lang.Integer" />
+		<property name="parentId" column="parentId" type="java.lang.Integer" />
+		<property name="jobName" column="jobName" type="java.lang.String" />
+		<property name="jobDesc" column="jobDesc" type="java.lang.String" />
+		<property name="sequence" column="sequence" type="java.lang.Integer" />
+		<property name="isManager" column="isManager" type="java.lang.Boolean" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.job.records">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgId,parentId,jobName,jobDesc,sequence,isManager
+        from core_job
+        order by sequence
+    ]]>
+	</sql-query>
+	<!-- 选择记录总数，便于分页 -->
+	<!-- Select records count, use for paging. -->
+	<sql-query name="core.job.records.count">
+    <![CDATA[
+        select count(*) as result from core_job
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.job.getrecordbyid">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	orgId,parentId,jobName,jobDesc,sequence,isManager
+        from core_job where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.job.updaterecordbyid">
+    <![CDATA[
+        update core_job set MID_ = :mId, MDATE_ = sysdate(),
+        	jobName = :jobName, jobDesc = :jobDesc, sequence = :sequence, isManager = :isManager
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.job.moverecordbyid">
+    <![CDATA[
+        update core_job set MID_ = :mId, MDATE_ = sysdate(),
+        	orgId = :orgId, parentId = :parentId
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.job.deleterecordbyid">
+    <![CDATA[
+        delete from core_job where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.job.getchildren">
+    <![CDATA[
+         select ID_,jobName,jobDesc
+         from core_job where orgId = :orgId and parentId = :parentId
+         order by sequence
+    ]]>
+	</sql-query>
+	<sql-query name="core.job.haschildren">
+    <![CDATA[
+         select count(*)
+         from core_job where orgId = :orgId and parentId = :parentId
+    ]]>
+	</sql-query>
+	<sql-query name="core.job.getjobnamebyid">
+    <![CDATA[
+        select ifnull((select jobName from core_job where ID_ = :jobId),'') from dual
+    ]]>
+	</sql-query>
+</hibernate-mapping>

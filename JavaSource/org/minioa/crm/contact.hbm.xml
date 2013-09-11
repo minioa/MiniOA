@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.crm">
+	<class name="Contact" table="crm_contact">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="birthday" column="birthday" type="java.util.Date" />
+		<property name="xingming" column="xingming" type="java.lang.String" />
+		<property name="chenghu" column="chenghu" type="java.lang.String" />
+		<property name="zhiwei" column="zhiwei" type="java.lang.String" />
+		<property name="bumen" column="bumen" type="java.lang.String" />
+		<property name="gudingdh" column="gudingdh" type="java.lang.String" />
+		<property name="yidongdh" column="yidongdh" type="java.lang.String" />
+		<property name="xingqu" column="xingqu" type="java.lang.String" />
+		<property name="qq" column="qq" type="java.lang.String" />
+		<property name="msn" column="msn" type="java.lang.String" />
+		<property name="youjian" column="youjian" type="java.lang.String" />
+		<property name="nickname" column="nickname" type="java.lang.String" />
+		<property name="lianxidj" column="lianxidj" type="java.lang.String" />
+		<property name="beizhu" column="beizhu" type="java.lang.String" />
+		<property name="isarc" column="isarc" type="java.lang.String" />
+		<property name="zhaidian" column="zhaidian" type="java.lang.String" />
+		<property name="chuanzhen" column="chuanzhen" type="java.lang.String" />
+		<property name="jiguan" column="jiguan" type="java.lang.String" />
+		<property name="hunfou" column="hunfou" type="java.lang.String" />
+		<property name="biyeyx" column="biyeyx" type="java.lang.String" />
+		<property name="zhize" column="zhize" type="java.lang.String" />
+		<property name="juesezy" column="juesezy" type="java.lang.String" />
+		<property name="dizhi" column="dizhi" type="java.lang.String" />
+	</class>
+	<sql-query name="crm.contact.records.count">
+    <![CDATA[
+        select count(*)
+        from crm_contact ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+		left join core_user tc on tc.ID_ = ta.CID_
+		left join core_user td on td.ID_ = ta.MID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.contact.records">
+    <![CDATA[
+        select tb.kehubm, tb.gongsimc, ta.xingming, ta.birthday, ta.chenghu, ta.zhiwei, ta.zhize, ta.bumen, 
+        	ta.gudingdh, ta.yidongdh, ta.xingqu, ta.qq, ta.msn, ta.youjian, ta.nickname,
+        	ta.lianxidj, ta.beizhu, ta.zhaidian, ta.chuanzhen, ta.jiguan, ta.hunfou, ta.biyeyx,
+        	ta.juesezy, ta.ID_, tc.displayName as cUser, ta.CDATE_, td.displayName as mUser, ta.MDATE_, ta.UUID_
+        from crm_contact ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+		left join core_user tc on tc.ID_ = ta.CID_
+		left join core_user td on td.ID_ = ta.MID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.contact.records.mail">
+    <![CDATA[
+        select tb.gongsimc, ta.xingming, ta.ID_, ta.youjian
+        from crm_contact ta
+		left join crm_customer tb on tb.UUID_ = ta.UUID_
+    ]]>
+	</sql-query>
+	<sql-query name="crm.contact.updatecid">
+    <![CDATA[
+		update crm_contact set CID_ = :cId where UUID_ in (select UUID_ from crm_customer where ID_ = :id)
+    ]]>
+	</sql-query>
+</hibernate-mapping>

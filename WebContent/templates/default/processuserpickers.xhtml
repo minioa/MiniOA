@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="请选择下一个节点的审批人：" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:region selfRendered="true">
+			<a4j:form style="margin-top:3px;">
+				<a4j:commandLink onclick="javascript:selectAll();return false;"
+					style="margin-right:3px;">
+					<h:outputText class="btn" value="全选" />
+				</a4j:commandLink>
+				<a4j:commandLink onclick="javascript:selectNone();return false;"
+					style="margin-right:3px;">
+					<h:outputText class="btn" value="全不选" />
+				</a4j:commandLink>
+
+				<a4j:commandLink action="#{ProcessUserPicker.UpdateApprovers}">
+					<h:outputText class="btn" value="继续" />
+					<f:param name="uuid" value="#{param['uuid']}" />
+					<f:param name="instanceId" value="#{param['instanceId']}" />
+					<f:param name="taskStatus" value="#{param['taskStatus']}" />
+					<f:param name="processId" value="#{param['processId']}" />
+					<f:param name="processId" value="#{param['processId']}" />
+					<f:param name="taskDefId" value="#{param['taskDefId']}" />
+					<f:param name="taskFromId" value="#{param['taskFromId']}" />
+					<f:param name="note" value="#{param['note']}" />
+					<f:param name="url" value="#{param['url']}" />
+				</a4j:commandLink>
+				<a4j:commandLink action="#{ProcessUserPicker.CompleteTask}">
+					<h:outputText class="btn" value="完成" />
+					<f:param name="uuid" value="#{param['uuid']}" />
+					<f:param name="instanceId" value="#{param['instanceId']}" />
+					<f:param name="taskStatus" value="#{param['taskStatus']}" />
+					<f:param name="processId" value="#{param['processId']}" />
+					<f:param name="taskDefId" value="#{param['taskDefId']}" />
+					<f:param name="taskFromId" value="#{param['taskFromId']}" />
+					<f:param name="note" value="#{param['note']}" />
+					<f:param name="url" value="#{param['url']}" />
+				</a4j:commandLink>
+
+				<rich:spacer height="3" width="100%"
+					style="margin-top:5px;" />
+
+				<rich:tree toggleOnClick="true" style="margin:0px 5px 0px 1px;width:300px;"
+					ajaxSubmitSelection="false" switchType="client"
+					value="#{UserTree.treeNode}" var="item" ajaxKeys="#{null}">
+					<rich:treeNode rendered="#{item.type=='user'}"
+						style="margin-left:3px;margin-top:3px;" iconLeaf="images/male.png"
+						icon="images/male.png">
+						<h:selectBooleanCheckbox
+							value="#{ProcessUserPicker.checkIdsMap[item.ID_]}">
+						</h:selectBooleanCheckbox>
+						<h:outputText value="#{item.displayName}" />
+					</rich:treeNode>
+					<rich:treeNode rendered="#{item.type=='depa'}"
+						style="margin-left:3px;margin-top:3px;"
+						iconLeaf="images/department.png" icon="images/department.png">
+						<h:outputText value="#{item.displayName}" />
+					</rich:treeNode>
+					<rich:treeNode rendered="#{item.type=='org'}"
+						style="margin-left:3px;margin-top:3px;" iconLeaf="images/home.png"
+						icon="images/home.png">
+						<h:outputText value="#{item.displayName}" />
+					</rich:treeNode>
+				</rich:tree>
+			</a4j:form>
+		</a4j:region>
+	</ui:define>
+</ui:composition>
+</html>

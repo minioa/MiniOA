@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:outputText value="收件人:" />
+					<h:inputText id="key" value="#{MySession.tempStr['CRMMail.key']}" style="width:80px;" />
+					<h:outputText value="收件地址:" />
+					<h:inputText id="key2" value="#{MySession.tempStr['CRMMail.key2']}" style="width:80px;" />
+					<h:outputText value="主题:" />
+					<h:inputText id="key3" value="#{MySession.tempStr['CRMMail.key3']}" style="width:80px;" />
+					<h:outputText value="内容:" />
+					<h:inputText id="key4" value="#{MySession.tempStr['CRMMail.key4']}" style="width:80px;" />
+					<a4j:commandLink action="#{CRMMail.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';$('searchForm:key2').value='';$('searchForm:key3').value='';$('searchForm:key4').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{CRMMail.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="状态" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="收件人" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="主题" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="发送时间" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="uuid" value="#{item.UUID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:36px;text-align:center;">
+							<h:outputText value="#{item.sended}" />
+						</rich:column>
+						<rich:column style="width:136px;text-align:left;">
+							<h:outputText value="#{item.recipient}:" />
+							<h:outputText value="#{item.address}" />
+						</rich:column>
+						<rich:column style="width:*;">
+							<h:outputText value="#{item.subject}" />
+						</rich:column>
+						<rich:column style="width:90px;text-align:center;">
+							<h:outputText value="#{item.CDATE}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink action="#{CRMMailDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{item.UUID_}" />
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{CRMMail.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="../ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{CRMMail.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="2" columnClasses="co1,co2">
+							<h:outputText value="姓名:" />
+							<h:outputText value="#{CRMMail.recipient}" />
+							
+							<h:outputText value="邮件地址:" />
+							<h:outputText value="#{CRMMail.address}" />
+							<h:outputText value="主题:" />
+							<h:outputText value="#{CRMMail.subject}" />
+							<h:outputText value="附件:" />
+							<rich:dataGrid id="attachmentTable" value="#{CRMMailAttachment.items}" var="att" columns="1" elements="36" style="border-width:0;">
+								<h:commandLink action="#{CRMMailAttachment.download}">
+									<h:outputText value="#{att.prop['oldname']}" />
+									<f:param name="id" value="#{att.prop['id']}" />
+									<f:param name="uuid" value="#{att.prop['uuid']}" />
+								</h:commandLink>
+							</rich:dataGrid>
+							<h:outputText value="内容:" />
+							<h:outputText value="#{CRMMail.message}" escape="false"/>
+							
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{CRMMailDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmAtt" width="300" height="80" zindex="3000" style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg,attachmentTable" action="#{CRMMailAttachment.deleteRecordById}" onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

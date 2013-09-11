@@ -1,0 +1,302 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="字段管理" />
+	</ui:define>
+	<ui:define name="body">
+		<h:outputText value="#{Form.init}" style="display:none;" />
+		<h:outputText value="系统字段管理" rendered="#{!(param['formId'] gt 0)}" />
+		<h:outputText value="#{Form.formName}" rendered="#{param['formId'] gt 0}" />
+		<br />
+		<br />
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="eForm" rendered="#{param['formId'] gt 0}">
+					<h:outputText value="字段名称:" />
+					<h:selectOneMenu value="#{FormField.ID_}" id="dataSource">
+						<f:selectItems value="#{FormField.si}" />
+						<a4j:support event="onchange" reRender="hidden" />
+					</h:selectOneMenu>
+					<h:outputText value="显示名称:" />
+					<h:inputText id="text" value="#{FormField.fieldText}" required="true" requiredMessage="显示名称不能空" style="width:80px;">
+						<rich:ajaxValidator event="onblur" />
+					</h:inputText>
+					<h:outputText value="顺序:" />
+					<h:inputText id="order" value="#{FormField.orderNum}" required="true" requiredMessage="" style="width:30px;">
+						<f:validator validatorId="Integer" />
+						<rich:ajaxValidator event="onblur" />
+					</h:inputText>
+					<a4j:commandLink action="#{FormField.newRecord}" reRender="dataForm,msg,eForm">
+						<h:outputText value="创建" class="btn" />
+						<f:param name="formId" value="#{param['formId']}" />
+					</a4j:commandLink>
+					<rich:message for="text" style="color:red;" />
+					<rich:message for="order" style="color:red;margin-left:3px;">
+						<f:facet name="errorMarker">
+							<h:outputText value="顺序号不能空，且必须是数字" />
+						</f:facet>
+					</rich:message>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{FormField.items}" var="item" rowKeyVar="rowNum" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<a4j:commandLink action="#{Form.buildItems}" reRender="dataForm,eForm">
+										<h:graphicImage title="刷新" class="imgBtn" url="images/reload.png">
+										</h:graphicImage>
+										<f:param name="reload" value="true" />
+										<f:param name="resetPageNo" value="true" />
+										<f:param name="formId" value="#{param['formId']}" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="字段名" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="显示名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="字段类型" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="长度" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="数据来源" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="校验方式" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="校验提醒" />
+								</rich:column>
+								<rich:column rendered="#{param['formId'] gt 0}">
+									<h:outputText value="排序" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="格式化" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="formId" value="#{param['formId']}" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{FormFieldDao.showDialog}" rendered="#{param['formId'] gt 0}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="formId" value="#{param['formId']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:40px;text-align:center;">
+							<h:outputText value="#{item.fieldName}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.fieldText}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="短文本" rendered="#{item.fieldType == 'varchar45'}" />
+							<h:outputText value="长文本" rendered="#{item.fieldType == 'varchar450'}" />
+							<h:outputText value="超长文本" rendered="#{item.fieldType == 'text'}" />
+							<h:outputText value="整数" rendered="#{item.fieldType == 'int'}" />
+							<h:outputText value="浮点型" rendered="#{item.fieldType == 'float'}" />
+							<h:outputText value="布尔型" rendered="#{item.fieldType == 'char'}" />
+							<h:outputText value="日期型" rendered="#{item.fieldType == 'datetime'}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:right;">
+							<h:outputText value="#{item.fieldWidth}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.dataSource}" />
+								<rich:toolTip>
+									<h:outputText value="自定义列表:#{item.textItems}" />
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.checkType}" />
+								<rich:toolTip>
+									<h:outputText value="校验规则:#{item.checkRule}" />
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.checkText}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;" rendered="#{param['formId'] gt 0}">
+							<h:outputText value="#{item.orderNum}" />
+						</rich:column>
+						<rich:column style="width:*;text-align:center;">
+							<h:outputText value="#{item.formatString}" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{FormField.init}" style="display:none;" />
+					<a4j:form rendered="#{param['id'] gt 0}">
+						<h:panelGrid columns="4" columnClasses="co1,co2,co3,co3">
+							<h:outputText value="字段名称:" />
+							<h:outputText value="#{FormField.fieldName}" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+							<h:outputText value="显示名称:" />
+							<h:inputText value="#{FormField.fieldText}" id="fieldText" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="字段显示的名称" class="imgBtn" url="images/help.png" />
+							<rich:message for="fieldText" />
+
+							<h:outputText value="字段类型:" />
+							<h:outputText value="短文本" rendered="#{FormField.fieldType == 'varchar45'}" />
+							<h:outputText value="长文本" rendered="#{FormField.fieldType == 'varchar450'}" />
+							<h:outputText value="超长文本" rendered="#{FormField.fieldType == 'text'}" />
+							<h:outputText value="整数" rendered="#{FormField.fieldType == 'int'}" />
+							<h:outputText value="浮点型" rendered="#{FormField.fieldType == 'float'}" />
+							<h:outputText value="布尔型" rendered="#{FormField.fieldType == 'char'}" />
+							<h:outputText value="日期型" rendered="#{FormField.fieldType == 'datetime'}" />
+							<h:outputText value="" />
+							<h:outputText value="" />
+
+							<h:outputText value="字段长度:" />
+							<h:inputText value="#{FormField.fieldWidth}" id="fieldWidth" style="width:30px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="针对文本字段，设定长度，中文字符要除以2" class="imgBtn" url="images/help.png" />
+							<rich:message for="fieldWidth" />
+
+							<h:outputText value="数据来源:" />
+							<h:selectOneMenu value="#{FormField.dataSource}" id="dataSource">
+								<f:selectItem itemValue="" itemLabel="" />
+								<f:selectItem itemValue="部门" itemLabel="部门" />
+								<f:selectItem itemValue="帐号" itemLabel="帐号" />
+								<f:selectItem itemValue="员工列表" itemLabel="员工列表" />
+								<f:selectItem itemValue="基础数据" itemLabel="基础数据" />
+								<f:selectItem itemValue="自定义列表" itemLabel="自定义列表" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<h:graphicImage title="数据来源" class="imgBtn" url="images/help.png" />
+							<rich:message for="dataSource" />
+
+							<h:outputText value="自定义列表:" />
+							<h:inputText value="#{FormField.textItems}" id="textItems" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="为自定义列表提供数据来源，多个关键词用英文分号隔开" class="imgBtn" url="images/help.png" />
+							<rich:message for="textItems" />
+
+							<h:outputText value="校验方式:" />
+							<h:selectOneMenu value="#{FormField.checkType}" id="checkType">
+								<f:selectItem itemValue="" itemLabel="" />
+								<f:selectItem itemValue="IP" itemLabel="IP" />
+								<f:selectItem itemValue="HTTP" itemLabel="网址" />
+								<f:selectItem itemValue="PhoneNum" itemLabel="电话号码" />
+								<f:selectItem itemValue="IDCard" itemLabel="身份证号" />
+								<f:selectItem itemValue="PostCode" itemLabel="邮政编码" />
+								<f:selectItem itemValue="Email" itemLabel="电子邮件" />
+								<f:selectItem itemValue="Reg" itemLabel="正则表达式" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<h:graphicImage title="校验当前字段输入值的规则" class="imgBtn" url="images/help.png" />
+							<rich:message for="checkType" />
+
+							<h:outputText value="校验规则:" />
+							<h:inputText value="#{FormField.checkRule}" id="checkRule" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="正则表达式" class="imgBtn" url="images/help.png" />
+							<rich:message for="checkRule" />
+
+							<h:outputText value="校验提醒:" />
+							<h:inputText value="#{FormField.checkText}" id="chechText" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="如果校验未通过，提示给用户的文本" class="imgBtn" url="images/help.png" />
+							<rich:message for="checkText" />
+
+							<h:outputText value="格式化文本:" />
+							<h:inputText value="#{FormField.formatString}" id="formatString" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<h:graphicImage title="数值或日期型格式化  #.## yyyy-MM-dd HH:mm:ss" class="imgBtn" url="images/help.png" />
+							<rich:message for="formatString" />
+
+							<h:outputText value="递增字段:" />
+							<h:selectOneRadio value="#{FormField.autoIncrease}" id="autoIncrease">
+								<f:selectItem itemValue="N" itemLabel="否" />
+								<f:selectItem itemValue="Y" itemLabel="是" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<h:graphicImage title="是否是递增字段" class="imgBtn" url="images/help.png" />
+							<rich:message for="autoIncrease" />
+
+							<h:outputText value="顺序:" />
+							<h:inputText id="order" value="#{FormField.orderNum}" required="true" requiredMessage="" style="width:30px;">
+								<f:validator validatorId="Integer" />
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="order" style="color:red;margin-left:3px;">
+								<f:facet name="errorMarker">
+									<h:outputText value="顺序号不能空，且必须是数字" />
+								</f:facet>
+							</rich:message>
+							<h:inputHidden value="#{FormField.orderNum}" rendered="#{!(param['formId'] gt 0)}" />
+
+
+							<h:outputText value="" />
+							<h:outputText value="" />
+							<a4j:commandLink action="#{FormField.updateRecordById}" reRender="msg">
+								<h:outputText class="btn" value="保存" />
+								<f:param name="redirect" value="false" />
+								<f:param name="reload" value="false" />
+								<f:param name="id" value="#{param['id']}" />
+							</a4j:commandLink>
+
+							<h:inputHidden value="#{FormField.formId}" />
+							<h:inputHidden value="#{FormField.CID_}" />
+							<h:inputHidden value="#{FormField.CDATE_}" />
+							<h:inputHidden value="#{FormField.fieldName}" />
+							<h:inputHidden value="#{FormField.fieldType}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{FormFieldDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

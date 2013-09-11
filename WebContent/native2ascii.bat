@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Java\jdk1.6.0_03\bin\"native2ascii -encoding UTF-8 lang.properties zh-cn.properties

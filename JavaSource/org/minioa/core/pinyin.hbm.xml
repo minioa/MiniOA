@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="Pinyin" table="core_pinyin">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="pinyin" column="pinyin" type="java.lang.String" />
+		<property name="hanzi" column="hanzi" type="java.lang.String" />
+	</class>
+	<!-- 选择全部记录 -->
+	<!-- Select all records -->
+	<sql-query name="core.pinyin.records">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	pinyin,hanzi
+        from core_pinyin order by pinyin
+    ]]>
+	</sql-query>
+	<!-- 选择记录总数，便于分页 -->
+	<!-- Select records count, use for paging. -->
+	<sql-query name="core.pinyin.records.count">
+    <![CDATA[
+        select count(*) as result from core_pinyin
+    ]]>
+	</sql-query>
+	<!-- 选择某一条记录 -->
+	<!-- Select one records by id. -->
+	<sql-query name="core.pinyin.getrecordbyid">
+    <![CDATA[
+        select ID_,CID_,CDATE_,MID_,MDATE_,UUID_,
+        	pinyin,hanzi
+        from core_pinyin where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 更新某一条记录 -->
+	<!-- Update one records by id. -->
+	<sql-query name="core.pinyin.updaterecordbyid">
+    <![CDATA[
+        update core_pinyin set MID_ = :mId, MDATE_ = sysdate(),
+        	pinyin = :pinyin, hanzi = :hanzi
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<!-- 删除某一条记录 -->
+	<!-- Delete one records by id. -->
+	<sql-query name="core.pinyin.deleterecordbyid">
+    <![CDATA[
+        delete from core_pinyin where ID_ = :id
+    ]]>
+	</sql-query>
+</hibernate-mapping>

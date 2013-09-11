@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<sql-query name="core.basicdata.newrecord">
+    <![CDATA[
+        insert into core_basicdata(CID_,CDATE_,name,value,value2,sequence) values(:cId,sysdate(),:name,:value,:value2,:sequence)
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.name, ta.value, ta.value2, ta.sequence
+        from core_basicdata ta 
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.records.list">
+    <![CDATA[
+        select ta.name, ta.value, ta.value2
+        from core_basicdata ta order by ta.name, ta.sequence, ta.value, ta.value2
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.records.count">
+    <![CDATA[
+        select count(*) as ds from core_basicdata
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.getrecordbyid">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,ta.MID_,ta.MDATE_,ta.UUID_,
+        	ta.name, ta.value, ta.value2, ta.sequence
+        from core_basicdata ta
+        where ta.ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.updaterecordbyid">
+    <![CDATA[
+        update core_basicdata set MID_ = :mId, MDATE_ = sysdate(), 
+        	name = :name, value = :value, value2 = :value2, sequence = :sequence
+        where ID_ = :id
+    ]]>
+	</sql-query>
+	<sql-query name="core.basicdata.deleterecordbyid">
+    <![CDATA[
+        delete from core_basicdata where ID_ = :id
+    ]]>
+	</sql-query>
+</hibernate-mapping>

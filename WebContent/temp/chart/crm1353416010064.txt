@@ -1,0 +1,36 @@
+{
+  "title":{
+    "text":  "客户分布图",
+    "style": "{font-size: 16px; color:#00000; font-family: 楷体_GB2312; text-align: center;font-weight:bold;}"
+  },
+  "elements":[
+    {
+      "type":      "bar_glass",
+      "alpha":     0.7,
+      "colour":    "#9933CC",
+      "text":      "百分比",
+      "on-show":	{"type": "grow-up"},
+      "font-size": 10,
+      "values" :   [1,8,1]
+    }
+  ],
+  "y_axis":{
+    "stroke":      4,
+    "tick_length": 3,
+    "colour":      "#909090",
+    "grid_colour": "#d0d0d0",
+    "offset":      0,
+    "steps":      10,
+    "max":         150
+  },
+  	"x_axis":{
+		"offset":8,
+		"stroke":1,
+		"colour":"#c6d9fd",
+		"grid-colour":"#dddddd",
+		"labels":{
+			"labels":["","管理员","163"]
+			}
+		},
+	"bg_colour":"#ffffff"
+}

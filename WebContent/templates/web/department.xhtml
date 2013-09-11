@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['departmentadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left" rendered="#{MySession.hasOp['core.depa.read']==true}">
+
+			<rich:tab id="tab1" name="tab1" label="#{Lang.prop[MySession.l]['list']}">
+
+				<h:panelGrid columns="2" columnClasses="tdTop,tdTop">
+
+					<a4j:form id="treeForm">
+						<fieldset class="fieldset">
+							<legend>
+								<h:outputText value="#{Lang.prop[MySession.l]['treemenu']}" />
+							</legend>
+							<rich:tree toggleOnClick="true" reRender="editForm,mpForConfirm" style="margin:0px 5px 0px 1px;width:300px;" ajaxSubmitSelection="true" switchType="client" value="#{Department.treeNode}" var="item" nodeSelectListener="#{Department.processSelection}" ajaxKeys="#{null}">
+								<rich:treeNode style="margin-left:3px;margin-top:3px;">
+									<h:outputText value="#{item.depaName}" />
+								</rich:treeNode>
+							</rich:tree>
+						</fieldset>
+					</a4j:form>
+
+					<a4j:outputPanel id="editForm">
+						<a4j:form>
+							<fieldset class="fieldset" style="width: 267px;">
+								<legend>
+									<h:outputText value="#{Lang.prop[MySession.l]['department']} " />
+								</legend>
+								<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+									<h:outputText value="#{Lang.prop[MySession.l]['org']}:" />
+									<h:outputText value="#{Department.orgName}" />
+									<h:outputText value="" />
+									<h:outputText value="#{Lang.prop[MySession.l]['parentdepartment']}:" />
+									<h:outputText value="#{Department.parentName}" />
+									<h:outputText value="" />
+
+									<h:outputText value="#{Lang.prop[MySession.l]['name']}:" />
+									<h:inputText value="#{Department.depaName}" style="width:100px;">
+									</h:inputText>
+									<h:outputText value="*" />
+
+									<h:outputText value="#{Lang.prop[MySession.l]['description']}:" />
+									<h:inputText value="#{Department.depaDesc}" style="width:200px;">
+									</h:inputText>
+									<h:outputText value="" />
+									<h:outputText value="#{Lang.prop[MySession.l]['sequence']}:" />
+									<h:inputText value="#{Department.sequence}" style="width:30px;">
+									</h:inputText>
+									<h:outputText value="" />
+
+									<h:outputText value="" />
+									<h:panelGrid columns="4" rendered="#{MySession.hasOp['core.depa.edit']==true}">
+										<a4j:commandLink action="#{Department.newRecord}" reRender="treeForm,msg">
+											<h:outputText class="btn" value="#{Lang.prop[MySession.l]['newrecord']}" rendered="#{Department.orgId gt 0}" />
+											<f:param name="orgId" value="#{Department.orgId}" />
+											<f:param name="parentId" value="#{Department.parentId}" />
+										</a4j:commandLink>
+										<a4j:commandLink action="#{Department.updateRecordById}" reRender="treeForm,msg">
+											<h:outputText class="btn" value="#{Lang.prop[MySession.l]['save']}" rendered="#{Department.ID_ gt 0}" />
+											<f:param name="orgId" value="#{Department.orgId}" />
+											<f:param name="parentId" value="#{Department.parentId}" />
+											<f:param name="id" value="#{Department.ID_}" />
+										</a4j:commandLink>
+										<a4j:commandLink action="#{Department.moveRecordById}" reRender="treeForm,msg">
+											<h:outputText class="btn" value="#{Lang.prop[MySession.l]['move']}" rendered="#{Department.ID_ gt 0}" />
+											<f:param name="orgId" value="#{Department.orgId}" />
+											<f:param name="parentId" value="#{Department.parentId}" />
+											<f:param name="id" value="#{Department.ID_}" />
+										</a4j:commandLink>
+										<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.show();" reRender="treeForm,msg">
+											<h:outputText class="btn" value="#{Lang.prop[MySession.l]['delete']}" rendered="#{Department.ID_ gt 0}" />
+											<f:param name="orgId" value="#{Department.orgId}" />
+											<f:param name="parentId" value="#{Department.parentId}" />
+											<f:param name="id" value="#{Department.ID_}" />
+										</a4j:commandLink>
+									</h:panelGrid>
+									<h:outputText value="" />
+								</h:panelGrid>
+							</fieldset>
+						</a4j:form>
+					</a4j:outputPanel>
+				</h:panelGrid>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="#{Lang.prop[MySession.l]['admin']}">
+				<a4j:form>
+					<a4j:commandLink action="#{Department.buildTreeFile}" reRender="msg">
+						<h:outputText value="生成静态部门树" class="btn" />
+						<f:param name="type" value="departmentTree" />
+					</a4j:commandLink>
+					<a4j:commandLink action="#{Department.buildTreeFile}" reRender="msg">
+						<h:outputText value="生成静态员工树" class="btn" />
+						<f:param name="type" value="userTree" />
+					</a4j:commandLink>
+				</a4j:form>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3002" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="treeForm,editForm,msg" action="#{Department.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="orgId" value="#{Department.orgId}" />
+							<f:param name="parentId" value="#{Department.parentId}" />
+							<f:param name="id" value="#{Department.ID_}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

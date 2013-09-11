@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title><h:outputText value="#{Lang.prop[MySession.l]['webname']}" /></title>
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/style.css" />
+<link rel="stylesheet" type="text/css" href="#{MySession.host}/templates/#{MySession.templateName}/css/firefox.css" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/ddaccordion.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/ddaccordion_init.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/main.js" />
+<script type="text/javascript" src="#{MySession.host}/templates/#{MySession.templateName}/js/niceforms.js" />
+<script language="javascript">
+/*防止多次提交按钮*/
+var lock = false;
+</script>
+</head>
+<body onkeydown="if(event.keyCode==13){if(document.getElementById('mpForMsg')){document.getElementById('mpForMsg').component.hide();}if(document.getElementById('mpForSubMsg')){document.getElementById('mpForSubMsg').component.hide();}}">
+<h:outputText value="#{Application.init} #{MySession.templateName}" style="display:none;" />
+<h:outputText escape="false" value="#{MySession.isLogin}" style="display:none;" />
+<h:outputText value="#{MySession.l}" style="display:none;" />
+<div id="main_container"><ui:include src="header.xhtml" />
+<div class="main_content"><ui:include src="topmenu.xhtml" />
+<div class="center_content"><ui:include src="leftmenu.xhtml" />
+<div class="right_content">
+<h2><ui:insert name="title">Title</ui:insert></h2>
+<ui:insert name="body">Body</ui:insert></div>
+</div>
+<!--end of center content -->
+<div class="clear"></div>
+</div>
+<!--end of main content--> <ui:include src="footer.xhtml" /></div>
+</body>
+</html>

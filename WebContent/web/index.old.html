@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>青岛中科华联新材料有限公司</title>
+<style type="text/css">
+body { font-family:"verdana", "arial","微软雅黑"; padding-top:1px; background-color:#efefef;}
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, blockquote, p { padding:0; margin:0; }
+img {border-width:0px;}
+.more { float:right; margin-right:1px; margin-top:8px; color:#fff; display:inline;}
+.more a { text-decoration:none; color:#333;}
+
+.picbox { height:237px; overflow:hidden; width:100%; margin:10px 0;}
+.picbox  #prev { width:25px; height:237px; background:url(images/indexbg.gif) no-repeat 0 0; float:left; margin-left:5px; display:inline; cursor:pointer;}
+.picbox .pics { width:690px;float:left; margin:0 1px; display:inline; overflow:hidden;}
+.picbox .pics  img { border:#e0dcd9 1px solid; margin:0 8px; float:left; display: inline; }
+.picbox  #next { width:25px; height:237px; background:url(images/indexbg.gif) no-repeat -30px 0;float:right;margin-right:5px; display:inline; cursor:pointer;}
+
+
+#container { margin:0 auto; width:980px;}
+#nav { 
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#cacaca), to(#848484)); 
+	background:-moz-linear-gradient(top, #cacaca, #848484); 
+	-webkit-border-radius:3px; 
+	-moz-border-radius:3px;
+	border-radius:3px;
+	-webkit-box-shadow:0 1px 2px rgba(0,0,0,.3);
+	display:inline-block;
+	list-style:none;
+	margin:0 0 20px;
+	overflow:hidden;
+	padding:0;
+	width:100%;
+}
+#nav li {border-right:1px solid #808080; -webkit-box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); float:left; }
+#nav li a {color:#262626; display:block; font:13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; height:36px; line-height:34px; padding:0 30px; text-decoration:none; text-shadow:0 1px #cecece; }
+#nav li a:hover { background:-webkit-gradient(linear, 0 0, 0 100%, from(#929292), to(#535353)); background:-moz-linear-gradient(top, #929292, #535353); -webkit-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 0 0 1px rgba(255,255,255,.1); color:#fff; text-shadow:0 -1px #414141; }
+#nav li a:active { -webkit-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); }
+#nav li .apple { padding:0; }
+#nav li .apple:hover { -moz-border-radius-topleft:3px; -moz-border-radius-bottomleft:3px; -webkit-border-top-left-radius:3px; -webkit-border-bottom-left-radius:3px; }
+#nav li .apple span { background:url(images/apple.png) center 6px no-repeat; display:block; padding:0; text-indent:-99999em; width:102px; }
+#nav li .current,
+#nav li .current:hover { background:-webkit-gradient(linear, 0 0, 0 100%, from(#373737), to(#525051)); background:-moz-linear-gradient(top, #373737, #525051); -webkit-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); color:#fff; text-shadow:0 1px #242323; }
+
+#nav2 {width:228px;list-style:none;margin:0px;padding:0px;}
+#nav2 li {width:222px;background-image:url(bgblack.png);background-position:0 -100;height:63px;}
+
+#nav2 li a {color:#262626; display:block; font:13px "Lucida Sans Unicode", "Lucida Grande", sans-serif; height:63px; line-height:61px; padding:0 10px; text-decoration:none; text-shadow:0 1px #cecece; }
+#nav2 li a:hover { background:-moz-linear-gradient(top, #929292, #535353); -webkit-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 0 0 1px rgba(255,255,255,.1); color:#fff; text-shadow:0 -1px #414141; }
+#nav2 li .current,
+#nav2 li .current:hover { background:-webkit-gradient(linear, 0 0, 0 100%, from(#373737), to(#525051)); background:-moz-linear-gradient(top, #373737, #525051); -webkit-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); -moz-box-shadow:inset 0 -10px 20px rgba(0,0,0,.05), inset 0 2px 5px #363636, inset 0 0 0 1px rgba(255,255,255,.1); color:#fff; text-shadow:0 1px #242323; }
+
+.search { background:url(images/search.png) right -53px no-repeat; padding:7px 20px 8px 5px; }
+.search label { background:url(images/search.png) 0 0 no-repeat; display:block; height:20px; }
+.search input { border:none; color:#a9a9a9; height:12px; margin-left:25px; -webkit-appearance:none; }
+.search input:focus { border:none; outline:none; }
+.search.focus { background-position:right -83px; padding:3px 20px 2px 5px; }
+.search.focus label { background-position:0 -26px; height:27px; padding-top:4px; }
+
+h1 { margin-bottom:0; }
+.read_article { color:#777; display:block; font-size:12px; margin-bottom:30px; }
+.menuli{font-family:微软雅黑;font-weight:bold;font-size:10pt;}
+
+
+.left { float:left; }
+.right { float:right; margin-right:60px;}
+
+
+a { color:#252525; text-decoration:none; }
+a:visited { text-decoration:none; }
+a:hover { color:#ba2636; text-decoration:underline; }
+a:active { color:#ba2636; }
+.more a:hover { color: #BA2636; }
+.more a, .more a:visited { color:#888; }
+</style>
+<style type="text/css">
+.widget-slide-content-text { padding: 10px; width: 140px; }
+    .widget-slide-content-text h4 { line-height: 25px; padding-bottom: 5px; overflow: hidden; font-family: "Microsoft YaHei", "微软雅黑"; font-size: 17px; font-weight: bold; text-align: left; }
+    .widget-slide h4 a, .widget-slide h4 a:visited { color:#4E4E4E; }
+    .widget-slide h4 a:hover { color: #BA2636; }
+    .widget-slide-content-text p { color: #888888; line-height: 21px; padding-top: 12px; clear: both;font-size:10px;}
+    .widget-slide-ctrl div, .widget-slide-ctrl-tabs li { display: inline; float: left; }
+    .widget-slide-ctrl-tabs {bottom: 12px; margin: 0px 16px 0 185px; overflow: hidden; position: absolute; width: 370px; visibility: hidden; }
+    .widget-slide-ctrl-tabs ul { overflow: hidden; width: 9999px; }
+    .widget-slide-ctrl-tabs li { width: 62px; }
+    .widget-slide-ctrl-tabs img { border: 2px solid #a7a5af; opacity: 0.8; filter:alpha(opacity=80); padding: 0px; }
+    .widget-slide-ctrl-tabs .current img { border: 2px solid #2db3e9; opacity: 1; filter:alpha(opacity=100); padding: 0px; }
+    .widget-slide {overflow: hidden; position: relative; }
+    .widget-slide-body { overflow: hidden; _position: relative; }
+    .widget-slide-1 { width:270px; padding-top: 28px;}
+    .widget-slide-2 { height: 305px; width: 745px;  margin-bottom: 10px; overflow: hidden; background: none repeat scroll 0px 0px #F3F3F3; }
+    .widget-slide .widget-slide-contents-piclist { width: 9999px;}
+    .widget-slide-contents-piclist li { float: left;  width: 745px; list-style-type:none;}
+
+    .widget-slide-ctrl-prev, .widget-slide-ctrl-next {font-family:"Arial"; background-color: #333333; color: #FFFFFF; display: inline-block; font-weight: bold; opacity: 0.6; filter:alpha(opacity=60); position: absolute; text-align: center; text-decoration: none; visibility: hidden; }
+    .widget-slide-ctrl-prev:hover, .widget-slide-ctrl-next:hover { background-color:#000; color:#fff; opacity: 0.8; filter:alpha(opacity=80); text-decoration:none; }
+    .widget-slide-1-ctrl .widget-slide-ctrl-prev, .widget-slide-1-ctrl .widget-slide-ctrl-next { border-radius: 21px 21px 21px 21px; bottom: 112px; font-size: 36px; height: 42px; line-height: 42px; width: 42px; }
+    .widget-slide-2-ctrl .widget-slide-ctrl-prev, .widget-slide-2-ctrl .widget-slide-ctrl-next { border-radius: 15px; bottom: 70px; height: 30px; line-height: 30px; font-size: 24px; width: 30px; }
+    .widget-slide-3-ctrl .widget-slide-ctrl-prev, .widget-slide-3-ctrl .widget-slide-ctrl-next { border-radius: 20px; bottom: 150px; height: 40px; line-height: 40px; font-size: 28px; width: 40px; }
+    .widget-slide-4-ctrl .widget-slide-ctrl-prev, .widget-slide-4-ctrl .widget-slide-ctrl-next { border-radius: 20px; bottom: 130px; height: 40px; line-height: 40px; font-size: 28px; width: 40px; }
+    .widget-slide-5-ctrl .widget-slide-ctrl-prev, .widget-slide-5-ctrl .widget-slide-ctrl-next { border-radius: 15px; bottom: 65px; height: 30px; line-height: 30px; font-size: 24px; width: 30px;  }
+    .widget-slide-1-ctrl .widget-slide-ctrl-prev { left: 15px; }
+    .widget-slide-1-ctrl .widget-slide-ctrl-next { left: 690px; }
+    .widget-slide-2-ctrl .widget-slide-ctrl-prev { left: 10px; }
+    .widget-slide-2-ctrl .widget-slide-ctrl-next { left: 185px; }
+    .widget-slide-3-ctrl .widget-slide-ctrl-prev { left: 10px; }
+    .widget-slide-3-ctrl .widget-slide-ctrl-next { left: 310px; }
+    .widget-slide-4-ctrl .widget-slide-ctrl-prev { left: 0px; }
+    .widget-slide-4-ctrl .widget-slide-ctrl-next { left: 920px; }
+    .widget-slide-5-ctrl .widget-slide-ctrl-prev { left: 10px; }
+    .widget-slide-5-ctrl .widget-slide-ctrl-next { left: 185px; }
+</style>
+
+<link rel="stylesheet" type="text/css" href="include/jkmegamenu.css" />
+<script charset="gb2312" src="include/ntes_jslib_1.js" language="javascript" type="text/javascript"></script>
+
+</head>
+
+<body >
+	<div id="container">
+	<table style="width:100%;padding:0;margin:0px;" cellspacing="0">
+		<tr>
+			<td style="width:30%;">
+				<img src="logo.png" style="border-width:0px;"/>
+			</td>
+			<td style="width:70%;">
+				<div style="margin-top:50px;float:right;background-image:url(searchbg.gif);width:276px;height:30px;">
+					<form class="search" method="get" action="#" style="margin:-2px 0 0 8px;">
+							<label for="search_2" >
+								<input value="Search" id="search_2" placeholder="请输入关键词" type="text" style="font-family:微软雅黑;font-size:10pt;height:21px;width:230px;margin-left:0px;">
+							</label>
+							<input type="image" src="go.png" style="float:left;width:30px;height:30px;margin:-23px 0 3px 230px;"/>
+					</form>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<ul id="nav" style="margin:0;padding:0;">
+					<li><a href="#"><span class="menuli">首页</span></a></li>
+					<li><a href="#"><span class="menuli">关于我们</span></a></li>
+					<li><a href="#"><span class="menuli">产品与服务</span></a></li>
+					<li><a href="#"><span class="menuli">研究与发展</span></a></li>
+					<li><a href="#"><span class="menuli">新闻资讯</span></a></li>
+					<li><a href="#"><span class="menuli">工作机会</span></a></li>
+					<li><a href="#"><span class="menuli">联系我们</span></a></li>
+				</ul>
+			</td>
+		</tr>
+	</table>
+	<table style="width:100%;padding:0;margin:0px;" cellspacing="0">
+		<tr>
+			<td style="width:230px;">
+				<!--Mega Menu Anchor-->
+				<ul id="nav2">
+					<li><a href="#" id="megaanchor" style="font-family:微软雅黑;font-weight:bold;font-size:10pt;"><img src="list.png" style="margin:0 3px 0 0"/>系统装备</a></li>
+					<li><a href="#" id="megaanchor2" style="font-family:微软雅黑;font-weight:bold;font-size:10pt;"><img src="list.png" style="margin:0 3px 0 0"/>通用化纤&amp;薄膜设备</a></li>
+					<li><a href="#" id="megaanchor2" style="font-family:微软雅黑;font-weight:bold;font-size:10pt;"><img src="list.png" style="margin:0 3px 0 0"/>实验室装备</a></li>
+					<li><a href="#" id="megaanchor2" style="font-family:微软雅黑;font-weight:bold;font-size:10pt;"><img src="list.png" style="margin:0 3px 0 0"/>服务流程</a></li>
+					<li><a href="#" id="megaanchor2" style="font-family:微软雅黑;font-weight:bold;font-size:10pt;"><img src="list.png" style="margin:0 3px 0 0"/>品质保障体系</a></li>
+				</ul>
+				<!--Mega Drop Down Menu HTML. Retain given CSS classes-->
+				<div id="megamenu1" class="megamenu">
+					<div class="column">
+					<h3>Web Development</h3>
+					<ul>
+						<li><a href="http://www.javascriptkit.com">JavaScript Kit</a></li>
+						<li><a href="http://www.dynamicdrive.com/">Dynamic Drive</a></li>
+						<li><a href="http://www.cssdrive.com">CSS Drive</a></li>
+						<li><a href="http://www.codingforums.com">Coding Forums</a></li>
+						<li><a href="http://www.javascriptkit.com/domref/">DOM Reference</a></li>
+					</ul>
+				</div>
+				<div class="column">
+					<h3>News Related</h3>
+					<ul>
+						<li><a href="http://www.cnn.com/">CNN</a></li>
+						<li><a href="http://www.msnbc.com">MSNBC</a></li>
+						<li><a href="http://www.google.com">Google</a></li>
+						<li><a href="http://news.bbc.co.uk">BBC News</a></li>
+					</ul>
+				</div>
+				<div class="column">
+					<h3>Technology</h3>
+					<ul>
+						<li><a href="http://www.news.com/">News.com</a></li>
+						<li><a href="http://www.slashdot.com">SlashDot</a></li>
+						<li><a href="http://www.digg.com">Digg</a></li>
+						<li><a href="http://www.techcrunch.com">Tech Crunch</a></li>
+					</ul>
+				</div>
+			</td>
+			<td style="width:*;">
+				<div style="float:right;width:100%;">
+
+
+
+<div class="widget-slide widget-slide-2">
+    <div style="width: 100%;" class="widget-slide-body">
+        <ul style="width: 3360px;" class="widget-slide-contents-piclist" style="list-style:none;">
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        	<li><a class="left" href="#"><img alt="" title="" src="images/pic.jpg" height="305" width="745"></a></li>
+        </ul>
+    </div>
+    <div class="widget-slide-ctrl widget-slide-1-ctrl" >
+        <a style="visibility: visible;" href="" class="widget-slide-ctrl-prev">&lt;</a>
+        <ul class="widget-slide-ctrl-nav" style="list-style:none;">
+        	<li class=""></li>
+        	<li class=""></li>
+        	<li class=""></li>
+        	<li class="current"></li>
+        	<li class=""></li>
+        	<li class=""></li>
+        </ul>
+        <div style="visibility: visible;" class="widget-slide-ctrl-tabs" id="widget-slide-ctrl-tabs">
+            <ul>
+            	<li class=""><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            	<li class=""><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            	<li class=""><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            	<li class="current"><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            	<li class=""><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            	<li class=""><a href="#"><img alt="" title="" src="images/pic.jpg" height="36" width="53"></a></li>
+            </ul>
+        </div>
+        <a style="visibility: visible;" href="" class="widget-slide-ctrl-next">&gt;</a>
+    </div>
+</div>
+
+
+
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td valign="top" style="padding:0;">
+				<div style="width:220px;background-color:#F3F3F3;padding:0;border:1px solid #D1D1D1;">
+					<div style="width:100%;background-image:url(title.gif);height:36px;border-bottom:1px solid #D1D1D1;">
+							<div style="width:300px;float:left;padding-top:8px;padding-left:8px;font-weight:bold;"><img src="markgreen.png" style="width:16px;margin-right:3px;"/>公司简介</div>
+					</div>
+					<ul style="list-style:none;margin:0;padding:0;">
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+					</ul>
+				</div>
+				<div style="width:220px;background-color:#F3F3F3;padding:0;border:1px solid #D1D1D1;margin-top:3px;">
+					<div style="width:100%;background-image:url(title.gif);height:36px;border-bottom:1px solid #D1D1D1;">
+							<div style="width:300px;float:left;padding-top:8px;padding-left:8px;font-weight:bold;"><img src="markgreen.png" style="width:16px;margin-right:3px;"/>公司简介</div>
+					</div>
+					<ul style="list-style:none;margin:0;padding:0;">
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+						<li style="border-bottom:1px solid #E7E7E7;padding:3px;"><span style="margin-left:30px;">行业新闻纪实的</span></li>
+					</ul>
+				</div>
+			</td>
+			<td valign="top" >
+				<div style="width:100%;background-color:#F3F3F3;float:right;border:1px solid #D1D1D1;">
+					<div style="width:100%;background-image:url(title.gif);height:36px;border-bottom:1px solid #D1D1D1;">
+							<div style="width:300px;float:left;padding-top:8px;padding-left:8px;font-weight:bold;"><img src="markyellow.png" style="width:16px;margin-right:3px;"/>公司简介</div>
+							<div style="width:300px;float:right;text-align:right;"><span class="more"><a href="#">More...</a></span></div>
+					</div>
+					
+					<div style="width:100%;height:100px;font-size:10pt;padding:3px;text-indent:30px;">
+						公司简介公司简介公司简介公司简介公司简介公司简介公司简介公司简介 公司简介公司
+						公司简介公司简介公司简介公司简介公司 简介公司简介公司简介公司简介
+						公司简介公司简介公司简介公司简介公司 简介公司简介公司简介公司简介
+						公司简介公司简介公司简介公司简介公司简介公司简介公司简介公司简介简介公司简介公司简介公司简介公司简介公司简介公司简介
+					</div>
+				</div>
+
+				<div style="width:100%;margin-top:3px;background-color:#F3F3F3;float:right;border:1px solid #D1D1D1;">
+					<div style="width:100%;background-image:url(title.gif);height:36px;border-bottom:1px solid #D1D1D1;">
+							<div style="width:300px;float:left;padding-top:8px;padding-left:8px;font-weight:bold;"><img src="markblue.png" style="width:16px;margin-right:3px;"/>公司简介</div>
+							<div style="width:300px;float:right;text-align:right;"><span class="more"><a href="#">More...</a></span></div>
+					</div>
+					
+					<div style="width:100%;height:100px;font-size:10pt;padding:3px;text-indent:30px;">
+						公司简介公司简介公司简介公司简介公司简介公司简介公司简介公司简介 公司简介公司
+						公司简介公司简介公司简介公司简介公司 简介公司简介公司简介公司简介
+						公司简介公司简介公司简介公司简介公司 简介公司简介公司简介公司简介
+						公司简介公司简介公司简介公司简介公司简介公司简介公司简介公司简介简介公司简介公司简介公司简介公司简介公司简介公司简介
+					</div>
+				</div>
+				<div style="width:100%;margin-top:3px;background-color:#F3F3F3;float:right;border:1px solid #D1D1D1;">
+					<div style="width:100%;background-image:url(title.gif);height:36px;border-bottom:1px solid #D1D1D1;">
+							<div style="width:300px;float:left;padding-top:8px;padding-left:8px;font-weight:bold;"><img src="markblue.png" style="width:16px;margin-right:3px;"/>纤维薄膜展示</div>
+							<div style="width:300px;float:right;text-align:right;"><span class="more"><a href="#">More...</a></span></div>
+					</div>
+					<div style="width:100%;font-size:10pt;padding:0;">
+						<div class="picbox" style="margin:0;padding:0;">
+							<div id="prev" style="margin:0;padding:0;"></div>
+       					<div class="pics">
+         					<div style="overflow: hidden; width: 650px; margin-left: 1px;">
+										<a href="http://www.bn21.com/Job-Search.asp"><img src="qqq/p1.jpg"></a>
+										<a href="http://www.bn21.com/contactus.html"><img src="qqq/p2.jpg"></a>
+										<a href="http://www.bn21.com/service-philosophy.html"><img src="qqq/p3.jpg"></a>
+										<a href="http://www.bn21.com/news.html"><img src="qqq/p4.jpg"></a>
+										<a href="http://www.bn21.com/service-philosophy.html"><img src="qqq/p5.jpg"></a> 
+										<a href="http://www.bn21.com/service-philosophy.html"><img src="qqq/p6.jpg"></a> 
+										<a href="http://www.bn21.com/service-philosophy.html"><img src="qqq/p7.jpg"></a> 
+									</div>
+								</div>
+							<div id="next" style="margin:0;padding:0;"></div>
+						</div>
+					</div>
+				</div>
+
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div style="margin-top:10px;width:100%;height:8px;background-color:#01A2FF;"></div>
+				<div style="margin-top:3;width:100%;text-align:center;font-size:13px;">
+					关于我们 | 华世洁 | 蓝科途 | 工作机会
+				</div>
+			</td>
+		</tr>	
+		<tr>
+			<td colspan="2">
+				<div style="margin-top:3;width:100%;text-align:center;font-size:12px;margin-top:3px;">青岛中科华联环保科技有限公司</div>
+			</td>
+		</tr>	
+	</table>	
+			
+		
+
+</div>
+
+	
+
+	
+
+
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-1586316-16']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();
+</script>
+
+
+<script type="text/javascript" language="javascript" src="include/ntes_ui_scroll.js" charset="gb2312"></script>
+
+<script type="text/javascript">
+    //Widget Slide
+    /*鼠标放上去出现切换大按钮和缩略图列表*/
+    var ctrlTabs = $('.widget-slide-ctrl-tabs');
+    var ctrlPrev = $('.widget-slide-ctrl-prev');
+    var ctrlNext = $('.widget-slide-ctrl-next');
+    var FOCUS_DELAY;
+    $('.widget-slide').addEvent('mouseover',function(){
+        clearTimeout(FOCUS_DELAY);
+        $( ".widget-slide-ctrl-tabs", $(this)).addCss('visibility:visible;');
+        $( ".widget-slide-ctrl-prev", $(this)).addCss('visibility:visible;');//类似于find(),$(selector, abc)
+        $( ".widget-slide-ctrl-next",  $(this)).addCss('visibility:visible;');
+    }) .addEvent('mouseout',function(){
+                //当前函数没有执行对象，就用一个变量储存当前的this
+                var t = this;
+                FOCUS_DELAY = setTimeout(function(){
+                    $( ".widget-slide-ctrl-tabs", $(t)).addCss('visibility:hidden;');
+                    $( ".widget-slide-ctrl-prev", $(t)).addCss('visibility:hidden;');
+                    $( ".widget-slide-ctrl-next",  $(t)).addCss('visibility:hidden;');
+                }, 25);
+            });
+    /*鼠标放小切换图上，出现切换图标*/
+    //Mod Scroll
+    (function(){
+        var Scrl = function(elem){
+            var axis = "x";
+            if ( $(elem).attr("class").indexOf("mod-scroll-y") != -1 ) axis = "y";
+            var t = this, body = NTES.one("> div.widget-slide-body > ul", elem);
+            t._ctrls = $("> div.widget-slide-ctrl > ul.widget-slide-ctrl-nav > li", elem);
+            t._ctrls_img = $("> div.widget-slide-ctrl > div.widget-slide-ctrl-tabs > ul > li", elem);
+            t._len = t._ctrls.length;
+            t.index = 0;
+            //修复滚动图片不出来bug
+            var gsty = NTES.style.getCurrentStyle,
+                    onli = NTES.one("> li", body),
+                    offWidth = onli.offsetWidth || (parseInt(gsty(onli, "width")) + parseInt(gsty(onli, "padding-left")) + parseInt(gsty(onli, "padding-right")));
+            this._elem = elem;
+            //
+            if (axis == "x"){
+                var bWidth = offWidth * body.$("> li").length;
+//                var bWidth = NTES.one("> li", body).offsetWidth * body.$("> li").length;
+                t._step = bWidth / t._len;
+                body.addCss({ width: bWidth + "px"});
+                $(body.parentNode).addCss({ width: t._step + "px"});
+            }else{
+                t._step = NTES.one("> li", body).offsetHeight;
+                var bHeight = t._step * t._len;
+                body.addCss({ height: bHeight + "px"});
+                $(body.parentNode).addCss({ height: t._step + "px"});
+            }
+            t._scrl = new NTES.ui.Scroll(body, axis);
+            if (axis == "y"){
+                t._scrl.speed = 50;//50
+                t._scrl.fps = 20;//20
+                t._scrl.lpf = 1;
+            }
+            /*鼠标放到切换小按钮，切换大图*/
+            t._ctrls.each(function(i){
+                $(this).addEvent("mouseover", t.show.bind(t, i), i);
+            });
+            /*鼠标放到缩略图上，切换大图*/
+            t._ctrls_img.each(function(i){
+                $(this).addEvent("mouseover", t.show.bind(t, i), i);
+            });
+            /*鼠标点击左右切换按钮，切换大图*/
+            NTES.one("> div.widget-slide-ctrl > a.widget-slide-ctrl-prev", elem).addEvent("click", function(e){
+                e.preventDefault();
+                t.show(--t.index);
+            }).addEvent("mouseup", function(){ this.blur(); });
+            NTES.one("> div.widget-slide-ctrl > a.widget-slide-ctrl-next", elem).addEvent("click", function(e){
+                e.preventDefault();
+                t.show(++t.index);
+            }).addEvent("mouseup", function(){ this.blur(); });
+            t.show(0);
+        }
+        Scrl.prototype = {
+            show: function(i){
+                var t = this;
+                t.index = i < 0 ? t._len - 1 : i > t._len - 1 ? 0 : i;
+                t._scrl.onStart = function(){
+                    t._ctrls.removeCss("current");
+                    t._ctrls.$(t.index).addCss("current");
+                    if(t._ctrls_img.length > 0){
+                        t._ctrls_img.removeCss("current");
+                        t._ctrls_img.$(t.index).addCss("current");
+                    }
+                }
+                t._scrl.scrollTo(t._step * t.index);
+            }
+        }
+        $("div.widget-slide").each(function(){
+            new Scrl(this);
+        });
+    })();
+</script>
+<!-- 为防止js冲突，将此代码放在广告图片之后 -->
+<script src="include/jquery.js" type="text/javascript"></script>
+<script src="include/ga.js" async="" type="text/javascript"></script>
+<script type="text/javascript" src="include/jkmegamenu.js"></script>
+<script type="text/javascript">
+jkmegamenu.definemenu("megaanchor", "megamenu1", "mouseover")
+</script>
+<!-- 为防止js冲突，将此代码放在广告图片之后 -->
+<script src="include/jquery.js" type="text/javascript"></script>
+<script>
+eval(function(p,a,c,k,e,d){e=function(c){return(c<a?"":e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)d[e(c)]=k[c]||e(c);k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1;};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p;}('$(5(){$(\'.g\').n(0).h();$(".u t").z(5(){9 e=$(".u t").y($(q));$(q).A(\'C\').o().B();$(\'.g\').n(e).h().o(\'.g\').l()});9 a=1;9 b=$(\'.2 w\').x();9 c=b-3;9 d=$(\'.2>4\').m()+J;$(\'.2>4\').8(\'m\',d);$("#I").r(5(){$(\'.2>4\').8("7-6","-f");$(\'.2>4\').j({\'7-6\':\'0\'},\'k\',5(){$(\'.2>4\').8({"7-6":"-f"});$(\'.2>4\').p(\'a:v\').D($(\'.2>4 a:s\'))});});$("#F").r(5(){$(\'.2>4\').8("7-6","0");$(\'.2>4\').j({\'7-6\':\'-f\'},\'k\',5(){$(\'.2>4\').8({"7-6":"0"});$(\'.2>4\').p(\'a:s\').H($(\'.2>4 a:v\'))});});$(\'.i\').G(5(){$(\'.E\').l();$(\'.i\').h()})});',46,46,'||pics||div|function|left|margin|css|var||||||226px|tabcon|show|share_self|animate|slow|hide|width|eq|siblings|find|this|click|last|li|tab|first|img|size|index|hover|addClass|removeClass|cur|before|loading|next|load|after|prev|226'.split('|'),0,{}))
+</script>
+<!-- 搜索框 -->
+<script>
+$(function() {
+	var $placeholder = $('input[placeholder]');
+	if ($placeholder.length > 0) {
+		var attrPh = $placeholder.attr('placeholder');
+		$placeholder.attr('value', attrPh)
+		  .bind('focus', function() {
+			var $this = $(this),
+				$form = $this.parents('.search');
+			if($this.val() === attrPh)
+				$this.val('').css('color','#333');
+			$form.addClass('focus');
+		}).bind('blur', function() {
+			var $this = $(this),
+				$form = $this.parents('.search');
+			if($this.val() === '')
+				$this.val(attrPh).css('color','#a9a9a9');
+			$form.removeClass('focus');
+		});
+	}
+});
+</script>
+</body>
+</html>

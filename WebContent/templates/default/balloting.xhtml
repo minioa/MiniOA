@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="#{Lang.prop[MySession.l]['ballotadmin']}" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:form id="dataForm" style="margin-top:3px;" rendered="#{MySession.hasOp['core.ballot.read']==true}">
+			<rich:dataTable id="dataTable" value="#{Ballot.items}" var="item" rowKeyVar="rowNum">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column>
+							<h:outputText value="" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['title']}" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="#{Lang.prop[MySession.l]['status']}" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column style="text-align:center;width:21px;">
+					<h:outputText value="#{rowNum + 1}" />
+				</rich:column>
+				<rich:column style="width:200px;">
+					<h:outputLink value="balloting2.jsf" rendered="#{item.status==1 or item.status==2}">
+						<h:outputText value="#{item.title}" />
+						<f:param name="headerId" value="#{item.ID_}" />
+						<f:param name="reload" value="false" />
+					</h:outputLink>
+					<h:outputText value="#{item.title}" rendered="#{item.status==0}" />
+				</rich:column>
+				<rich:column style="width:60px;text-align:center;">
+					<h:outputText rendered="#{item.status==0}" value="#{Lang.prop[MySession.l]['notstarted']}" />
+					<h:outputText rendered="#{item.status==1}" value="#{Lang.prop[MySession.l]['balloting']}" />
+					<h:outputText rendered="#{item.status==2}" value="#{Lang.prop[MySession.l]['balloted']}" />
+				</rich:column>
+			</rich:dataTable>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="表单管理" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:outputText value="表单名称:" />
+					<h:inputText id="key" value="#{MySession.tempStr['Form.key']}" style="width:80px;" />
+					<h:outputText value="空间名称:" />
+					<h:inputText id="key2" value="#{MySession.tempStr['Form.key2']}" style="width:80px;" />
+					<a4j:commandLink action="#{Form.buildItems}" reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;" onclick="$('searchForm:key').value='';$('searchForm:key2').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{Form.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="表单名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="字段 视图" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="空间名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="权限策略" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="记录日志" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="允许附件" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="状态" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改" class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="headerId" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+							<a4j:commandLink action="#{FormDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:*;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.formName}" />
+								<rich:toolTip>
+									<h:outputText value="公告信息:#{item.notice}" />
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:120px;text-align:center;">
+							<h:outputLink value="formfield.jsf">
+								<h:outputText value="字段" />
+								<f:param name="formId" value="#{item.ID_}" />
+							</h:outputLink>
+							<h:outputLink value="formview.jsf">
+								<h:outputText value="视图" />
+								<f:param name="formId" value="#{item.ID_}" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.tableName=='core_form_table'}" value="默认表" />
+							<h:outputText rendered="#{item.tableName=='core_form_table2'}" value="默认表2" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.opType=='N'}" value="不限制" />
+							<h:outputText rendered="#{item.opType=='Y'}" value="限制" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.enabledLog=='N'}" value="关闭" />
+							<h:outputText rendered="#{item.enabledLog=='Y'}" value="启用" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.enabledAtt=='N'}" value="启用" />
+							<h:outputText rendered="#{item.enabledAtt=='Y'}" value="关闭" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText rendered="#{item.isPublish=='N'}" value="未发布" />
+							<h:outputText rendered="#{item.isPublish=='Y'}" value="已发布" />
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Form.dsList}" var="item" style="width:100%;" reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{Form.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="表单名称:" />
+							<h:inputText value="#{Form.formName}" id="formName" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="formName" />
+
+							<h:outputText value="空间名称:" />
+							<h:selectOneMenu value="#{Form.tableName}" id="tableName">
+								<f:selectItem itemValue="core_form_main" itemLabel="默认表" />
+								<f:selectItem itemValue="core_form_main2" itemLabel="默认表2" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="tableName" />
+
+							<h:outputText value="权限策略:" />
+							<h:selectOneRadio value="#{Form.opType}" id="opType">
+								<f:selectItem itemValue="N" itemLabel="不限制" />
+								<f:selectItem itemValue="Y" itemLabel="仅修改自己的记录，具备权限的可浏览本部门或全部记录" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="opType" />
+
+							<h:outputText value="是否记录日志:" />
+							<h:selectOneRadio value="#{Form.enabledLog}" id="enabledLog">
+								<f:selectItem itemValue="N" itemLabel="不启用" />
+								<f:selectItem itemValue="Y" itemLabel="启用日志管理" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="enabledLog" />
+
+							<h:outputText value="是否允许上传附件:" />
+							<h:selectOneRadio value="#{Form.enabledAtt}" id="enabledAtt">
+								<f:selectItem itemValue="N" itemLabel="不允许" />
+								<f:selectItem itemValue="Y" itemLabel="允许" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="enabledAtt" />
+
+							<h:outputText value="状态:" />
+							<h:selectOneRadio value="#{Form.isPublish}" id="isPublish">
+								<f:selectItem itemValue="N" itemLabel="未发布" />
+								<f:selectItem itemValue="Y" itemLabel="已发布" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneRadio>
+							<rich:message for="isPublish" />
+
+							<h:outputText value="公告信息:" />
+							<h:inputText value="#{Form.notice}" id="notice" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="notice" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="2">
+								<a4j:commandLink action="#{Form.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Form.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{Form.ID_}" />
+							<h:inputHidden value="#{Form.CID_}" />
+							<h:inputHidden value="#{Form.CDATE_}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{FormDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+		<!-- Arquivos utilizados pelo jQuery lightBox plugin -->
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/jquery.lightbox-0.5.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/jquery.lightbox-0.5.css" media="screen" />
+		<!-- / fim dos arquivos utilizados pelo jQuery lightBox plugin -->
+
+		<!-- Ativando o jQuery lightBox plugin -->
+		<script type="text/javascript">
+    $(function() {
+        $('#gallery a').lightBox();
+    });
+    </script>
+    
+		<div id="gallery"><a href="photos/image1.jpg"> <img src="photos/thumb_image1.jpg" width="72" height="72" alt="" /> </a></div>
+</ui:composition>
+</html>

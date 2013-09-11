@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="新邮件" />
+	</ui:define>
+	<ui:define name="body">
+		<a4j:outputPanel id="editForm">
+			<h:outputText value="#{CRMMail.init}" style="display:none;" />
+			<h:form id="form">
+				<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+					<h:outputText value="姓名:" />
+					<h:outputText value="#{CRMMail.recipient}" style="width:600px;" />
+					<h:outputText value="" />
+
+					<h:outputText value="邮件地址:" />
+					<h:outputText value="#{CRMMail.address}" style="width:600px;" />
+					<h:outputText value="" />
+
+					<h:outputText value="主题:" />
+					<h:inputText value="#{CRMMail.subject}" id="subject" required="true" requiredMessage="不能空" style="width:400px;">
+						<rich:ajaxValidator event="onblur" />
+					</h:inputText>
+					<rich:message for="subject" />
+					<h:outputText value="附件:" />
+					<rich:dataGrid id="attachmentTable" value="#{CRMMailAttachment.items}" var="att" columns="1" elements="36" style="border-width:0;">
+						<h:commandLink action="#{CRMMailAttachment.download}">
+							<h:outputText value="#{att.prop['oldname']}" />
+							<f:param name="id" value="#{att.prop['id']}" />
+							<f:param name="uuid" value="#{att.prop['uuid']}" />
+						</h:commandLink>
+						<a4j:commandLink action="#{CRMMailAttachment.showDialog}" onclick="#{rich:component('mpForConfirmAtt')}.show();">
+							<h:graphicImage title="#{Lang.prop[MySession.l]['delete']}" class="imgBtn" url="../images/delete.png">
+							</h:graphicImage>
+							<f:param name="reload" value="false" />
+							<f:param name="id" value="#{att.prop['id']}" />
+							<f:param name="uuid" value="#{att.prop['uuid']}" />
+						</a4j:commandLink>
+					</rich:dataGrid>
+					<h:outputText value="" />
+				</h:panelGrid>
+				<rich:simpleTogglePanel opened="false" switchType="client" style="width:100%;">
+					<rich:fileUpload fileUploadListener="#{CRMMailAttachment.uploadListener}" maxFilesQuantity="100" listWidth="500" listHeight="80" ondblclick="#{rich:component('mpForAttachment')}.hide()">
+						<a4j:support event="onuploadcomplete" reRender="js,msg,attachmentTable" />
+						<f:param name="uuid" value="#{CRMMailDao.uuid}" />
+					</rich:fileUpload>
+				</rich:simpleTogglePanel>
+				<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+					<h:outputText value="内容:" />
+					<rich:editor theme="advanced" id="message" width="600" height="300" viewMode="visual" value="#{CRMMail.message}">
+						<f:param name="theme_advanced_buttons1" value="bold,italic,underline, cut,copy,paste,pasteword,fontselect,fontsizeselect,justifyleft,justifycenter,justifyright" />
+						<f:param name="theme_advanced_toolbar_location" value="top" />
+						<f:param name="theme_advanced_toolbar_align" value="left" />
+					</rich:editor>
+					<rich:message for="message" />
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+					<h:outputText value="　　" />
+					<a4j:commandLink action="#{CRMMail.sendMail}" reRender="progressPanel,msg" style="margin: 9px 0px 5px;">
+						<h:outputText class="btn" value="加入队列" style="margin-left:3px;" />
+						<f:param name="redirect" value="true" />
+						<f:param name="reload" value="false" />
+						<f:param name="uuid" value="#{CRMMailDao.uuid}" />
+					</a4j:commandLink>
+					<a4j:outputPanel id="progressPanel">
+						<rich:progressBar style="width:400px;height:16px;font-family: Berlin Sans FB, Constantia, Candara;" value="#{MySession.currentValue}" interval="1000" label="正在将第#{MySession.currentValue}封邮件加入队列，共#{MySession.maxValue}封邮件，请等待……" minValue="#{MySession.minValue}" maxValue="#{MySession.maxValue}">
+						</rich:progressBar>
+					</a4j:outputPanel>
+				</h:panelGrid>
+				<h:inputHidden value="#{CRMMail.ID_}" />
+				<h:inputHidden value="#{CRMMail.CID_}" />
+				<h:inputHidden value="#{CRMMail.CDATE_}" />
+				<h:inputHidden value="#{CRMMail.UUID_}" />
+			</h:form>
+		</a4j:outputPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmAtt" width="300" height="80" zindex="3000" style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg,attachmentTable" action="#{CRMMailAttachment.deleteRecordById}" onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmAtt')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="../main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="客户资料管理" />
+	</ui:define>
+	<ui:define name="body">
+		<style>
+.rich-stglpanel-header {
+	color: #000;
+	border-width: 0;
+	background-color: white;
+	height: 18px;
+	background: none;
+	background: url(../images/search.png) no-repeat;
+}
+</style>
+		<rich:tabPanel id="tab" selectedTab="#{MySession.tab}" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<rich:simpleTogglePanel opened="false" switchType="client" style="width:96%;">
+					<a4j:form id="searchForm">
+						<h:outputText value="客户编码：" />
+						<h:inputText id="key4" value="#{MySession.tempStr['Customer.key4']}" style="width:80px;" />
+						<h:outputText value="客户名称：" />
+						<h:inputText id="key" value="#{MySession.tempStr['Customer.key']}" style="width:80px;" />
+						<h:outputText value="行业：" />
+						<h:inputText id="key2" value="#{MySession.tempStr['Customer.key2']}" style="width:80px;" />
+						<h:outputText value="省份：" />
+						<h:inputText id="keyPro" value="#{MySession.tempStr['Customer.keyPro']}" style="width:80px;" />
+						<h:outputText value="城市：" />
+						<h:inputText id="keyCity" value="#{MySession.tempStr['Customer.keyCity']}" style="width:80px;" />
+						<h:outputText value="客户经理：" />
+						<h:selectOneMenu id="key6" value="#{MySession.tempStr['Customer.key6']}">
+							<f:selectItem itemValue="" itemLabel="" />
+							<f:selectItems value="#{Application.userSelectItem}" />
+						</h:selectOneMenu>
+						<h:panelGrid columns="10" style="margin-left:-2px;">
+							<h:outputText value="开始日期：" />
+							<a4j:outputPanel layout="block" style="margin-left:-5px;">
+								<rich:calendar id="startDate" value="#{MySession.tempDate['Customer.startDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+							</a4j:outputPanel>
+							<h:outputText value="结束日期：" />
+							<a4j:outputPanel layout="block">
+								<rich:calendar id="endDate" value="#{MySession.tempDate['Customer.endDate']}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+							</a4j:outputPanel>
+							<h:outputText value="排序" />
+							<h:selectOneMenu value="#{MySession.tempStr['Customer.order']}">
+								<f:selectItem itemValue="kehubm" itemLabel="客户编码" />
+								<f:selectItem itemValue="CDATE_" itemLabel="创建时间" />
+								<f:selectItem itemValue="MDATE_" itemLabel="修改时间" />
+							</h:selectOneMenu>
+							<h:selectOneMenu value="#{MySession.tempStr['Customer.asc']}">
+								<f:selectItem itemValue="asc" itemLabel="升序" />
+								<f:selectItem itemValue="desc" itemLabel="降序" />
+							</h:selectOneMenu>
+							<a4j:commandLink action="#{Customer.buildItems}" reRender="dataForm">
+								<h:outputText value="搜索" class="btn" />
+								<f:param name="reload" value="true" />
+								<f:param name="resetPageNo" value="true" />
+								<f:param name="type" value="#{param['type']}" />
+							</a4j:commandLink>
+							<a4j:commandLink style="margin-left:6px;margin-top:8px" onclick="$('searchForm:key').value='';$('searchForm:key2').value='';return false;">
+								<h:outputText value="清空" class="btn" />
+							</a4j:commandLink>
+						</h:panelGrid>
+					</a4j:form>
+				</rich:simpleTogglePanel>
+				<a4j:form id="dataForm" style="margin-top:3px;font-size:10pt;">
+					<h:outputText value="重分配客户给：" rendered="#{MySession.hasOp['crm.admin']}" />
+					<h:selectOneMenu id="man" value="#{MySession.tempStr['Customer.man']}" rendered="#{MySession.hasOp['crm.admin']}">
+						<f:selectItems value="#{Application.userSelectItem}" />
+					</h:selectOneMenu>
+					<a4j:commandLink action="#{CustomerDao.updateCId}" reRender="msg" rendered="#{MySession.hasOp['crm.admin']}">
+						<h:outputText value="分配" class="btn" />
+					</a4j:commandLink>
+					<rich:dataTable id="dataTable" value="#{Customer.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:96%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<input type="checkbox" onclick="javascript:if(this.checked) selectAll(); else selectNone();" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="类别" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="编码" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="客户全称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="行业" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="规模" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="省份" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="城市" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="客户经理" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Arc" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;">
+							<h:selectBooleanCheckbox value="#{CustomerDao.checkIdsMap[item.prop['ID_']]}">
+							</h:selectBooleanCheckbox>
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['kehulb']}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputLink value="#" onclick="javascript:addFrame('crm/customerentity_edit.jsf?id=#{item.prop['ID_']}&amp;headerId=#{item.prop['ID_']}&amp;uuid=#{item.prop['UUID_']}','#{item.prop['kehubm']}')">
+								<h:outputText value="#{item.prop['kehubm']}" />
+							</h:outputLink>
+						</rich:column>
+						<rich:column style="width:200px;">
+							<h:outputText value="#{item.prop['gongsimc']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['hangye']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['guimo']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['shengfen']}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.prop['city']}" />
+						</rich:column>
+						<rich:column style="width:100px;text-align:center;">
+							<h:outputText value="#{item.prop['cUser']}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;">
+							<h:outputText value="#{item.prop['isarc']}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink action="#{CustomerDao.showDialog}"
+								onclick="#{rich:component('mpForConfirmCDel')}.show();hideObject('dataForm:dataTable:#{rowNum}:edit');hideObject('dataForm:dataTable:#{rowNum}:del');hideObject('dataForm:dataTable:#{rowNum}:att');hideObject('dataForm:dataTable:#{rowNum}:record');hideObject('dataForm:dataTable:#{rowNum}:contact');hideObject('dataForm:dataTable:#{rowNum}:visit');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.prop['ID_']}" />
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}" value="#{Customer.dsList}" var="item" style="width:96%;" reRender="ds">
+						<ui:include src="../ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="导入">
+				<a4j:form style="margin-top:8px;">
+					<rich:fileUpload fileUploadListener="#{CustomerDao.uploadListener}" acceptedTypes="xls" maxFilesQuantity="1" id="upload" listHeight="80" listWidth="300">
+						<a4j:support event="onuploadcomplete" reRender="msg" />
+					</rich:fileUpload>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab3" name="tab3" label="新建">
+				<ui:include src="customernew.xhtml" />
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmCDel" width="300" height="80" zindex="3000"
+				style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{CustomerDao.deleteRecordById}" onclick="#{rich:component('mpForConfirmCDel')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmCDel')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+	</ui:define>
+</ui:composition>
+</html>

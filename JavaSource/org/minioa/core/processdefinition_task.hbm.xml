@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="ProcessDefinitionTask" table="core_processdefinition_task">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="MID_" column="MID_" type="java.lang.Integer" />
+		<property name="MDATE_" column="MDATE_" type="java.util.Date" />
+		<property name="UUID_" column="UUID_" type="java.lang.String" />
+		<property name="headerId" column="headerId" type="java.lang.Integer" />
+		<property name="formViewId" column="formViewId" type="java.lang.Integer" />
+		<property name="taskName" column="taskName" type="java.lang.String" />
+		<property name="taskCode" column="taskCode" type="java.lang.String" />
+		<property name="taskType" column="taskType" type="java.lang.String" />
+		<property name="taskApproveType" column="taskApproveType"
+			type="java.lang.String" />
+		<property name="taskApproverId" column="taskApproverId" type="java.lang.Integer" />
+		<property name="taskApproverRoleId" column="taskApproverRoleId"
+			type="java.lang.Integer" />
+		<property name="taskApproverJobId" column="taskApproverJobId"
+			type="java.lang.Integer" />
+		<property name="taskDuation" column="taskDuation" type="java.lang.String" />
+		<property name="taskNextStep" column="taskNextStep" type="java.lang.String" />
+		<property name="sqlWhenCompleted" column="sqlWhenCompleted" type="java.lang.String" />
+		<property name="emailNotice" column="emailNotice" type="java.lang.String" />
+		<property name="smsNotice" column="smsNotice" type="java.lang.String" />
+		<property name="imNotice" column="imNotice" type="java.lang.String" />
+	</class>
+	<sql-query name="core.processdefinition.task.items">
+    <![CDATA[
+        select * from core_processdefinition_task where headerId = :headerId order by taskCode
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.si">
+    <![CDATA[
+        select ID_, concat(taskCode,'-',taskName) from core_processdefinition_task where headerId = :headerId order by taskCode
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.firsttask">
+    <![CDATA[
+        select min(ta.taskCode)
+        from core_processdefinition_task ta
+        where ta.headerId = :headerId
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.gettaskdefid">
+    <![CDATA[
+    	select ifnull((
+        select ta.ID_
+        from core_processdefinition_task ta
+        where ta.headerId = :processDefId and ta.taskCode = :taskCode),0) from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.gettaskapproverid">
+    <![CDATA[
+    	select ifnull((
+        select ta.taskApproverId from core_processdefinition_task ta
+        where ta.ID_ = :taskDefId),0) from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.gettaskapproverroleid">
+    <![CDATA[
+    	select ifnull((
+        select ta.taskApproverRoleId from core_processdefinition_task ta
+        where ta.ID_ = :taskDefId),0) from dual
+    ]]>
+	</sql-query>
+	<sql-query name="core.processdefinition.task.gettaskapproverjobid">
+    <![CDATA[
+    	select ifnull((
+        select ta.taskApproverJobId from core_processdefinition_task ta
+        where ta.ID_ = :taskDefId),0) from dual
+    ]]>
+	</sql-query>
+</hibernate-mapping>

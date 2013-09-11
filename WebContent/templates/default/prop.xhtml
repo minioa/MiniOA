@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<ui:composition template="main.xhtml">
+	<ui:define name="title">
+		<h:outputText value="系统参数设置" />
+	</ui:define>
+	<ui:define name="body">
+		<rich:tabPanel id="tab" switchType="client" headerAlignment="left">
+			<rich:tab id="tab1" name="tab1" label="列表">
+				<a4j:form id="searchForm">
+					<h:outputText value="参数名称:" />
+					<h:inputText id="key" value="#{MySession.tempStr['Prop.key']}"
+						style="width:80px;" />
+					<h:outputText value="参数描述:" />
+					<h:inputText id="key2" value="#{MySession.tempStr['Prop.key2']}"
+						style="width:80px;" />
+					<a4j:commandLink action="#{Prop.buildItems}"
+						reRender="dataForm">
+						<h:outputText value="搜索" class="btn" />
+						<f:param name="reload" value="true" />
+						<f:param name="resetPageNo" value="true" />
+					</a4j:commandLink>
+					<a4j:commandLink style="margin-left:6px;"
+						onclick="$('searchForm:key').value='';$('searchForm:key2').value='';return false;">
+						<h:outputText value="清空" class="btn" />
+					</a4j:commandLink>
+				</a4j:form>
+				<a4j:form id="dataForm" style="margin-top:3px;">
+					<rich:dataTable id="dataTable" value="#{Prop.items}"
+						var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}"
+						style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="操作" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="参数名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="参数描述" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="参数值" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column
+							style="text-align:center;width:40px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm">
+								<h:graphicImage id="edit"
+									onclick="RichFaces.switchTab('tab','tab2','tab2');" title="修改"
+									class="imgBtn" url="images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:100px;text-align:left;">
+							<h:outputText value="#{item.propName}" />
+						</rich:column>
+						<rich:column style="width:*;text-align:left;">
+							<h:outputText value="#{item.propDesc}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:left;">
+							<h:outputText value="*******" rendered="#{item.inputType=='password'}"/>
+							<h:outputText value="#{item.propValue}" rendered="#{!(item.inputType=='password')}"/>
+						</rich:column>
+					</rich:dataTable>
+					<rich:dataTable id="dsTable" rows="#{MySession.pageSize}"
+						value="#{Prop.dsList}" var="item" style="width:100%;"
+						reRender="ds">
+						<ui:include src="ds.xhtml" />
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab2" name="tab2" label="编辑">
+				<a4j:outputPanel id="editForm">
+					<h:outputText value="#{Prop.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="参数名称:" />
+							<h:outputText value="#{Prop.propName}" />
+							<h:outputText value="" />
+
+							<h:outputText value="参数描述:" />
+							<h:outputText value="#{Prop.propDesc}" />
+							<h:outputText value="" />
+
+							<h:outputText value="参数值:" />
+							<h:panelGrid columns="2" columnClasses="co1,co3"
+								rendered="#{MySession.tempStr['textbox']=='Y'}">
+								<h:inputText value="#{Prop.propValue}" id="propValue"
+									style="width:200px;">
+									<rich:ajaxValidator event="onblur" />
+								</h:inputText>
+								<rich:message for="propValue" />
+							</h:panelGrid>
+
+							<h:panelGrid columns="2" columnClasses="co1,co3"
+								rendered="#{MySession.tempStr['radio']=='Y'}">
+								<h:selectOneRadio value="#{Prop.propValue}" id="propValue2">
+									<f:selectItem itemValue="N" itemLabel="N" />
+									<f:selectItem itemValue="Y" itemLabel="Y" />
+									<rich:ajaxValidator event="onblur" />
+								</h:selectOneRadio>
+								<rich:message for="propValue2" />
+							</h:panelGrid>
+							
+							<h:panelGrid columns="2" columnClasses="co1,co3"
+								rendered="#{MySession.tempStr['password']=='Y'}">
+								<h:inputSecret value="#{Prop.propValue}" id="propValue3"
+									style="width:200px;">
+									<rich:ajaxValidator event="onblur" />
+								</h:inputSecret>
+								<rich:message for="propValue3" />
+							</h:panelGrid>
+
+							<h:outputText value="" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="2">
+								<a4j:commandLink action="#{Prop.updateRecordById}"
+									reRender="msg">
+									<h:outputText class="btn" value="保存" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:inputHidden value="#{Prop.CID_}" />
+							<h:inputHidden value="#{Prop.inputType}" />
+							<h:inputHidden value="#{Prop.propName}" />
+							<h:inputHidden value="#{Prop.propDesc}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+</ui:composition>
+</html>

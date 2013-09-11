@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	<!DOCTYPE digester-rules SYSTEM "digester-rules.dtd">
+ -->
+<digester-rules>
+	<pattern value="*/userentity">
+		<object-create-rule	classname="org.minioa.core.suggestionbox.UserEntity" />
+		<bean-property-setter-rule pattern="id" propertyname="id"/>
+		<bean-property-setter-rule pattern="name" propertyname="name"/>
+		<bean-property-setter-rule pattern="displayName" propertyname="displayName"/>
+		<bean-property-setter-rule pattern="depaName" propertyname="depaName"/>
+		<set-next-rule methodname="addUserEntity"/>
+	</pattern>
+</digester-rules>

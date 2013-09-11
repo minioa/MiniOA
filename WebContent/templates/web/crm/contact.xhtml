@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+		<rich:tabPanel id="tab20" switchType="client" headerAlignment="left">
+			<rich:tab id="tab21" name="tab21" label="列表">
+				<a4j:form id="dataForm20" style="margin-top:3px;">
+					<rich:dataTable id="dataTable20" value="#{Contact.items}" var="item" rowKeyVar="rowNum" rows="#{MySession.pageSize}" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="姓名" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="性别" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="部门" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="职位" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="职责" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="等级" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="生日" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="电话" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="邮件" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Arc" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm20">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab20','tab22','tab22');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:80px;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.xingming}" />
+								<rich:toolTip>
+									<h:panelGrid columns="1">
+										<h:outputText value="QQ:#{item.qq}" />
+										<h:outputText value="MSN:#{item.msn}" />
+										<h:outputText value="邮件:#{item.youjian}" />
+										<h:outputText value="固定电话:#{item.gudingdh}" />
+										<h:outputText value="移动电话:#{item.yidongdh}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:40px;text-align:center;">
+							<h:outputText value="#{item.chenghu}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.bumen}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.zhiwei}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.zhize}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.lianxidj}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.birthday}" />
+						</rich:column>
+						<rich:column style="width:60px;text-align:center;">
+							<h:outputText value="#{item.gudingdh}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.youjian}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;">
+							<h:outputText value="#{item.isarc}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink action="#{ContactDao.showDialog}" onclick="#{rich:component('mpForConfirm')}.show();hideObject('dataForm20:dataTable20:#{rowNum}:edit');hideObject('dataForm20:dataTable20:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab22" name="tab22" label="编辑">
+				<a4j:outputPanel id="editForm20">
+					<h:outputText value="#{Contact.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="6" columnClasses="co1,co2,co3,co1,co2,co3">
+							<h:outputText value="姓名:" />
+							<h:inputText value="#{Contact.xingming}" id="xingming" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="xingming" />
+							<h:outputText value="昵称:" />
+							<h:inputText value="#{Contact.nickname}" id="nickname" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="nickname" />
+							<h:outputText value="性别:" />
+							<h:selectOneMenu value="#{Contact.chenghu}" id="chenghu">
+								<f:selectItem itemValue="男" itemLabel="男" />
+								<f:selectItem itemValue="女" itemLabel="女" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="chenghu" />
+							<h:outputText value="婚否:" />
+							<h:selectOneMenu value="#{Contact.hunfou}" id="hunfou">
+								<f:selectItem itemValue="否" itemLabel="否" />
+								<f:selectItem itemValue="是" itemLabel="是" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="hunfou" />
+							<h:outputText value="生日:" />
+							<a4j:outputPanel layout="block">
+								<rich:calendar id="birthday" value="#{Contact.birthday}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+							</a4j:outputPanel>
+							<rich:message for="birthday" />
+							<h:outputText value="籍贯:" />
+							<h:inputText value="#{Contact.jiguan}" id="jiguan" style="width:50px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="jiguan" />
+							<h:outputText value="部门:" />
+							<h:inputText value="#{Contact.bumen}" id="bumen" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="bumen" />
+							<h:outputText value="职位:" />
+							<h:inputText value="#{Contact.zhiwei}" id="zhiwei" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="zhiwei" />
+							<h:outputText value="职责:" />
+							<h:inputText value="#{Contact.zhize}" id="zhize" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="zhize" />
+							<h:outputText value="联系等级:" />
+							<h:selectOneMenu value="#{Contact.lianxidj}" id="lianxidj">
+								<f:selectItem itemValue="一般" itemLabel="一般" />
+								<f:selectItem itemValue="重要" itemLabel="重要" />
+								<f:selectItem itemValue="非常重要" itemLabel="非常重要" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="lianxidj" />
+							<h:outputText value="角色作用:" />
+							<h:selectOneMenu value="#{Contact.juesezy}" id="juesezy">
+								<f:selectItem itemValue="执行者" itemLabel="执行者" />
+								<f:selectItem itemValue="建议者" itemLabel="建议者" />
+								<f:selectItem itemValue="决策者" itemLabel="决策者" />
+								<f:selectItem itemValue="核心决策者" itemLabel="核心决策者" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="juesezy" />
+							<h:outputText value="办公电话:" />
+							<h:inputText value="#{Contact.gudingdh}" id="gudingdh" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="gudingdh" />
+							<h:outputText value="传真:" />
+							<h:inputText value="#{Contact.chuanzhen}" id="chuanzhen" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="chuanzhen" />
+							<h:outputText value="手机:" />
+							<h:inputText value="#{Contact.yidongdh}" id="yidongdh" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="yidongdh" />
+							<h:outputText value="宅电:" />
+							<h:inputText value="#{Contact.zhaidian}" id="zhaidian" style="width:160px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="zhaidian" />
+
+							<h:outputText value="兴趣:" />
+							<h:inputText value="#{Contact.xingqu}" id="xingqu" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="xingqu" />
+
+							<h:outputText value="QQ:" />
+							<h:inputText value="#{Contact.qq}" id="qq" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="qq" />
+							<h:outputText value="MSN:" />
+							<h:inputText value="#{Contact.msn}" id="msn" style="width:100px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="msn" />
+							<h:outputText value="邮件:" />
+							<h:inputText value="#{Contact.youjian}" id="youjian" style="width:120px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="youjian" />
+							<h:outputText value="毕业院校:" />
+							<h:inputText value="#{Contact.biyeyx}" id="biyeyx" style="width:120px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="biyeyx" />
+						</h:panelGrid>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="办公地址:" />
+							<h:inputText value="#{Contact.dizhi}" id="dizhi" style="width:300px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="dizhi" />
+							<h:outputText value="备注:" />
+							<h:inputText value="#{Contact.beizhu}" id="beizhu" style="width:400px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="beizhu" />
+							<h:outputText value="" />
+							<h:panelGrid columns="4">
+								<a4j:commandLink action="#{Contact.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Contact.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" rendered="#{param['id'] gt 0}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Contact.arc}" reRender="msg">
+									<h:outputText class="btn" value="存档" rendered="#{param['id'] gt 0 and Contact.isarc=='N'}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Contact.unarc}" rendered="#{MySession.hasOp['crm.admin']==true}" reRender="msg">
+									<h:outputText class="btn" value="取消存档" rendered="#{param['id'] gt 0 and Contact.isarc=='Y'}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{Contact.ID_}" />
+							<h:inputHidden value="#{Contact.CID_}" />
+							<h:inputHidden value="#{Contact.CDATE_}" />
+							<h:inputHidden value="#{Contact.isarc}" />
+							<h:inputHidden value="#{Contact.UUID_}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirm" width="300" height="80" zindex="3000" style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{ContactDao.deleteRecordById}" onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+							<f:param name="uuid" value="#{param['uuid']}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirm')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+</ui:composition>
+</html>

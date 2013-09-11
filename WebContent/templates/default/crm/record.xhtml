@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich">
+<ui:composition>
+		<rich:tabPanel id="tab40" switchType="client" headerAlignment="left">
+			<rich:tab id="tab41" name="tab41" label="列表">
+				<a4j:form id="dataForm40" style="margin-top:3px;">
+					<rich:dataTable id="dataTable40" value="#{Record.items}" var="item" rowKeyVar="rowNum" style="width:100%;">
+						<f:facet name="header">
+							<rich:columnGroup>
+								<rich:column styleClass="left">
+									<a4j:commandButton action="#{Record.buildItems}" image="../images/reload.png"  reRender="dataTable40">
+										<f:param name="uuid" value="#{param['uuid']}" />
+									</a4j:commandButton>
+								</rich:column>
+								<rich:column>
+									<h:outputText value="" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="项目名称" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="开始日期" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="结束日期" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="学员人数" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="项目金额" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="增值服务" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="备注" />
+								</rich:column>
+								<rich:column>
+									<h:outputText value="Arc" />
+								</rich:column>
+								<rich:column styleClass="right">
+									<h:outputText value="" />
+								</rich:column>
+							</rich:columnGroup>
+						</f:facet>
+						<rich:column style="text-align:center;width:21px;">
+							<h:outputText value="#{rowNum + 1}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink reRender="editForm40">
+								<h:graphicImage id="edit" onclick="RichFaces.switchTab('tab40','tab42','tab42');" title="修改" class="imgBtn" url="../images/edit.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column style="width:120px;text-align:left;">
+							<rich:panel style="border-width:0;">
+								<h:outputText value="#{item.xiangmumc}" />
+								<rich:toolTip>
+									<h:panelGrid columns="1">
+										<h:outputText value="培训对象:#{item.peixundx}" />
+										<br />
+										<h:outputText value="客户反馈:#{item.kehufk}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</rich:panel>
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.jiaoyisj}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:center;">
+							<h:outputText value="#{item.jieshusj}" class="datetimeBlue" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:right;">
+							<h:outputText value="#{item.xueyuanrs}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:right;">
+							<h:outputText value="#{item.jiaoyije}" />
+						</rich:column>
+						<rich:column style="width:80px;text-align:left;">
+							<h:outputText value="#{item.zengzhifw}" />
+						</rich:column>
+						<rich:column style="width:120px;text-align:center;">
+							<h:outputText value="#{item.beizhu}" />
+						</rich:column>
+						<rich:column style="width:30px;text-align:center;">
+							<h:outputText value="#{item.isarc}" />
+						</rich:column>
+						<rich:column style="text-align:center;width:21px;white-space:nowrap">
+							<a4j:commandLink action="#{RecordDao.showDialog}" onclick="#{rich:component('mpForConfirmRecord')}.show();hideObject('dataForm40:dataTable40:#{rowNum}:edit');hideObject('dataForm40:dataTable40:#{rowNum}:del');">
+								<h:graphicImage id="del" title="删除" class="imgBtn" url="../images/delete.png">
+								</h:graphicImage>
+								<f:param name="id" value="#{item.ID_}" />
+								<f:param name="reload" value="false" />
+								<f:param name="uuid" value="#{param['uuid']}" />
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</a4j:form>
+			</rich:tab>
+			<rich:tab id="tab42" name="tab42" label="编辑">
+				<a4j:outputPanel id="editForm40">
+					<h:outputText value="#{Record.init}" style="display:none;" />
+					<a4j:form>
+						<h:panelGrid columns="3" columnClasses="co1,co2,co3">
+							<h:outputText value="项目名称:" />
+							<h:inputText value="#{Record.xiangmumc}" id="xiangmumc" required="true" requiredMessage="" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="xiangmumc">
+								<f:facet name="errorMarker">
+									<h:outputText value="项目名称不能空" />
+								</f:facet>
+							</rich:message>
+
+							<h:outputText value="开始日期:" />
+							<h:panelGrid columns="5" style="margin-left:-3px;">
+								<a4j:outputPanel layout="block">
+									<rich:calendar id="jiaoyisj" value="#{Record.jiaoyisj}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+								</a4j:outputPanel>
+								<rich:message for="jiaoyisj" style="color:red;margin-left:3px;">
+									<f:facet name="errorMarker">
+										<h:outputText value="" />
+									</f:facet>
+								</rich:message>
+								<h:outputText value="结束日期:" />
+								<a4j:outputPanel layout="block">
+									<rich:calendar id="jieshuisj" value="#{Record.jieshusj}" locale="zh/CN" cellWidth="24px" cellHeight="22px" enableManualInput="true" datePattern="yyyy-MM-dd" />
+								</a4j:outputPanel>
+								<rich:message for="jieshuisj" style="color:red;margin-left:3px;">
+									<f:facet name="errorMarker">
+										<h:outputText value="" />
+									</f:facet>
+								</rich:message>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:outputText value="培训对象:" />
+							<h:inputText value="#{Record.peixundx}" id="peixundx" style="width:200px;">
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="peixundx" />
+							<h:outputText value="学员人数:" />
+							<h:inputText value="#{Record.xueyuanrs}" errorMessage="" id="xueyuanrs" style="width:80px;">
+								<f:validator validatorId="Integer" />
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="xueyuanrs">
+								<f:facet name="errorMarker">
+									<h:outputText value="学员人数必须是数值格式" />
+								</f:facet>
+							</rich:message>
+
+							<h:outputText value="项目金额:" />
+							<h:inputText value="#{Record.jiaoyije}" id="jiaoyije" style="width:80px;">
+								<f:validator validatorId="Float" />
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText>
+							<rich:message for="jiaoyije">
+								<f:facet name="errorMarker">
+									<h:outputText value="项目金额必须是数值格式" />
+								</f:facet>
+							</rich:message>
+
+							<h:outputText value="客户反馈:" />
+							<h:inputTextarea value="#{Record.kehufk}" id="kehufk" style="width:500px;">
+								<rich:ajaxValidator event="kehufk" />
+							</h:inputTextarea>
+							<rich:message for="baifangjl" />
+							<h:outputText value="增值服务:" />
+							<h:selectOneMenu value="#{Record.zengzhifw}" id="zengzhifw">
+								<f:selectItem itemValue="否" itemLabel="否" />
+								<f:selectItem itemValue="有" itemLabel="有" />
+								<rich:ajaxValidator event="onblur" />
+							</h:selectOneMenu>
+							<rich:message for="zengzhifw" />
+
+							<h:outputText value="备注:" />
+							<h:inputTextarea value="#{Record.beizhu}" id="beizhu" style="width:500px;">
+								<rich:ajaxValidator event="beizhu" />
+							</h:inputTextarea>
+							<rich:message for="beizhu" />
+
+							<h:outputText value="" />
+							<h:panelGrid columns="4">
+								<a4j:commandLink action="#{Record.newRecord}" reRender="msg">
+									<h:outputText class="btn" value="新建" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Record.updateRecordById}" reRender="msg">
+									<h:outputText class="btn" value="保存" rendered="#{param['id'] gt 0}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Record.arc}" reRender="msg">
+									<h:outputText class="btn" value="存档" rendered="#{param['id'] gt 0 and Record.isarc=='N'}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+								<a4j:commandLink action="#{Record.unarc}" rendered="#{MySession.hasOp['crm.admin']==true}" reRender="msg">
+									<h:outputText class="btn" value="取消存档" rendered="#{param['id'] gt 0 and Record.isarc=='Y'}" />
+									<f:param name="redirect" value="false" />
+									<f:param name="reload" value="false" />
+									<f:param name="id" value="#{param['id']}" />
+									<f:param name="uuid" value="#{param['uuid']}" />
+								</a4j:commandLink>
+							</h:panelGrid>
+							<h:outputText value="" />
+							<h:inputHidden value="#{Record.ID_}" />
+							<h:inputHidden value="#{Record.CID_}" />
+							<h:inputHidden value="#{Record.CDATE_}" />
+							<h:inputHidden value="#{Record.isarc}" />
+							<h:inputHidden value="#{Record.UUID_}" />
+						</h:panelGrid>
+					</a4j:form>
+				</a4j:outputPanel>
+			</rich:tab>
+		</rich:tabPanel>
+		<a4j:form>
+			<rich:modalPanel id="mpForConfirmRecord" width="300" height="80" zindex="3000" style="clear:both;background:url(../images/warning.png) no-repeat 8px 12px #fcfae9;background-image:url(../images/warning.png)">
+				<a4j:outputPanel style="width:250px;margin-top:-10px;height:80px;">
+					<h:panelGrid columns="3">
+						<h:outputText value="#{Lang.prop[MySession.l]['deletewarning']}" style="font-size:11pt;" />
+						<a4j:commandLink reRender="msg" action="#{RecordDao.deleteRecordById}" onclick="#{rich:component('mpForConfirmRecord')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['ok']}" />
+							<f:param name="reload" value="false" />
+							<f:param name="uuid" value="#{param['uuid']}" />
+						</a4j:commandLink>
+						<a4j:commandLink onclick="#{rich:component('mpForConfirmRecord')}.hide()">
+							<h:outputText class="btn" value="#{Lang.prop[MySession.l]['cancel']}" />
+						</a4j:commandLink>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</a4j:form>
+</ui:composition>
+</html>

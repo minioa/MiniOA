@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+      "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping auto-import="true" package="org.minioa.core">
+	<class name="RoleUserRelation" table="core_role_user_relation">
+		<id name="ID_" column="ID_" type="java.lang.Integer">
+			<generator class="increment" />
+		</id>
+		<property name="CID_" column="CID_" type="java.lang.Integer" />
+		<property name="CDATE_" column="CDATE_" type="java.util.Date" />
+		<property name="roleId" column="roleId" type="java.lang.Integer" />
+		<property name="userId" column="userId" type="java.lang.Integer" />
+	</class>
+	<sql-query name="core.roleuserrelation.records">
+    <![CDATA[
+        select ta.ID_,ta.CID_,ta.CDATE_,
+        	ta.roleId,ta.userId,tb.roleName,tc.userName
+        from core_role_user_relation ta
+        left join core_role tb on tb.ID_ = ta.roleId
+        left join core_user tc on tc.ID_ = ta.userId
+    ]]>
+	</sql-query>
+	<sql-query name="core.roleuserrelation.deleterecordbyid">
+    <![CDATA[
+        delete from core_role_user_relation where ID_ = :id
+    ]]>
+	</sql-query>
+</hibernate-mapping>
