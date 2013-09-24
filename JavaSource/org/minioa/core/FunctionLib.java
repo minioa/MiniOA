@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jivesoftware.smack.Chat;
@@ -230,11 +231,32 @@ public class FunctionLib {
 		try {
 			FacesContext context = FacesContext.getCurrentInstance();
 			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-			response.sendRedirect("http://" + context.getExternalContext().getRequestHeaderMap().get("host") + "/" + page);
+			String httpOrHttps = GetHttpOrHttps();
+			response.sendRedirect(httpOrHttps + context.getExternalContext().getRequestHeaderMap().get("host") + "/" + page);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
+	public static String GetHttpOrHttps() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		// 首先判断是否可取得referer
+		String referer = context.getExternalContext().getRequestHeaderMap().get("referer");
+		String httpOrHttps = "http://";
+		if(referer == null){
+			// 如果未取得referer就通过默认端口8443来判断
+			String host = context.getExternalContext().getRequestHeaderMap().get("host");
+			if(host.indexOf("8443")>-1)
+				httpOrHttps = "https://";
+		}
+		else{
+			if(referer.startsWith("https"))
+				httpOrHttps = "https://";
+		}
+		return httpOrHttps;
+	}
+
+	
 
 	/**
 	 * 打开指定页面

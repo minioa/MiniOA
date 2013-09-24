@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.jboss.seam.ui.HibernateEntityLoader;
@@ -99,7 +102,8 @@ public class MySession {
 	public String getHost() {
 		if (host == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
-			host = "http://" + context.getExternalContext().getRequestHeaderMap().get("host") + "/" + context.getExternalContext().getInitParameter("webAppName");
+			String httpOrHttps = FunctionLib.GetHttpOrHttps();
+			host = httpOrHttps + context.getExternalContext().getRequestHeaderMap().get("host") + "/" + context.getExternalContext().getInitParameter("webAppName");
 		}
 		return host;
 	}

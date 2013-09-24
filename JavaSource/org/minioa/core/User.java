@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -388,11 +389,15 @@ public class User {
 				String userName = prop.get("userName");
 				String password = prop.get("password");
 				password = new Blowfish(FunctionLib.passwordKey).decryptString(password);
+				FacesContext context = FacesContext.getCurrentInstance();
+				HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+				String referer = context.getExternalContext().getRequestHeaderMap().get("referer");
+				String httpOrHttps = FunctionLib.GetHttpOrHttps();
 				String url = FunctionLib.getWebAppName();
 				if ("".equals(url))
-					url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/autologin.jsf?url=";
+					url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/autologin.jsf?url=";
 				else
-					url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/" + url + "/autologin.jsf?url=";
+					url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/" + url + "/autologin.jsf?url=";
 				prop.put("url", url + new Blowfish(FunctionLib.passwordKey).encryptString(userName + ";" + password + ";" + FunctionLib.getIp() + ";" + getMySession().getTemplateName()));
 
 				getMySession().getTempInt().put("DepartmentTree.id", FunctionLib.getInt(obj[6]));
@@ -764,17 +769,18 @@ public class User {
 				it = null;
 				getMySession().setUserName(name);
 				getMySession().setIsLogin("true");
-				
-				String url = FunctionLib.getWebAppName() + "/templates/" + getMySession().getTemplateName() + "/index.html";
-				if ("".equals(url))
-					url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/";
-				else
-					url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/" + url;
 
 				FacesContext context = FacesContext.getCurrentInstance();
 				HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+				String httpOrHttps = FunctionLib.GetHttpOrHttps();
+				String url = FunctionLib.getWebAppName() + "/templates/" + getMySession().getTemplateName() + "/index.html";
+				if ("".equals(url))
+					url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/";
+				else
+					url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/" + url;
+				
 				response.sendRedirect(url);
-
+				
 				FunctionLib.sendOfMessage(app.getProp().get("openfireUsername"), name + " login, the ip is " + ip);
 
 				String msg = getMySession().getDisplayName() + "登录到系统";
@@ -848,13 +854,14 @@ public class User {
 				}
 			}
 			url = FunctionLib.getWebAppName() + "/templates/" + getMySession().getTemplateName() + "/index.html";
-			if ("".equals(url))
-				url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/";
-			else
-				url = "http://" + FunctionLib.getRequestHeaderMap("host") + "/" + url;
-
 			FacesContext context = FacesContext.getCurrentInstance();
 			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			String httpOrHttps = FunctionLib.GetHttpOrHttps();
+			if ("".equals(url))
+				url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/";
+			else
+				url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/" + url;
+
 			response.sendRedirect(url);
 		} catch (Exception ex) {
 			ex.printStackTrace();
