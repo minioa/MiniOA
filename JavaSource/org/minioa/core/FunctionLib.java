@@ -238,6 +238,10 @@ public class FunctionLib {
 		}
 	}
 	
+	/**
+	 * 返回http://或https://
+	 * @return 返回http://或https://
+	 */
 	public static String GetHttpOrHttps() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		// 首先判断是否可取得referer

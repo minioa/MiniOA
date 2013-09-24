@@ -102,6 +102,7 @@ public class MySession {
 	public String getHost() {
 		if (host == null) {
 			FacesContext context = FacesContext.getCurrentInstance();
+			//判断http或https
 			String httpOrHttps = FunctionLib.GetHttpOrHttps();
 			host = httpOrHttps + context.getExternalContext().getRequestHeaderMap().get("host") + "/" + context.getExternalContext().getInitParameter("webAppName");
 		}

@@ -856,6 +856,7 @@ public class User {
 			url = FunctionLib.getWebAppName() + "/templates/" + getMySession().getTemplateName() + "/index.html";
 			FacesContext context = FacesContext.getCurrentInstance();
 			HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+			// 返回http://或https://
 			String httpOrHttps = FunctionLib.GetHttpOrHttps();
 			if ("".equals(url))
 				url = httpOrHttps + FunctionLib.getRequestHeaderMap("host") + "/";
